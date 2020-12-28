@@ -1,0 +1,1284 @@
+{
+    "status": 200,
+    "data": [
+        {
+            "id": "5f47507363ee8b676be9af52",
+            "name": "Dark Skully",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5f47507363ee8b676be9af52/icon.png",
+                "png": false,
+                "gallery": "https://image.fnbr.co/outfit/5f47507363ee8b676be9af52/gallery.png",
+                "featured": "https://image.fnbr.co/outfit/5f47507363ee8b676be9af52/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "dark",
+            "type": "outfit",
+            "slug": "dark-skully",
+            "readableType": "Outfit",
+            "description": "The dreaded master of stylish domination.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f474f0d63ee8bf004e9ae7c",
+            "name": "Dark Skully Satchel",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5f474f0d63ee8bf004e9ae7c/icon.png",
+                "png": false,
+                "gallery": "https://image.fnbr.co/backpack/5f474f0d63ee8bf004e9ae7c/gallery.png",
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "dark",
+            "type": "backpack",
+            "slug": "dark-skully-satchel",
+            "readableType": "Back Bling",
+            "description": "Equal parts disturbing and disturbing.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f474fd063ee8b4ab2e9aeee",
+            "name": "Dark Splitter",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5f474fd063ee8b4ab2e9aeee/icon.png",
+                "png": false,
+                "gallery": "https://image.fnbr.co/pickaxe/5f474fd063ee8b4ab2e9aeee/gallery.png",
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "dark",
+            "type": "pickaxe",
+            "slug": "dark-splitter",
+            "readableType": "Pickaxe",
+            "description": "Battle ready and destined for darkness.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f474fd363ee8b432fe9aef1",
+            "name": "Adamantium Claws",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5f474fd363ee8b432fe9aef1/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "marvel",
+            "type": "pickaxe",
+            "slug": "adamantium-claws",
+            "readableType": "Pickaxe",
+            "description": "You better believe they can cut through anything, bub.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb5c9daf3a8f84e52e59f4e",
+            "name": "Johnny Blaze",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/spray/5fb5c9daf3a8f84e52e59f4e/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "marvel",
+            "type": "spray",
+            "slug": "johnny-blaze",
+            "readableType": "Spray",
+            "description": "Leave your mark.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f47ba0fd71051d51e7f5b7b",
+            "name": "Reflector",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5f47ba0fd71051d51e7f5b7b/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5f47ba0fd71051d51e7f5b7b/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "marvel",
+            "type": "wrap",
+            "slug": "reflector",
+            "readableType": "Wrap",
+            "description": "Show your style.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f474ffc63ee8b094ee9af0f",
+            "name": "Tag of Doom",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/spray/5f474ffc63ee8b094ee9af0f/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "marvel",
+            "type": "spray",
+            "slug": "tag-of-doom",
+            "readableType": "Spray",
+            "description": "Leave your mark.",
+            "bundleSet": false
+        },
+        {
+            "id": "5eea697ce59f83842b4ac8fa",
+            "name": "Marshmello",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/bundle/5eea697ce59f83842b4ac8fa/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "icon_series",
+            "type": "bundle",
+            "slug": "marshmello",
+            "readableType": "Bundle",
+            "description": false,
+            "bundleSet": "5eea7190e59f833e234ac8fd"
+        },
+        {
+            "id": "5dd7108dd180981a00b7ee30",
+            "name": "Bash",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/bundle/5dd7108dd180981a00b7ee30/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "bundle",
+            "slug": "bash",
+            "readableType": "Bundle",
+            "description": "2 Item Bundle",
+            "bundleSet": "5dd71038d180980972b7ee2a"
+        },
+        {
+            "id": "5dd710e0d18098f283b7ee34",
+            "name": "Brilliant Bomber",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/bundle/5dd710e0d18098f283b7ee34/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "bundle",
+            "slug": "brilliant-bomber",
+            "readableType": "Bundle",
+            "description": "3 Item Bundle",
+            "bundleSet": "5dd7107bd18098a833b7ee2e"
+        },
+        {
+            "id": "5fa1245bda84560c96400358",
+            "name": "Cloud Striker",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fa1245bda84560c96400358/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5fa1245bda84560c96400358/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "outfit",
+            "slug": "cloud-striker",
+            "readableType": "Outfit",
+            "description": "Soar beyond the horizon.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f8561bfa4f55d30d7295b39",
+            "name": "Electri-claw",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5f8561bfa4f55d30d7295b39/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "pickaxe",
+            "slug": "electri-claw",
+            "readableType": "Pickaxe",
+            "description": "Charged and ready to strike.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12428da845650d4400352",
+            "name": "Elevation",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5fa12428da845650d4400352/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "backpack",
+            "slug": "elevation",
+            "readableType": "Back Bling",
+            "description": "Don't let gravity hold you down.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa123fada8456b0df40034f",
+            "name": "Indigo Kama",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5fa123fada8456b0df40034f/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "backpack",
+            "slug": "indigo-kama",
+            "readableType": "Back Bling",
+            "description": "Perfectly balanced for victory.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa1243eda84564b53400355",
+            "name": "Indigo Kuno",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fa1243eda84564b53400355/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "outfit",
+            "slug": "indigo-kuno",
+            "readableType": "Outfit",
+            "description": "The Falcon Clan's finest.",
+            "bundleSet": false
+        },
+        {
+            "id": "5cc17ffd96e9521b932e7304",
+            "name": "Plasma Carrot",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5cc17ffd96e9521b932e7304/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "epic",
+            "type": "pickaxe",
+            "slug": "plasma-carrot",
+            "readableType": "Pickaxe",
+            "description": "So good you can almost taste it.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb4f564f3a8f81a02e59ed5",
+            "name": "6-Carat Cutter",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5fb4f564f3a8f81a02e59ed5/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "pickaxe",
+            "slug": "6-carat-cutter",
+            "readableType": "Pickaxe",
+            "description": "Yes, those are real diamonds.",
+            "bundleSet": false
+        },
+        {
+            "id": "5dd529863f9cec533fd1375f",
+            "name": "Brilliant Bomber",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5dd529863f9cec533fd1375f/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5dd529863f9cec533fd1375f/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "brilliant-bomber",
+            "readableType": "Outfit",
+            "description": "Show your shine.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f4750cb63ee8b6d55e9af86",
+            "name": "Danger Frog",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5f4750cb63ee8b6d55e9af86/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5f4750cb63ee8b6d55e9af86/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "wrap",
+            "slug": "danger-frog",
+            "readableType": "Wrap",
+            "description": "Do not eat.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12496da8456f99340035e",
+            "name": "Deep Zzz",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5fa12496da8456f99340035e/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "backpack",
+            "slug": "deep-zzz",
+            "readableType": "Back Bling",
+            "description": "Sleep with the fishes.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12507da845602e8400370",
+            "name": "Dozer",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fa12507da845602e8400370/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5fa12507da845602e8400370/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "dozer",
+            "readableType": "Outfit",
+            "description": "The best of the rest.",
+            "bundleSet": false
+        },
+        {
+            "id": "5eea112ee59f833e1a4ac8b7",
+            "name": "GHOST Beach Brawler",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5eea112ee59f833e1a4ac8b7/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "ghost-beach-brawler",
+            "readableType": "Outfit",
+            "description": "Hit the beach.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb4f18ef3a8f8a21ee59ec7",
+            "name": "Heart Target",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5fb4f18ef3a8f8a21ee59ec7/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "backpack",
+            "slug": "heart-target",
+            "readableType": "Back Bling",
+            "description": "Delivered with love.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12565da8456646a40037f",
+            "name": "Holofoil",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5fa12565da8456646a40037f/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5fa12565da8456646a40037f/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "wrap",
+            "slug": "holofoil",
+            "readableType": "Wrap",
+            "description": "Show your style.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb4f112f3a8f85193e59eb2",
+            "name": "Ice Raider",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fb4f112f3a8f85193e59eb2/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "ice-raider",
+            "readableType": "Outfit",
+            "description": "Synthetic diamonds need not apply.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f85614aa4f55df392295ae6",
+            "name": "Key Change",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/music/5f85614aa4f55df392295ae6/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "music",
+            "slug": "key-change",
+            "readableType": "Music",
+            "description": "Press play and find your perfect key.",
+            "bundleSet": false
+        },
+        {
+            "id": "5df27d6bb84283b75edeb016",
+            "name": "Loons",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5df27d6bb84283b75edeb016/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "backpack",
+            "slug": "loons",
+            "readableType": "Back Bling",
+            "description": "Fashionably floaty.",
+            "bundleSet": false
+        },
+        {
+            "id": "5e4f11fe39a2f75addcfb669",
+            "name": "Members Only",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/emote/5e4f11fe39a2f75addcfb669/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "emote",
+            "slug": "members-only",
+            "readableType": "Emote",
+            "description": "Are you in the club?",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa124e3da84567e4a40036a",
+            "name": "Nap Cap'n",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fa124e3da84567e4a40036a/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5fa124e3da84567e4a40036a/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "nap-capn",
+            "readableType": "Outfit",
+            "description": "See you in your dreams.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb4f617f3a8f82429e59edb",
+            "name": "Nebulaic",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5fb4f617f3a8f82429e59edb/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5fb4f617f3a8f82429e59edb/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "wrap",
+            "slug": "nebulaic",
+            "readableType": "Wrap",
+            "description": "Show your style.",
+            "bundleSet": false
+        },
+        {
+            "id": "5ea91d015b967238268a210b",
+            "name": "Neon Pulse",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5ea91d015b967238268a210b/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5ea91d015b967238268a210b/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "wrap",
+            "slug": "neon-pulse",
+            "readableType": "Wrap",
+            "description": "Show your style.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12c50da845681444003c2",
+            "name": "Nightbite",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5fa12c50da845681444003c2/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "pickaxe",
+            "slug": "nightbite",
+            "readableType": "Pickaxe",
+            "description": "Bioluminescent deep sea fishaxe.",
+            "bundleSet": false
+        },
+        {
+            "id": "5dd529c83f9cec64cad13765",
+            "name": "Polar Poleaxe",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5dd529c83f9cec64cad13765/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "pickaxe",
+            "slug": "polar-poleaxe",
+            "readableType": "Pickaxe",
+            "description": "We wish you a merry pickaxe.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa124d1da84566206400367",
+            "name": "REM Raider",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fa124d1da84566206400367/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5fa124d1da84566206400367/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "rem-raider",
+            "readableType": "Outfit",
+            "description": "Nothing beats a little shut eye.",
+            "bundleSet": false
+        },
+        {
+            "id": "5eea1147e59f833cd34ac8ba",
+            "name": "SHADOW Beach Brawler",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5eea1147e59f833cd34ac8ba/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "shadow-beach-brawler",
+            "readableType": "Outfit",
+            "description": "It's brawl or nothing.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa124f6da8456792740036d",
+            "name": "Sgt. Snooze",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fa124f6da8456792740036d/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5fa124f6da8456792740036d/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "sgt-snooze",
+            "readableType": "Outfit",
+            "description": "Drop and give me forty winks.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb4f16ff3a8f8a5cce59ec1",
+            "name": "Shine Pack",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5fb4f16ff3a8f8a5cce59ec1/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "backpack",
+            "slug": "shine-pack",
+            "readableType": "Back Bling",
+            "description": "Can't hide this shine.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12515da84561f06400373",
+            "name": "Slumberjack",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fa12515da84561f06400373/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5fa12515da84561f06400373/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "outfit",
+            "slug": "slumberjack",
+            "readableType": "Outfit",
+            "description": "Just five more minutes.",
+            "bundleSet": false
+        },
+        {
+            "id": "5ec4d093b3dbeb2982169a36",
+            "name": "Spectral Flex",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5ec4d093b3dbeb2982169a36/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5ec4d093b3dbeb2982169a36/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "wrap",
+            "slug": "spectral-flex",
+            "readableType": "Wrap",
+            "description": "Show your style.",
+            "bundleSet": false
+        },
+        {
+            "id": "5ea91bc35b967267438a20dd",
+            "name": "Stealth Stinger",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/glider/5ea91bc35b967267438a20dd/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "glider",
+            "slug": "stealth-stinger",
+            "readableType": "Glider",
+            "description": "Lightweight jet glider with venomous flare.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12c74da84560e5c4003c5",
+            "name": "Twin Talons",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5fa12c74da84560e5c4003c5/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "pickaxe",
+            "slug": "twin-talons",
+            "readableType": "Pickaxe",
+            "description": "Nothing escapes your grasp.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f47502763ee8b7035e9af2a",
+            "name": "Unicycle",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/emote/5f47502763ee8b7035e9af2a/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "emote",
+            "slug": "unicycle",
+            "readableType": "Emote",
+            "description": "Because you've made choices.",
+            "bundleSet": false
+        },
+        {
+            "id": "5d19f7f267693a786c6211a8",
+            "name": "Winner's Circle",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/music/5d19f7f267693a786c6211a8/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "rare",
+            "type": "music",
+            "slug": "winners-circle",
+            "readableType": "Music",
+            "description": "The sound of triumph!",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb523e9f3a8f8e296e59ef9",
+            "name": "Backscatter",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fb523e9f3a8f8e296e59ef9/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/outfit/5fb523e9f3a8f8e296e59ef9/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "outfit",
+            "slug": "backscatter",
+            "readableType": "Outfit",
+            "description": "Never stand still, give as hard as you get.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa1258cda8456458b400385",
+            "name": "Batty Blanket",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5fa1258cda8456458b400385/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "backpack",
+            "slug": "batty-blanket",
+            "readableType": "Back Bling",
+            "description": "It's so dreamy.",
+            "bundleSet": false
+        },
+        {
+            "id": "5e4f0f7939a2f7f1e1cfb64d",
+            "name": "Cloudycorn",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/spray/5e4f0f7939a2f7f1e1cfb64d/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "spray",
+            "slug": "cloudycorn",
+            "readableType": "Spray",
+            "description": "Leave your mark.",
+            "bundleSet": false
+        },
+        {
+            "id": "5d53c780806fc42fa5475f02",
+            "name": "Distracted",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/emote/5d53c780806fc42fa5475f02/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "emote",
+            "slug": "distracted",
+            "readableType": "Emote",
+            "description": "Plan of attack... entirely forgotten.",
+            "bundleSet": false
+        },
+        {
+            "id": "5efadbeb3eca967261252d67",
+            "name": "Dog Eat Dog",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/spray/5efadbeb3eca967261252d67/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "spray",
+            "slug": "dog-eat-dog",
+            "readableType": "Spray",
+            "description": "Leave your mark.",
+            "bundleSet": false
+        },
+        {
+            "id": "5efadd053eca9638c6252daf",
+            "name": "Lil' Sweeties",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5efadd053eca9638c6252daf/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "pickaxe",
+            "slug": "lil-sweeties",
+            "readableType": "Pickaxe",
+            "description": "They've got quite a pop.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa1f10db72f41093da2bfe8",
+            "name": "Llama Surprise",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/emoji/5fa1f10db72f41093da2bfe8/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "emoji",
+            "slug": "llama-surprise",
+            "readableType": "Emoji",
+            "description": "Express yourself on the battlefield.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb5c8f0f3a8f8024be59f48",
+            "name": "Nana Dance",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/spray/5fb5c8f0f3a8f8024be59f48/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false
+            },
+            "rarity": "uncommon",
+            "type": "spray",
+            "slug": "nana-dance",
+            "readableType": "Spray",
+            "description": "Leave your mark.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f6b0765de8535047db1c398",
+            "name": "On Your Mark...",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/emote/5f6b0765de8535047db1c398/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "emote",
+            "slug": "on-your-mark",
+            "readableType": "Emote",
+            "description": "Don't forget to stretch.",
+            "bundleSet": false
+        },
+        {
+            "id": "5db801e9c02d059b290b0579",
+            "name": "Piranhas",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5db801e9c02d059b290b0579/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "pickaxe",
+            "slug": "piranhas",
+            "readableType": "Pickaxe",
+            "description": "Ready for a chopping frenzy.",
+            "bundleSet": false
+        },
+        {
+            "id": "5d8b2871c9f119337b51978e",
+            "name": "Rainbow Riot",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5d8b2871c9f119337b51978e/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5d8b2871c9f119337b51978e/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "wrap",
+            "slug": "rainbow-riot",
+            "readableType": "Wrap",
+            "description": "Show your style.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fb5c8b9f3a8f84913e59f45",
+            "name": "Reboot",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/emoji/5fb5c8b9f3a8f84913e59f45/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "emoji",
+            "slug": "reboot",
+            "readableType": "Emoji",
+            "description": "Express yourself on the battlefield.",
+            "bundleSet": false
+        },
+        {
+            "id": "5e4f11d939a2f7b103cfb667",
+            "name": "Sad Claps",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/emote/5e4f11d939a2f7b103cfb667/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "emote",
+            "slug": "sad-claps",
+            "readableType": "Emote",
+            "description": "Clap through the sadness.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa125a1da845689f7400388",
+            "name": "Shakez-2-Go",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/backpack/5fa125a1da845689f7400388/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "backpack",
+            "slug": "shakez-2-go",
+            "readableType": "Back Bling",
+            "description": "Get shook with a friend!",
+            "bundleSet": false
+        },
+        {
+            "id": "5fbd4931324ededfa64ab23d",
+            "name": "Sideline Commander",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fbd4931324ededfa64ab23d/icon.png",
+                "png": false,
+                "gallery": "https://image.fnbr.co/outfit/5fbd4931324ededfa64ab23d/gallery.png",
+                "featured": "https://image.fnbr.co/outfit/5fbd4931324ededfa64ab23d/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "outfit",
+            "slug": "sideline-commander",
+            "readableType": "Outfit",
+            "description": "Keep'em on the straight and narrow.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fbd4b7b324edeaf784ab257",
+            "name": "Spiral Specialist",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/outfit/5fbd4b7b324edeaf784ab257/icon.png",
+                "png": false,
+                "gallery": "https://image.fnbr.co/outfit/5fbd4b7b324edeaf784ab257/gallery.png",
+                "featured": "https://image.fnbr.co/outfit/5fbd4b7b324edeaf784ab257/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "outfit",
+            "slug": "spiral-specialist",
+            "readableType": "Outfit",
+            "description": "Knows a good play when she sees one.",
+            "bundleSet": false
+        },
+        {
+            "id": "5f856180a4f55d7b83295b0d",
+            "name": "Squad Sail",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/glider/5f856180a4f55d7b83295b0d/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "glider",
+            "slug": "squad-sail",
+            "readableType": "Glider",
+            "description": "The gang's all here.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12f06da84566c384003df",
+            "name": "Stuffie Smasher",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5fa12f06da84566c384003df/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "pickaxe",
+            "slug": "stuffie-smasher",
+            "readableType": "Pickaxe",
+            "description": "Tuck into the competition.",
+            "bundleSet": false
+        },
+        {
+            "id": "5fa12f2dda84562cfa4003e5",
+            "name": "Tater Pounders",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/pickaxe/5fa12f2dda84562cfa4003e5/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "pickaxe",
+            "slug": "tater-pounders",
+            "readableType": "Pickaxe",
+            "description": "I'll take mine to go.",
+            "bundleSet": false
+        },
+        {
+            "id": "5d42c5be5f111eb34dce6154",
+            "name": "Visitor GG",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/spray/5d42c5be5f111eb34dce6154/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": false,
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "spray",
+            "slug": "visitor-gg",
+            "readableType": "Spray",
+            "description": "Leave your mark.",
+            "bundleSet": false
+        },
+        {
+            "id": "5db724618b834678bfb4b613",
+            "name": "Wavebreaker",
+            "price": "???",
+            "priceIcon": false,
+            "priceIconLink": false,
+            "images": {
+                "icon": "https://image.fnbr.co/wrap/5db724618b834678bfb4b613/icon.png",
+                "png": false,
+                "gallery": false,
+                "featured": "https://image.fnbr.co/wrap/5db724618b834678bfb4b613/featured.png",
+                "resizeAvailable": true
+            },
+            "rarity": "uncommon",
+            "type": "wrap",
+            "slug": "wavebreaker",
+            "readableType": "Wrap",
+            "description": "Show your style.",
+            "bundleSet": false
+        }
+    ]
+}

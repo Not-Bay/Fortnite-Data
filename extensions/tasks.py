@@ -1,0 +1,216 @@
+from discord.ext import commands, tasks
+import requests
+import traceback
+import io
+import asyncio
+import discord
+import requests
+import random
+import funcs
+import json
+import main
+import time
+import sys
+
+async def send_update_message(bot, embed, file=None):
+    serverconfig = main.serverconfig()
+    
+    for guild in bot.guilds:
+        if serverconfig[str(guild.id)]['updates_channel'] != 1:
+
+            chan = bot.get_channel(serverconfig[str(guild.id)]['updates_channel'])
+            if chan == None:
+                continue
+
+            if file != None:
+                await chan.send(embed=embed, file=file)
+            else:
+                await chan.send(embed=embed)
+
+def text_guild(guild, value: str):
+    servers = main.serverconfig()
+    lang = 'es' if servers[str(guild.id)]['lang'] == 'es' else 'en' if servers[str(guild.id)]['lang'] == 'en' else 'ja' if servers[str(guild.id)]['lang'] == 'ja' else 'en'
+
+    try:
+        with open(f'langs/{lang}.json', 'r', encoding='utf-8') as f:
+            return json.load(f)[str(value)]
+    except:
+        with open(f'langs/{lang}.json', 'r', encoding='utf-8-sig') as f:
+            return json.load(f)[str(value)]
+
+
+async def wait_for_valid_image(headers):
+
+    base_url = 'https://api.nitestats.com/v1/shop/image'
+
+    while True:
+
+        response = requests.get(base_url, params=headers)
+
+        if response.status_code == 200:
+            if response.headers["Content-Type"] == 'image/png':
+                return response
+
+        await asyncio.sleep(1)
+
+
+class Tasks(commands.Cog):
+    def __init__(self, bot: commands.Bot):
+
+        self.bot = bot
+
+        self.fnapi_key = None
+
+        self.check_shop.start()
+        self.update_dbpy_stats.start()
+        self.status_changes.start()
+        self.update_topgg_stats.start()
+
+
+    def cog_unload(self):
+        
+        self.check_shop.stop()
+        self.update_dbpy_stats.stop()
+        self.status_changes.stop()
+        self.update_topgg_stats.stop()
+
+
+    def fnapi_request(self, url):
+
+        if self.fnapi_key == None:
+            with open('values.json', 'r', encoding='utf-8') as f:
+                self.fnapi_key = json.load(f)["fnapi_key"]
+
+        headers = {
+            "x-api-key": self.fnapi_key
+        }
+        response = requests.get(url, headers=headers)
+
+        return response
+
+    @tasks.loop(seconds=15)
+    async def check_shop(self):
+
+        await self.bot.wait_until_ready()
+
+        with open('cached/shop.txt', 'r', encoding='utf-8') as c:
+            cached = c.read()
+        response = requests.get('https://api.nitestats.com/v1/shop/shophash')
+
+        if response.status_code == 200:
+
+            if cached != response.text:
+
+                with open('cached/shop.txt', 'w', encoding='utf-8') as f:
+                    f.write(response.text)
+
+                funcs.log('New shop detected <:FNWarn:762553132898058282>')
+
+                serverconfig = main.serverconfig()
+                start_time = time.time()
+                count = 0
+
+                for guild in self.bot.guilds:
+
+
+                    if serverconfig[str(guild.id)]['shop_channel'] == 1:
+                        continue
+
+                    await self.bot.wait_until_ready()
+                    channel = self.bot.get_channel(int(serverconfig[str(guild.id)]['shop_channel']))
+
+                    if channel == None:
+                        continue
+
+                    embed = discord.Embed(color=0x570ae4)
+                    embed.set_author(
+                        name=text_guild(guild, 'new_fortnite_shop'),
+                        url='https://discord.com/oauth2/authorize?client_id=729409703360069722&permissions=379968&scope=bot',
+                        icon_url=f'https://cdn.discordapp.com/emojis/763528352828227584.png'
+                    )
+                    embed.set_image(url='attachment://shop.png')
+
+                    shopimage = await wait_for_valid_image(funcs.compose_shop_headers(guild))
+
+                    file = discord.File(
+                        fp = io.BytesIO(shopimage.content),
+                        filename = 'shop.png',
+                        spoiler = False
+                    )
+
+                    try:
+                        await self.bot.wait_until_ready()
+                        await channel.send(embed=embed, file=file)
+                        count += 1
+                    except Exception as error:
+                        funcs.log(f'Error while trying to send shop to channel {channel.id}:\n```\b{"".join(traceback.format_exception(None, error, error.__traceback__))}```')
+
+                funcs.log(f'Sended shop in `{round(time.time() - start_time, 3)}` seconds on `{count}` channels')
+
+
+
+    @tasks.loop(seconds=300)
+    async def status_changes(self):
+
+        await self.bot.wait_until_ready()
+
+        try:
+            statuses = [
+                f'{len(self.bot.guilds)} servers',
+                f'{requests.get("https://api.peely.de/v1/br/progress/data").json()["data"]["DaysLeft"]} days to end season',
+                f'{len(requests.get("https://fortnite-api.com/v2/cosmetics/br").json()["data"])} cosmetics ingame',
+                f'{requests.get("https://fortnite-api.com/v2/cosmetics/br/new").json()["data"]["items"]} unreleased cosmetics',
+                'f!invite',
+                'docs.fortnitedata.tk'
+            ]
+            selected = random.choice(statuses)
+                
+            await self.bot.change_presence(activity=discord.Game(name=selected))
+        except:
+            pass
+
+
+    @tasks.loop(minutes=30)
+    async def update_dbpy_stats(self):
+
+        await self.bot.wait_until_ready()
+
+        with open('values.json', 'r', encoding='utf-8') as f:
+            values = json.load(f)
+
+        headers = {'Authorization': f'{values["dbpy_token"]}'}
+        params = {'server_count': f'{len(self.bot.guilds)}'}
+
+        if self.bot.user.id == 729409703360069722:
+
+            try:
+                requests.post(f'https://discord.boats/api/v2/bot/729409703360069722', headers=headers, json=params)
+            except Exception as e:
+                funcs.log(f'Failed to update discord boats stats: ```\n{e}```')
+
+
+    @tasks.loop(minutes=30)
+    async def update_topgg_stats(self):
+
+        await self.bot.wait_until_ready()
+
+        with open('values.json', 'r', encoding='utf-8') as f:
+            values = json.load(f)
+
+        headers = {
+            "Authorization": values['topgg_token']
+            }
+        params = {
+            "server_count": f"{len(self.bot.guilds)}"
+            }
+
+        if self.bot.user.id == 729409703360069722:
+
+            try:
+                requests.post(f'https://top.gg/api/bots/729409703360069722/stats', headers=headers, json=params).raise_for_status()
+            except Exception as e:
+                funcs.log(f'Failed to update top.gg stats: ```\n{e}```')
+
+
+def setup(bot):
+    bot.add_cog(Tasks(bot))

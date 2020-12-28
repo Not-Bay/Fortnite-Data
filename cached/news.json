@@ -1,0 +1,111 @@
+{
+    "status": 200,
+    "data": {
+        "br": {
+            "hash": "2234853e3b8b193d83af8d932fbe096b6b74e88e",
+            "date": "2020-12-28T00:07:04Z",
+            "image": "https://cdn.fortnite-api.com/news/v2/2234853e3b8b193d83af8d932fbe096b6b74e88e.gif",
+            "motds": [
+                {
+                    "id": "Shadow Strike Pack",
+                    "title": "Shadow Strike Pack",
+                    "tabTitle": null,
+                    "body": "Engineered for stealth and assembled in the shadows, this shadow strike team is ready for action.",
+                    "image": "https://cdn2.unrealengine.com/14br-shadow-strike-pack-motd-1920x1080-1920x1080-c71c8ba44ecc.jpg",
+                    "tileImage": "https://cdn2.unrealengine.com/14br-shadow-strike-pack-motd-1024x512-1024x512-56ac08a9813a.jpg",
+                    "sortingPriority": 70,
+                    "hidden": false
+                },
+                {
+                    "id": "Air Royale links to Playlist_Goose_Duos_16",
+                    "title": "Air Royale",
+                    "tabTitle": "Operation Snowdown LTM",
+                    "body": "Team up with a fellow ace pilot and perfect your aviation acrobatics to be the last X4 Stormwing flying in the skies!",
+                    "image": "https://cdn2.unrealengine.com/15br-snowdown-airroyale-ltm-motd-1920x1080-1920x1080-482accc9fd2b.jpg",
+                    "tileImage": "https://cdn2.unrealengine.com/15br-snowdown-airroyale-ltm-motd-1024x512-1024x512-407150ad303b.jpg",
+                    "sortingPriority": 60,
+                    "hidden": false
+                },
+                {
+                    "id": "Reboot A Friend Beta",
+                    "title": "Reboot A Friend Beta",
+                    "tabTitle": null,
+                    "body": "Sign up for the Reboot A Friend Beta, play matches with your friends, and unlock free rewards! Learn more at fn.gg/rebootafriend",
+                    "image": "https://cdn2.unrealengine.com/reboot-motd-1920x1080-1920x1080-24557da88d83.jpg",
+                    "tileImage": "https://cdn2.unrealengine.com/reboot-motd-1024x512-1024x512-8903d0d74d94.jpg",
+                    "sortingPriority": 20,
+                    "hidden": false
+                }
+            ],
+            "messages": [
+                {
+                    "title": "Keep Your Account Secure",
+                    "body": "Avoid scam sites offering free V-Bucks. Epic will never ask for your password. Enable Two-Factor Authentication to help stay secure!",
+                    "image": "https://cdn2.unrealengine.com/Fortnite/fortnite-game/battleroyalenews/v42/BR04_MOTD_Shield-1024x512-75eacc957ecc88e76693143b6256ba06159efb76.jpg",
+                    "adspace": null
+                }
+            ]
+        },
+        "stw": {
+            "hash": "1afdcb31869af241b3b8c42ab657b40c56ac7696",
+            "date": "2020-12-28T00:11:59Z",
+            "image": null,
+            "motds": null,
+            "messages": [
+                {
+                    "title": "Santa's Little Helper",
+                    "body": "“Special Delivery. Signed, sealed, and launched!” - Clip",
+                    "image": "https://cdn2.unrealengine.com/stw07-motd-santa-slittlehelper-1024x512-558827726.jpg",
+                    "adspace": "EVENT STORE!"
+                },
+                {
+                    "title": "Special Delivery",
+                    "body": "The BluGlo is tapped and isn’t found in the environment. Venture out and defend the newly deployed BluGlo dispensers to keep that burner filled! Keep the burner warm during this weekly challenge to unlock Ted.",
+                    "image": "https://cdn2.unrealengine.com/15stw-ted-motd-1024x512-1024x512-5de15101f6f1.jpg",
+                    "adspace": "Seasonal Event"
+                },
+                {
+                    "title": "Sentry Gun Krampus",
+                    "body": "Rack up the coal with Sentry Gunner Krampus. Unlock this constructor by completing Frostnite Quests.",
+                    "image": "https://cdn2.unrealengine.com/11stw-krampus-motd-1024x512-558827597.jpg",
+                    "adspace": "Seasonal Event"
+                }
+            ]
+        },
+        "creative": {
+            "hash": "321ebe91785104743a6f644dfb2aeefed181447e",
+            "date": "2020-12-28T00:08:27Z",
+            "image": "https://cdn.fortnite-api.com/news/v2/321ebe91785104743a6f644dfb2aeefed181447e.gif",
+            "motds": [
+                {
+                    "id": "Shadow Strike Pack",
+                    "title": "Shadow Strike Pack",
+                    "tabTitle": null,
+                    "body": "Engineered for stealth and assembled in the shadows, this shadow strike team is ready for action.",
+                    "image": "https://cdn2.unrealengine.com/14br-shadow-strike-pack-motd-1920x1080-1920x1080-c71c8ba44ecc.jpg",
+                    "tileImage": "https://cdn2.unrealengine.com/14br-shadow-strike-pack-motd-1024x512-1024x512-56ac08a9813a.jpg",
+                    "sortingPriority": 70,
+                    "hidden": false
+                },
+                {
+                    "id": "Spy Within: Midas' Museum links to Playlist_Creative_LTM_Spy_Midas",
+                    "title": "Spy Within: Midas' Museum",
+                    "tabTitle": "Creative Showcase",
+                    "body": "Agent, you’ve got a new mission. Head to the Spy Within LTM and track down Spies in Midas' Museum. Watch your back!",
+                    "image": "https://cdn2.unrealengine.com/15cm-spywithin-midasmuseum-motd-1920x1080-1920x1080-dec8776d93ad.jpg",
+                    "tileImage": "https://cdn2.unrealengine.com/15cm-spywithin-midasmuseum-motd-1024x512-1024x512-1d64051a4920.jpg",
+                    "sortingPriority": 60,
+                    "hidden": false
+                }
+            ],
+            "messages": [
+                {
+                    "title": "Keep Your Account Secure",
+                    "body": "Avoid scam sites offering free V-Bucks. Epic will never ask for your password. Enable Two-Factor Authentication to help stay secure!",
+                    "image": "https://cdn2.unrealengine.com/Fortnite/fortnite-game/battleroyalenews/v42/BR04_MOTD_Shield-1024x512-75eacc957ecc88e76693143b6256ba06159efb76.jpg",
+                    "adspace": null
+                }
+            ]
+        }
+    }
+}
