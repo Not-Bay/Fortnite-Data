@@ -30,17 +30,13 @@ def logdebug(content):
 
 
 async def create_config(guild):
-    guilds = main.serverconfig()
-    if str(guild.id) in guilds:
+    guilds = main.db.guilds
+
+    if guilds.find_one(filter={"server_id": guild.id}) != None:
         return False
-    
-    file = 'bservers' if '--debug' in sys.argv else 'servers'
-
-    with open(f'settings/{file}.json', 'r', encoding='utf-8') as f:
-        guilds = json.load(f)
-
 
     newdata = {
+        "server_id": guild.id,
         "prefix": "f!",
         "lang": "en",
         "search_lang": "en",
@@ -61,63 +57,51 @@ async def create_config(guild):
             "aes": True
             }
         }
-    
-    guilds[str(guild.id)] = newdata
-
-    with open(f'settings/{file}.json', 'w', encoding='utf-8') as fw:
-        json.dump(guilds, fw, indent=4, ensure_ascii=False)
+    guilds.insert_one(newdata)
 
     return True
 
 async def delete_config(guild):
-    guilds = main.serverconfig()
-    if str(guild.id) not in guilds:
-        return False
+    guilds = main.db.guilds
 
-    del guilds[str(guild.id)]
+    guilds.find_one_and_delete(filter={"server_id": guild.id})
 
-    file = 'bservers' if '--debug' in sys.argv else 'servers'
-
-    with open(f'settings/{file}.json', 'w', encoding='utf-8') as f:
-        json.dump(guilds, f, indent=4, ensure_ascii=False)
     return True
 
 
 
 async def set_config(ctx, config, value):
-    guilds = main.serverconfig()
+    guilds = main.db.guilds
 
     if config == None:
         return
 
     if value == None:
         return
-
-    file = 'servers' if '--debug' not in sys.argv else 'bservers'
     
-    guilds[str(ctx.guild.id)][config] = value
+    guilds.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {config: value}})
 
-    with open(f'settings/{file}.json', 'w', encoding='utf-8') as f:
-        json.dump(guilds, f, indent=4, ensure_ascii=False)
     return True
 
 
 def compose_shop_headers(guild):
-    servers = main.serverconfig()
+    servers = main.db.guilds
+
+    server = servers.find_one({"server_id": guild.id})
     
     composed_headers = {}
 
     if servers[str(guild.id)]["shop_config"]["header"] != '':
-        composed_headers["header"] = servers[str(guild.id)]["shop_config"]["header"]
+        composed_headers["header"] = server["shop_config"]["header"]
 
     if servers[str(guild.id)]["shop_config"]["subheader"] != '':
-        composed_headers["subheader"] = servers[str(guild.id)]["shop_config"]["subheader"]
+        composed_headers["subheader"] = server["shop_config"]["subheader"]
     
     if servers[str(guild.id)]["shop_config"]["footer"] != '':
-        composed_headers["footer"] = servers[str(guild.id)]["shop_config"]["footer"]
+        composed_headers["footer"] = server["shop_config"]["footer"]
 
     if servers[str(guild.id)]["shop_config"]["background"] != '':
-        composed_headers["background"] = servers[str(guild.id)]["shop_config"]["background"]
+        composed_headers["background"] = server["shop_config"]["background"]
 
     return composed_headers
 

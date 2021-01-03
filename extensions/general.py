@@ -26,19 +26,19 @@ class General(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        serverconfig = main.serverconfig()
+        serverconfig = main.db.guilds.find_one({"server_id": ctx.guild.id})
 
         if args.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_')):
             params = {
-                "language": serverconfig[str(ctx.guild.id)]['lang'],
-                "searchLanguage": serverconfig[str(ctx.guild.id)]['search_lang'],
+                "language": serverconfig['lang'],
+                "searchLanguage": serverconfig['search_lang'],
                 "matchMethod": "contains",
                 "id": args
             }
         else:
             params = {
-                "language": serverconfig[str(ctx.guild.id)]['lang'],
-                "searchLanguage": serverconfig[str(ctx.guild.id)]['search_lang'],
+                "language": serverconfig['lang'],
+                "searchLanguage": serverconfig['search_lang'],
                 "matchMethod": "contains",
                 "name": args
             }
@@ -96,7 +96,7 @@ class General(commands.Cog):
                 results.append(embed)
             
             sended = 0
-            maximum = serverconfig[str(ctx.guild.id)]['max_results']
+            maximum = serverconfig['max_results']
             left = 0
             
             for embed in results:
@@ -123,7 +123,9 @@ class General(commands.Cog):
     @commands.cooldown(2, 15, commands.BucketType.user)
     async def leaked(self, ctx):
 
-        params = {"lang": f"{main.serverconfig()[str(ctx.guild.id)]['lang']}"}
+        serverconfig = main.db.guilds.find_one({"server_id": ctx.guild.id})
+
+        params = {"lang": f"{serverconfig['lang']}"}
 
         response = requests.get('https://api.peely.de/cdn/current/leaks.png', params=params)
 
@@ -174,12 +176,12 @@ class General(commands.Cog):
     @commands.group(usage='news <br / stw / creative>')
     @commands.cooldown(5, 30, commands.BucketType.user)
     async def news(self, ctx):
-        serverconfig = main.serverconfig()
+        serverconfig = main.db.guilds.find_one({"server_id": ctx.guild.id})
         
-        if ctx.message.content == f'{serverconfig[str(ctx.guild.id)]["prefix"]}news':
+        if ctx.message.content == f'{serverconfig["prefix"]}news':
 
             embed = discord.Embed(
-                description = f"{main.text(ctx, 'usage')}: `{serverconfig[str(ctx.guild.id)]['prefix']}news <br / stw / creative>`",
+                description = f"{main.text(ctx, 'usage')}: `{serverconfig['prefix']}news <br / stw / creative>`",
                 color = 0x570ae4
             )
             await ctx.send(embed=embed)
@@ -191,9 +193,9 @@ class General(commands.Cog):
     @news.command()
     @commands.cooldown(5, 30, commands.BucketType.user)
     async def br(self, ctx, lang=None):
-        serverconfig = main.serverconfig()
+        serverconfig = main.db.guilds.find_one({"server_id": ctx.guild.id})
 
-        response = requests.get(f'https://fortnite-api.com/v2/news/br?language={serverconfig[str(ctx.guild.id)]["lang"] if lang == None else lang}')
+        response = requests.get(f'https://fortnite-api.com/v2/news/br?language={serverconfig["lang"] if lang == None else lang}')
 
         if response.status_code == 200:
 
@@ -230,9 +232,9 @@ class General(commands.Cog):
     @news.command()
     @commands.cooldown(5, 30, commands.BucketType.user)
     async def creative(self, ctx, lang=None):
-        serverconfig = main.serverconfig()
+        serverconfig = main.db.guilds.find_one({"server_id": ctx.guild.id})
 
-        response = requests.get(f'https://fortnite-api.com/v2/news/creative?language={serverconfig[str(ctx.guild.id)]["lang"] if lang == None else lang}')
+        response = requests.get(f'https://fortnite-api.com/v2/news/creative?language={serverconfig["lang"] if lang == None else lang}')
 
         if response.status_code == 200:
 
@@ -269,9 +271,9 @@ class General(commands.Cog):
     @news.command()
     @commands.cooldown(5, 30, commands.BucketType.user)
     async def stw(self, ctx, lang=None):
-        serverconfig = main.serverconfig()
+        serverconfig = main.db.guilds.find_one({"server_id": ctx.guild.id})
 
-        response = requests.get(f'https://api.peely.de/v1/stw/news?lang={serverconfig[str(ctx.guild.id)]["lang"] if lang == None else lang}')
+        response = requests.get(f'https://api.peely.de/v1/stw/news?lang={serverconfig["lang"] if lang == None else lang}')
 
         if response.status_code == 200:
 
@@ -501,8 +503,8 @@ class General(commands.Cog):
             await ctx.send(embed=embed)
             return
         
-        guilds = main.serverconfig()
-        response = requests.get(f'https://fortnite-api.com/v1/playlists?language={guilds[str(ctx.guild.id)]["lang"]}')
+        server = main.db.guilds.find_one({"server_id": ctx.guild.id})
+        response = requests.get(f'https://fortnite-api.com/v1/playlists?language={server["lang"]}')
 
         if response.status_code == 200:
 
@@ -605,8 +607,8 @@ class General(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        guilds = main.serverconfig()
-        response = requests.get(f'https://fortnite-api.com/v1/banners?language={guilds[str(ctx.guild.id)]["lang"]}')
+        server = main.db.guilds.find_one({"server_id": ctx.guild.id})
+        response = requests.get(f'https://fortnite-api.com/v1/banners?language={server["lang"]}')
 
         if response.status_code == 200:
 

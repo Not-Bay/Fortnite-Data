@@ -23,7 +23,7 @@ class settings(commands.Cog, name='Settings'):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def settings(self, ctx):
 
-        configs = main.serverconfig()
+        servers = main.db.guilds
 
         embed = discord.Embed(
             title=f'{str(main.text(ctx, "config_for"))} {ctx.guild.name}\n',
@@ -35,20 +35,18 @@ class settings(commands.Cog, name='Settings'):
         embed.set_footer(
             text=f"{main.text(ctx, value='executed_by')} {ctx.author}", icon_url=ctx.author.avatar_url)
 
-        embed.add_field(name=main.text(ctx, 'prefix'), value=f'`{configs[str(ctx.guild.id)]["prefix"]}`', inline=False)
-        embed.add_field(name=main.text(ctx, "lang"), value=f'`{configs[str(ctx.guild.id)]["lang"]}`', inline=False)
+        embed.add_field(name=main.text(ctx, 'prefix'), value=f'`{servers.find_one({"server_id": ctx.guild.id})["prefix"]}`', inline=False)
+        embed.add_field(name=main.text(ctx, "lang"), value=f'`{servers.find_one({"server_id": ctx.guild.id})["lang"]}`', inline=False)
         
-        embed.add_field(name=main.text(ctx, 'search_lang'), value=f'`{configs[str(ctx.guild.id)]["search_lang"]}`', inline=False)
-        embed.add_field(name=main.text(ctx, 'max_search_results'), value=f'`{configs[str(ctx.guild.id)]["max_results"]}`', inline=False)
+        embed.add_field(name=main.text(ctx, 'search_lang'), value=f'`{servers.find_one({"server_id": ctx.guild.id})["search_lang"]}`', inline=False)
+        embed.add_field(name=main.text(ctx, 'max_search_results'), value=f'`{servers.find_one({"server_id": ctx.guild.id})["max_results"]}`', inline=False)
 
 
-        chan = f'<#{configs[str(ctx.guild.id)]["shop_channel"]}>' if configs[str(
-            ctx.guild.id)]["shop_channel"] != 1 else main.text(ctx, 'none')
+        chan = f'<#{servers.find_one({"server_id": ctx.guild.id})["shop_channel"]}>' if servers.find_one({"server_id": ctx.guild.id})["shop_channel"] != 1 else main.text(ctx, 'none')
         embed.add_field(name=main.text(ctx, 'shop_channel'),
                         value=chan)
 
-        uchan = f'<#{configs[str(ctx.guild.id)]["updates_channel"]}>' if configs[str(
-            ctx.guild.id)]["updates_channel"] != 1 else main.text(ctx, 'none')
+        uchan = f'<#{servers.find_one({"server_id": ctx.guild.id})["updates_channel"]}>' if servers.find_one({"server_id": ctx.guild.id})["updates_channel"] != 1 else main.text(ctx, 'none')
         embed.add_field(name=main.text(ctx, 'updates_channel'),
                         value=uchan)
 
@@ -267,9 +265,9 @@ class settings(commands.Cog, name='Settings'):
                 await ctx.send(embed=embed)
                 return
 
-            configs = main.serverconfig()
+            servers = main.db.guilds
 
-            if configs[str(ctx.guild.id)]['max_results'] == entered:
+            if servers.find_one({"server_id": ctx.guild.id})['max_results'] == entered:
 
                 embed = discord.Embed(
                     description = f'{main.text(ctx, "must_be_another_than_actual")}',
@@ -371,9 +369,9 @@ class settings(commands.Cog, name='Settings'):
     @commands.has_guild_permissions(administrator=True)
     async def updatesconfig(self, ctx, value1=None, value2=None):
 
-        servers = main.serverconfig()
+        servers = main.db.guilds
 
-        filename = 'servers' if '--debug' not in sys.argv else 'bservers'
+        server = servers.find_one({"server_id": ctx.guild.id})
 
         if value1 == None:
 
@@ -381,13 +379,13 @@ class settings(commands.Cog, name='Settings'):
                 title = main.text(ctx, 'updates_channel_configuration'),
                 color = 0x570ae4
             )
-            embed.add_field(name='Cosmetics', value=f'`{main.text(ctx, "enabled") if servers[str(ctx.guild.id)]["updates_config"]["cosmetics"] == True else main.text(ctx, "disabled")}`')
-            embed.add_field(name='Playlists', value=f'`{main.text(ctx, "enabled") if servers[str(ctx.guild.id)]["updates_config"]["playlists"] == True else main.text(ctx, "disabled")}`')
+            embed.add_field(name='Cosmetics', value=f'`{main.text(ctx, "enabled") if server["updates_config"]["cosmetics"] == True else main.text(ctx, "disabled")}`')
+            embed.add_field(name='Playlists', value=f'`{main.text(ctx, "enabled") if server["updates_config"]["playlists"] == True else main.text(ctx, "disabled")}`')
 
-            embed.add_field(name='Blogposts', value=f'`{main.text(ctx, "enabled") if servers[str(ctx.guild.id)]["updates_config"]["blogposts"] == True else main.text(ctx, "disabled")}`')
-            embed.add_field(name='News', value=f'`{main.text(ctx, "enabled") if servers[str(ctx.guild.id)]["updates_config"]["news"] == True else main.text(ctx, "disabled")}`')
+            embed.add_field(name='Blogposts', value=f'`{main.text(ctx, "enabled") if server["updates_config"]["blogposts"] == True else main.text(ctx, "disabled")}`')
+            embed.add_field(name='News', value=f'`{main.text(ctx, "enabled") if server["updates_config"]["news"] == True else main.text(ctx, "disabled")}`')
 
-            embed.add_field(name='Aes', value=f'`{main.text(ctx, "enabled") if servers[str(ctx.guild.id)]["updates_config"]["aes"] == True else main.text(ctx, "disabled")}`')
+            embed.add_field(name='Aes', value=f'`{main.text(ctx, "enabled") if server["updates_config"]["aes"] == True else main.text(ctx, "disabled")}`')
             
             embed.set_footer(text=f"{main.text(ctx, value='executed_by')} {ctx.author}", icon_url=ctx.author.avatar_url)
 
@@ -397,7 +395,7 @@ class settings(commands.Cog, name='Settings'):
 
             if value2 in ['true', 'enable', 'on']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['cosmetics'] == True:
+                if server['updates_config']['cosmetics'] == True:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_enabled"),
                         color = 0x570ae4
@@ -405,9 +403,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['cosmetics'] = True
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.cosmetics": True}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'enabled'),
@@ -417,7 +413,7 @@ class settings(commands.Cog, name='Settings'):
 
             elif value2 in ['false', 'disable', 'off']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['cosmetics'] == False:
+                if server['updates_config']['cosmetics'] == False:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_disabled"),
                         color = 0x570ae4
@@ -425,9 +421,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['cosmetics'] = False
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.cosmetics": False}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'disabled'),
@@ -446,7 +440,7 @@ class settings(commands.Cog, name='Settings'):
 
             if value2 in ['true', 'enable', 'on']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['aes'] == True:
+                if server['updates_config']['aes'] == True:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_enabled"),
                         color = 0x570ae4
@@ -454,9 +448,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['aes'] = True
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.aes": True}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'enabled'),
@@ -466,7 +458,7 @@ class settings(commands.Cog, name='Settings'):
 
             elif value2 in ['false', 'disable', 'off']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['aes'] == False:
+                if server['updates_config']['aes'] == False:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_disabled"),
                         color = 0x570ae4
@@ -474,9 +466,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['aes'] = False
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.aes": False}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'disabled'),
@@ -495,7 +485,7 @@ class settings(commands.Cog, name='Settings'):
 
             if value2 in ['true', 'enable', 'on']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['playlists'] == True:
+                if server['updates_config']['playlists'] == True:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_enabled"),
                         color = 0x570ae4
@@ -503,9 +493,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['playlists'] = True
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.playlists": True}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'enabled'),
@@ -515,7 +503,7 @@ class settings(commands.Cog, name='Settings'):
 
             elif value2 in ['false', 'disable', 'off']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['playlists'] == False:
+                if server['updates_config']['playlists'] == False:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_disabled"),
                         color = 0x570ae4
@@ -523,9 +511,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['playlists'] = False
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.playlists": False}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'disabled'),
@@ -544,7 +530,7 @@ class settings(commands.Cog, name='Settings'):
 
             if value2 in ['true', 'enable', 'on']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['blogposts'] == True:
+                if server['updates_config']['blogposts'] == True:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_enabled"),
                         color = 0x570ae4
@@ -552,9 +538,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['blogposts'] = True
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.blogposts": True}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'enabled'),
@@ -564,7 +548,7 @@ class settings(commands.Cog, name='Settings'):
 
             elif value2 in ['false', 'disable', 'off']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['blogposts'] == False:
+                if server['updates_config']['blogposts'] == False:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_disabled"),
                         color = 0x570ae4
@@ -572,9 +556,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['blogposts'] = False
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.blogposts": False}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'disabled'),
@@ -593,7 +575,7 @@ class settings(commands.Cog, name='Settings'):
 
             if value2 in ['true', 'enable', 'on']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['news'] == True:
+                if server['updates_config']['news'] == True:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_enabled"),
                         color = 0x570ae4
@@ -601,9 +583,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['news'] = True
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.news": True}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'enabled'),
@@ -613,7 +593,7 @@ class settings(commands.Cog, name='Settings'):
 
             elif value2 in ['false', 'disable', 'off']:
 
-                if servers[str(ctx.guild.id)]['updates_config']['news'] == False:
+                if server['updates_config']['news'] == False:
                     embed = discord.Embed(
                         description = main.text(ctx, "already_disabled"),
                         color = 0x570ae4
@@ -621,9 +601,7 @@ class settings(commands.Cog, name='Settings'):
                     await ctx.send(embed=embed)
                     return
 
-                servers[str(ctx.guild.id)]['updates_config']['news'] = False
-                with open(f'settings/{filename}.json', 'w', encoding='utf-8') as f:
-                    json.dump(servers, f, indent=4, ensure_ascii=False)
+                servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"updates_config.news": False}})
 
                 embed = discord.Embed(
                     description = main.text(ctx, 'disabled'),
@@ -648,9 +626,8 @@ class settings(commands.Cog, name='Settings'):
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def shopconfig(self, ctx, config=None, *, newvalue=None):
 
-        file = 'servers' if '--debug' not in sys.argv else 'bservers'
-
-        servers = main.serverconfig()
+        servers = main.db.guilds
+        server = servers.find_one({"server_id": ctx.guild.id})
         configs = ['header', 'subheader', 'footer', 'background']
 
         if ctx.author.guild_permissions.administrator:
@@ -662,10 +639,10 @@ class settings(commands.Cog, name='Settings'):
                     color = 0x570ae4,
                     timestamp = ctx.message.created_at
                 )
-                embed.add_field(name=main.text(ctx, 'shop_header'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["header"] if servers[str(ctx.guild.id)]["shop_config"]["header"] != "" else "None"}`')
-                embed.add_field(name=main.text(ctx, 'shop_subheader'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["subheader"] if servers[str(ctx.guild.id)]["shop_config"]["subheader"] != "" else "None"}`')
-                embed.add_field(name=main.text(ctx, 'shop_footer'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["footer"] if servers[str(ctx.guild.id)]["shop_config"]["footer"] != "" else "None"}`')
-                embed.add_field(name=main.text(ctx, 'shop_background'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["background"] if servers[str(ctx.guild.id)]["shop_config"]["background"] != "" else "None"}`')
+                embed.add_field(name=main.text(ctx, 'shop_header'), value=f'`{server["shop_config"]["header"] if server["shop_config"]["header"] != "" else "None"}`')
+                embed.add_field(name=main.text(ctx, 'shop_subheader'), value=f'`{server["shop_config"]["subheader"] if server["shop_config"]["subheader"] != "" else "None"}`')
+                embed.add_field(name=main.text(ctx, 'shop_footer'), value=f'`{server["shop_config"]["footer"] if server["shop_config"]["footer"] != "" else "None"}`')
+                embed.add_field(name=main.text(ctx, 'shop_background'), value=f'`{server["shop_config"]["background"] if server["shop_config"]["background"] != "" else "None"}`')
 
                 embed.set_footer(text=f"{main.text(ctx, value='executed_by')} {ctx.author}", icon_url=ctx.author.avatar_url)
 
@@ -677,7 +654,7 @@ class settings(commands.Cog, name='Settings'):
                 if newvalue == None:
 
                     embed = discord.Embed(
-                        description=f'{main.text(ctx, "shop_header")}: `{servers[str(ctx.guild.id)]["shop_config"]["header"] if servers[str(ctx.guild.id)]["shop_config"]["header"] != "" else "None"}`',
+                        description=f'{main.text(ctx, "shop_header")}: `{server["shop_config"]["header"] if server["shop_config"]["header"] != "" else "None"}`',
                             color = discord.Colour.blue()
                     )
                     await ctx.send(embed=embed)
@@ -685,9 +662,7 @@ class settings(commands.Cog, name='Settings'):
                 
                 else:
 
-                    servers[str(ctx.guild.id)]["shop_config"]["header"] = newvalue if newvalue != 'clear' else ''
-                    with open(f'settings/{file}.json', 'w', encoding='utf-8') as f:
-                        json.dump(servers, f, indent=4, ensure_ascii=False)
+                    servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"shop_config.header": newvalue if newvalue != 'clear' else ''}})
 
                     if newvalue == 'clear':
 
@@ -710,7 +685,7 @@ class settings(commands.Cog, name='Settings'):
                 if newvalue == None:
 
                     embed = discord.Embed(
-                            description=f'{main.text(ctx, "shop_subheader")}: `{servers[str(ctx.guild.id)]["shop_config"]["subheader"] if servers[str(ctx.guild.id)]["shop_config"]["subheader"] != "" else "None"}`',
+                            description=f'{main.text(ctx, "shop_subheader")}: `{server["shop_config"]["subheader"] if server["shop_config"]["subheader"] != "" else "None"}`',
                         color = discord.Colour.blue()
                     )
                     await ctx.send(embed=embed)
@@ -718,9 +693,7 @@ class settings(commands.Cog, name='Settings'):
 
                 else:
 
-                    servers[str(ctx.guild.id)]["shop_config"]["subheader"] = newvalue if newvalue != 'clear' else ''
-                    with open(f'settings/{file}.json', 'w', encoding='utf-8') as f:
-                        json.dump(servers, f, indent=4, ensure_ascii=False)
+                    servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"shop_config.subheader": newvalue if newvalue != 'clear' else ''}})
 
                     if newvalue == 'clear':
 
@@ -744,7 +717,7 @@ class settings(commands.Cog, name='Settings'):
                 if newvalue == None:
 
                     embed = discord.Embed(
-                        description=f'{main.text(ctx, "shop_footer")}: `{servers[str(ctx.guild.id)]["shop_config"]["footer"] if servers[str(ctx.guild.id)]["shop_config"]["footer"] != "" else "None"}`',
+                        description=f'{main.text(ctx, "shop_footer")}: `{server["shop_config"]["footer"] if server["shop_config"]["footer"] != "" else "None"}`',
                         color = discord.Colour.blue()
                     )
                     await ctx.send(embed=embed)
@@ -752,9 +725,7 @@ class settings(commands.Cog, name='Settings'):
 
                 else:
 
-                    servers[str(ctx.guild.id)]["shop_config"]["footer"] = newvalue if newvalue != 'clear' else ''
-                    with open(f'settings/{file}.json', 'w', encoding='utf-8') as f:
-                        json.dump(servers, f, indent=4, ensure_ascii=False)
+                    servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"shop_config.footer": newvalue if newvalue != 'clear' else ''}})
                         
                     if newvalue == 'clear':
 
@@ -777,7 +748,7 @@ class settings(commands.Cog, name='Settings'):
                 if newvalue == None:
 
                     embed = discord.Embed(
-                        description=f'{main.text(ctx, "shop_background")}: `{servers[str(ctx.guild.id)]["shop_config"]["background"] if servers[str(ctx.guild.id)]["shop_config"]["background"] != "" else "None"}`',
+                        description=f'{main.text(ctx, "shop_background")}: `{server["shop_config"]["background"] if server["shop_config"]["background"] != "" else "None"}`',
                         color = discord.Colour.blue()
                     )
                     await ctx.send(embed=embed)
@@ -785,9 +756,7 @@ class settings(commands.Cog, name='Settings'):
 
                 else:
 
-                    servers[str(ctx.guild.id)]["shop_config"]["background"] = newvalue if newvalue != 'clear' else ''
-                    with open(f'settings/{file}.json', 'w', encoding='utf-8') as f:
-                        json.dump(servers, f, indent=4, ensure_ascii=False)
+                    servers.find_one_and_update({"server_id": ctx.guild.id}, {"$set": {"shop_config.background": newvalue if newvalue != 'clear' else ''}})
 
                     if newvalue == 'clear':
 
@@ -820,10 +789,10 @@ class settings(commands.Cog, name='Settings'):
                 color = 0x570ae4,
                 timestamp = ctx.message.created_at
                 )
-            embed.add_field(name=main.text(ctx, 'shop_header'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["header"] if servers[str(ctx.guild.id)]["shop_config"]["header"] != "" else "None"}`')
-            embed.add_field(name=main.text(ctx, 'shop_subheader'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["subheader"] if servers[str(ctx.guild.id)]["shop_config"]["subheader"] != "" else "None"}`')
-            embed.add_field(name=main.text(ctx, 'shop_footer'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["footer"] if servers[str(ctx.guild.id)]["shop_config"]["footer"] != "" else "None"}`')
-            embed.add_field(name=main.text(ctx, 'shop_background'), value=f'`{servers[str(ctx.guild.id)]["shop_config"]["background"] if servers[str(ctx.guild.id)]["shop_config"]["background"] != "" else "None"}`')
+            embed.add_field(name=main.text(ctx, 'shop_header'), value=f'`{server["shop_config"]["header"] if server["shop_config"]["header"] != "" else "None"}`')
+            embed.add_field(name=main.text(ctx, 'shop_subheader'), value=f'`{server["shop_config"]["subheader"] if server["shop_config"]["subheader"] != "" else "None"}`')
+            embed.add_field(name=main.text(ctx, 'shop_footer'), value=f'`{server["shop_config"]["footer"] if server["shop_config"]["footer"] != "" else "None"}`')
+            embed.add_field(name=main.text(ctx, 'shop_background'), value=f'`{server["shop_config"]["background"] if server["shop_config"]["background"] != "" else "None"}`')
 
             embed.set_footer(text=f"{main.text(ctx, value='executed_by')} {ctx.author}", icon_url=ctx.author.avatar_url)
 

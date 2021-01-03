@@ -32,10 +32,10 @@ class Events(commands.Cog):
 
         if message.content in [f'<@{self.bot.user.id}>', f'<@!{self.bot.user.id}>']:
 
-            servers = main.serverconfig()
+            server = main.db.guilds.find_one({"server_id": message.guild.id})
 
             embed = discord.Embed(
-                description = f'{main.text(message, "prefix")}: `{servers[str(message.guild.id)]["prefix"]}`',
+                description = f'{main.text(message, "prefix")}: `{server["prefix"]}`',
                 color = 0x570ae4
             )
             await message.channel.send(embed=embed)

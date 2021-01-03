@@ -12,24 +12,10 @@ import main
 import time
 import sys
 
-async def send_update_message(bot, embed, file=None):
-    serverconfig = main.serverconfig()
-    
-    for guild in bot.guilds:
-        if serverconfig[str(guild.id)]['updates_channel'] != 1:
-
-            chan = bot.get_channel(serverconfig[str(guild.id)]['updates_channel'])
-            if chan == None:
-                continue
-
-            if file != None:
-                await chan.send(embed=embed, file=file)
-            else:
-                await chan.send(embed=embed)
 
 def text_guild(guild, value: str):
-    servers = main.serverconfig()
-    lang = 'es' if servers[str(guild.id)]['lang'] == 'es' else 'en' if servers[str(guild.id)]['lang'] == 'en' else 'ja' if servers[str(guild.id)]['lang'] == 'ja' else 'en'
+    server = main.db.guilds.find_one({"server_id": guild.id})
+    lang = 'es' if server['lang'] == 'es' else 'en' if server['lang'] == 'en' else 'ja' if server['lang'] == 'ja' else 'en'
 
     try:
         with open(f'langs/{lang}.json', 'r', encoding='utf-8') as f:
@@ -51,7 +37,7 @@ async def wait_for_valid_image(headers):
             if response.headers["Content-Type"] == 'image/png':
                 return response
 
-        await asyncio.sleep(1)
+        await asyncio.sleep(4.3)
 
 
 class Tasks(commands.Cog):
@@ -106,18 +92,19 @@ class Tasks(commands.Cog):
 
                 funcs.log('New shop detected <:FNWarn:762553132898058282>')
 
-                serverconfig = main.serverconfig()
+                servers = main.db.guilds
                 start_time = time.time()
                 count = 0
 
                 for guild in self.bot.guilds:
 
+                    server = servers.find_one({"server_id": guild.id})
 
-                    if serverconfig[str(guild.id)]['shop_channel'] == 1:
+                    if server['shop_channel'] == 1:
                         continue
 
                     await self.bot.wait_until_ready()
-                    channel = self.bot.get_channel(int(serverconfig[str(guild.id)]['shop_channel']))
+                    channel = self.bot.get_channel(int(server['shop_channel']))
 
                     if channel == None:
                         continue

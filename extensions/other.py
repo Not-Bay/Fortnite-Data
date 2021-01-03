@@ -32,14 +32,15 @@ class info(commands.Cog):
     @commands.cooldown(3, 20, commands.BucketType.user)
     async def info(self, ctx):
 
+        current_time = time.time()
+        difference = int(round(current_time - start_time))
+        final = str(datetime.timedelta(seconds=difference))
+
         embed = discord.Embed(
             title = f'Fortnite Data',
             description = 'Powered by [Fortnite-API.com](https://fortnite-api.com/) , [benbotfn.tk](https://benbotfn.tk/) , [nitestats.com](https://nitestats.com/) and [api.peely.de](https://api.peely.de)',
             color = 0x570ae4
         )
-        current_time = time.time()
-        difference = int(round(current_time - start_time))
-        final = str(datetime.timedelta(seconds=difference))
 
         embed.add_field(name=main.text(ctx, 'owner'), value='``BayGamerYT#7849``') #rip nitro xd
         embed.add_field(name=main.text(ctx, 'servers'), value=f'``{len(self.bot.guilds)}``')

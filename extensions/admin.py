@@ -68,33 +68,5 @@ class admin(commands.Cog):
             await ctx.send(f'```\n{error}```')
 
 
-    @commands.command()
-    @commands.is_owner()
-    async def _updatefile(self, ctx, path):
-
-        giturl = 'https://raw.githubusercontent.com/BayGamerYT/Fortnite-Data-Stuff/master/'
-
-        response = requests.get(f'{giturl}{path}')
-
-        if response.status_code != 200:
-            await ctx.send(f'Error, response status `{response.status_code}`')
-
-        else:
-            with open(path, 'w', encoding='utf-8') as f:
-                f.write(response.text)
-
-            await ctx.send(f'Updated `{path}`')
-
-    @commands.command()
-    @commands.is_owner()
-    async def _getguilds(self, ctx):
-
-        msg = await ctx.send(file=discord.File('settings/servers.json', filename='servers.json'))
-        await asyncio.sleep(30)
-        await msg.delete()
-
-
-
-
 def setup(bot):
     bot.add_cog(admin(bot))

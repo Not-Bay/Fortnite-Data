@@ -20,15 +20,18 @@ class Updates(commands.Cog):
 
     async def send_update_message(self, type:str ,embed=None, content=None, file=None):
         
-        servers = main.serverconfig()
+        servers = main.db.guilds
 
         channels = []
 
         for guild in self.bot.guilds:
-            if servers[str(guild.id)]['updates_channel'] != 1:
 
-                if servers[str(guild.id)]['updates_config'][type] == True:
-                    c = self.bot.get_channel(int(servers[str(guild.id)]['updates_channel']))
+            server = servers.find_one({"server_id": guild.id})
+
+            if server['updates_channel'] != 1:
+
+                if server['updates_config'][type] == True:
+                    c = self.bot.get_channel(int(server['updates_channel']))
 
                     if c != None:
                         channels.append(c)
