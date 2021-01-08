@@ -90,7 +90,10 @@ class General(commands.Cog):
 
                 embed.add_field(name=main.text(ctx, value='showcase_video'), value=f'{showcasevideo}')
 
-                gameplaytags = '\n'.join(f'{x}' for x in item['gameplayTags']) if len(item['gameplayTags']) > 0 else main.text(ctx, 'none')
+                if item['gameplayTags'] != None:
+                    gameplaytags = '\n'.join(f'{x}' for x in item['gameplayTags'])
+                else:
+                    gameplaytags = main.text(ctx, 'none')
                 embed.add_field(name='GameplayTags', value=f'`{gameplaytags}`')
 
                 results.append(embed)
