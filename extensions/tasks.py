@@ -10,7 +10,6 @@ import funcs
 import json
 import main
 import time
-import sys
 
 
 def text_guild(guild, value: str):
@@ -90,6 +89,7 @@ class Tasks(commands.Cog):
                 with open('cached/shop.txt', 'w', encoding='utf-8') as f:
                     f.write(response.text)
 
+                main.log.info(f'New shop detected. {response.text}')
                 funcs.log('New shop detected <:FNWarn:762553132898058282>')
 
                 servers = main.db.guilds
@@ -128,11 +128,14 @@ class Tasks(commands.Cog):
                     try:
                         await self.bot.wait_until_ready()
                         await channel.send(embed=embed, file=file)
+                        main.log.debug(f'Sended shop successfully: {channel.id}')
                         count += 1
                     except Exception as error:
+                        main.log.error(f'Could not send shop. Channel: "{channel.id}" GuildID: "{channel.guild.id}". Error: {error}')
                         funcs.log(f'Error while trying to send shop to channel {channel.id}:\n```\b{"".join(traceback.format_exception(None, error, error.__traceback__))}```')
 
-                funcs.log(f'Sended shop in `{round(time.time() - start_time, 3)}` seconds on `{count}` channels')
+                main.log.info(f'Sended shop in `{round(time.time() - start_time, 3)}` seconds to `{count}` channels')
+                funcs.log(f'Sended shop in `{round(time.time() - start_time, 3)}` seconds to `{count}` channels')
 
 
 
@@ -151,8 +154,9 @@ class Tasks(commands.Cog):
                 'docs.fortnitedata.tk'
             ]
             selected = random.choice(statuses)
-                
+            
             await self.bot.change_presence(activity=discord.Game(name=selected))
+            main.log.debug(f'Status updated: "{selected}"')
         except:
             pass
 
@@ -172,8 +176,9 @@ class Tasks(commands.Cog):
 
             try:
                 requests.post(f'https://discord.boats/api/v2/bot/729409703360069722', headers=headers, json=params)
+                main.log.debug('Posted stats to discord.boats.')
             except Exception as e:
-                funcs.log(f'Failed to update discord boats stats: ```\n{e}```')
+                main.log.error(f'Failed to post stats to discord.boats: {e}')
 
 
     @tasks.loop(minutes=30)
@@ -195,8 +200,9 @@ class Tasks(commands.Cog):
 
             try:
                 requests.post(f'https://top.gg/api/bots/729409703360069722/stats', headers=headers, json=params).raise_for_status()
+                main.log.debug('Posted stats to top.gg.')
             except Exception as e:
-                funcs.log(f'Failed to update top.gg stats: ```\n{e}```')
+                main.log.error(f'Failed to post stats to top.gg: {e}')
 
 
 def setup(bot):

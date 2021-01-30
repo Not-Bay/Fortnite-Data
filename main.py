@@ -1,6 +1,8 @@
 bot_version = '3.3.2'
 
 from discord.ext import commands
+import logging
+import coloredlogs
 import pymongo
 import asyncio
 import discord
@@ -8,6 +10,9 @@ import funcs
 import json
 import sys
 import os
+
+coloredlogs.install(level='DEBUG')
+log = logging.getLogger('main')
 
 if '--vps' in sys.argv:
     os.chdir('/home/Fortnite-Data/')
@@ -28,7 +33,12 @@ def cfg():
         return json.load(f)
 
 def getprefix(bot, message):
-    return db.guilds.find_one(filter={"server_id": message.guild.id})['prefix']
+    prefix = db.guilds.find_one(filter={"server_id": message.guild.id})['prefix']
+    if prefix != None:
+        return prefix
+    else:
+        log.critical(f'Returning default prefix for guild "{message.guild.id}". Guild is not in db')
+        return 'f!'
 
 
 intents = discord.Intents.default()
@@ -47,16 +57,15 @@ async def on_ready():
         try:
             await funcs.create_config(guild)
         except:
-            funcs.log(f'Failed to create config for guild {guild.id}')
+            log.critical(f'Could not create config for guild {guild.id}')
 
     for extension in extensions:
         try:
             bot.load_extension(f'extensions.{extension}')
         except Exception as e:
-            print(f'Could not load extension {extension}: {e}')
+            log.critical(f'Could not load extension {extension}: {e}')
 
-    funcs.log('Fortnite Data Ready')
-
+    log.info('Fortnite Data Ready!')
 
     #wait 2 days for restart
     if '--debug' not in sys.argv:

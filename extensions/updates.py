@@ -14,8 +14,7 @@ class Updates(commands.Cog):
         self.updates_playlists.start()
         self.updates_aes.start()
         self.updates_news.start()
-        self.updates_blogposts_c.start()
-        self.updates_blogposts_n.start()
+        self.updates_blogposts.start()
 
 
     async def send_update_message(self, type:str ,embed=None, content=None, file=None):
@@ -39,6 +38,7 @@ class Updates(commands.Cog):
             try:
                 await chan.send(embed=embed, content=content, file=file)
             except Exception as e:
+                main.log.error(f'Could not send update message to channel {chan.id}: {e}')
                 funcs.log(f'Failed to send update message to channel {chan.id}: {e}')
 
 
@@ -50,34 +50,37 @@ class Updates(commands.Cog):
         response = requests.get('https://fortnite-api.com/v2/cosmetics/br/new')
 
         if response.status_code != 200:
-            funcs.logdebug(f'[Updates][updates_cosmetics] Received status {response.status_code}')
+            main.log.error(f'"fortnite-api.com/v2/cosmetics/br/new" returned status {response.status_code}')
             return
 
         with open('cached/cosmetics.json', 'r', encoding='utf-8') as f:
             cached = json.load(f)
 
+        cached_cosmetics_ids = [x['id'] for x in cached['data']['items']]
+
         if cached != response.json():
 
             for cosmetic in response.json()['data']['items']:
                 if cosmetic not in cached['data']['items']:
+                    if cosmetic['id'] not in cached_cosmetics_ids:
 
-                    try:
+                        try:
 
-                        embed = discord.Embed(
-                            title = f'New {cosmetic["type"]["value"]}',
-                            description = f'**{cosmetic["name"]}**\n_{cosmetic["description"]}_\n\n**ID**\n`{cosmetic["id"]}`\n**Rarity**\n`{cosmetic["rarity"]["displayValue"]}`\n**Set**\n`{cosmetic["set"]["text"] if cosmetic["set"] else ""}`',
-                            color = funcs.rarity_color(cosmetic['rarity']['value'])
-                        )
-                        if cosmetic['images']['icon']:
-                            embed.set_thumbnail(url=cosmetic['images']['icon'])
+                            embed = discord.Embed(
+                                title = f'New {cosmetic["type"]["value"]}',
+                                description = f'**{cosmetic["name"]}**\n_{cosmetic["description"]}_\n\n**ID**\n`{cosmetic["id"]}`\n**Rarity**\n`{cosmetic["rarity"]["displayValue"]}`\n**Set**\n`{cosmetic["set"]["text"] if cosmetic["set"] else ""}`',
+                                color = funcs.rarity_color(cosmetic['rarity']['value'])
+                            )
+                            if cosmetic['images']['icon']:
+                                embed.set_thumbnail(url=cosmetic['images']['icon'])
 
-                        if cosmetic['images']['featured']:
-                            embed.set_image(url=cosmetic['images']['featured'])
+                            if cosmetic['images']['featured']:
+                                embed.set_image(url=cosmetic['images']['featured'])
 
-                        await self.send_update_message(type='cosmetics', embed=embed)
+                            await self.send_update_message(type='cosmetics', embed=embed)
 
-                    except Exception as e:
-                        funcs.log(f'Failed to send a new cosmetic to updates channel: {e}')
+                        except Exception as e:
+                            funcs.log(f'Failed to send a new cosmetic to updates channel: {e}')
 
             with open('cached/cosmetics.json', 'w', encoding='utf-8') as f:
                 json.dump(response.json(), f, indent=4, ensure_ascii=False)
@@ -91,7 +94,7 @@ class Updates(commands.Cog):
         response = requests.get('https://fortnite-api.com/v1/playlists')
 
         if response.status_code != 200:
-            funcs.logdebug(f'[Updates][updates_playlists] Received status {response.status_code}')
+            main.log.error(f'"fortnite-api.com/v1/playlists" returned status {response.status_code}')
             return
 
         with open('cached/playlists.json', 'r', encoding='utf-8') as f:
@@ -133,7 +136,7 @@ class Updates(commands.Cog):
         response = requests.get('https://fortnite-api.com/v2/aes')
 
         if response.status_code != 200:
-            funcs.logdebug(f'[Updates][updates_aes] Received status {response.status_code}')
+            main.log.error(f'"fortnite-api.com/v2/aes" returned status {response.status_code}')
             return
 
         with open('cached/aes.json', 'r', encoding='utf-8') as f:
@@ -180,7 +183,7 @@ class Updates(commands.Cog):
         response = requests.get('https://fortnite-api.com/v2/news')
 
         if response.status_code != 200:
-            funcs.logdebug(f'[Updates][updates_news] Received status {response.status_code}')
+            main.log.error(f'"fortnite-api.com/v2/news" returned status {response.status_code}')
             return
 
         with open('cached/news.json', 'r', encoding='utf-8') as f:
@@ -224,97 +227,51 @@ class Updates(commands.Cog):
 
 
     @tasks.loop(seconds=60)
-    async def updates_blogposts_n(self):
+    async def updates_blogposts(self):
 
         await self.bot.wait_until_ready()
 
-        responseN = requests.get('https://api.peely.de/v1/blogposts/normal')
+        response = requests.get('https://api.fortnitedata.tk/v1/blogposts')
 
-        if responseN.status_code != 200:
-            funcs.logdebug(f'[Updates][updates_blogposts normal] Received status {responseN.status_code}')
+        if response.status_code != 200:
+            main.log.error(f'"api.fortnitedata.tk/v1/blogposts" returned status {response.status_code}')
             return
 
-        with open('cached/blogposts_n.json', 'r', encoding='utf-8') as f:
-            cachedN = json.load(f)
+        cached = json.load(open('cached/blogposts.json', 'r', encoding='utf-8'))
 
-        if cachedN != responseN.json():
+        for blogpost in response.json()['data']['normal']:
+            if blogpost not in cached['data']['normal']:
 
-            for blogpost in responseN.json()['data']['blogposts']:
-                if blogpost not in cachedN['data']['blogposts']:
+                link = f'[Link]({blogpost["url"]})'
 
-                    try:
-                        desc = f'_{blogpost["description"]}_'
-                    except:
-                        desc = ''
-                    try:
-                        url = f'[Link]({blogpost["url"]})'
-                    except:
-                        url = ''
+                embed = discord.Embed(
+                    title = 'New blogpost',
+                    description = f'**{blogpost["title"]}**\n{blogpost["description"]}\n\n{link}',
+                    color = 0x570ae4
+                )
+                embed.set_footer(text=blogpost['author'])
+                embed.set_image(url=blogpost['image'])
 
-                    embed = discord.Embed(
-                        title = 'New blogpost',
-                        description = f'**{blogpost["title"]}**\n{desc}\n\n{url}',
-                        color = 0x570ae4
-                    )
-                    try:
-                        embed.set_footer(text=blogpost['author'])
-                    except:
-                        pass
-                    try:
-                        embed.set_image(url=blogpost['image'])
-                    except:
-                        pass
+                await self.send_update_message(type='blogposts', embed=embed)
 
-                    await self.send_update_message(type='blogposts', embed=embed)
-            
-            with open('cached/blogposts_n.json', 'w', encoding='utf-8') as f:
-                json.dump(responseN.json(), f, indent=4, ensure_ascii=False)
+        for blogpost in response.json()['data']['competitive']:
+            if blogpost not in cached['data']['competitive']:
 
+                link = f'[Link]({blogpost["url"]})'
 
-    @tasks.loop(seconds=60)
-    async def updates_blogposts_c(self):
+                embed = discord.Embed(
+                    title = 'New competitive blogpost',
+                    description = f'**{blogpost["title"]}**\n{blogpost["description"]}\n\n{link}',
+                    color = 0x570ae4
+                )
+                embed.set_footer(text=blogpost['author'])
+                embed.set_image(url=blogpost['image'])
 
-        responseC = requests.get('https://api.peely.de/v1/blogposts/competitive')
+                await self.send_update_message(type='blogposts', embed=embed)
 
-        if responseC.status_code != 200:
-            funcs.logdebug(f'[Updates][updates_blogposts competitive] Received status {responseC.status_code}')
-            return
+        with open('cached/blogposts.json', 'w', encoding='utf-8') as f:
+            json.dump(response.json(), f, indent=4, ensure_ascii=False)
 
-        with open('cached/blogposts_c.json', 'r', encoding='utf-8') as f:
-            cachedC = json.load(f)
-
-        if cachedC != responseC.json():
-
-            for blogpost in responseC.json()['data']['blogposts']:
-                if blogpost not in cachedC['data']['blogposts']:
-
-                    try:
-                        desc = f'_{blogpost["description"]}_'
-                    except:
-                        desc = ''
-                    try:
-                        url = f'[Link]({blogpost["url"]})'
-                    except:
-                        url = ''
-
-                    embed = discord.Embed(
-                        title = 'New competitive blogpost',
-                        description = f'**{blogpost["title"]}**\n{desc}\n\n{url}',
-                        color = 0x570ae4
-                    )
-                    try:
-                        embed.set_footer(text=blogpost['author'])
-                    except:
-                        pass
-                    try:
-                        embed.set_image(url=blogpost['image'])
-                    except:
-                        pass
-
-                    await self.send_update_message(type='blogposts', embed=embed)
-            
-            with open('cached/blogposts_c.json', 'w', encoding='utf-8') as f:
-                json.dump(responseC.json(), f, indent=4, ensure_ascii=False)
 
 
 def setup(bot):

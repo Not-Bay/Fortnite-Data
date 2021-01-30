@@ -8,7 +8,6 @@ import sys
 def log(content):
 
     timestamp = datetime.datetime.now().strftime('%H:%M:%S')
-    print(f'{crayons.green(timestamp)} {content}')
 
     with open('values.json', 'r', encoding='utf-8') as f:
         values = json.load(f)
@@ -19,14 +18,6 @@ def log(content):
 
         data = {"content": f"`{timestamp}` {content}"}
         return requests.post(webhook, data=data)
-
-
-def logdebug(content):
-
-    if '--debug' in sys.argv:
-
-        timestamp = datetime.datetime.now().strftime('%H:%M:%S')
-        print(f'{crayons.green(timestamp)} {crayons.yellow("[DEBUG]", bold=True)} {content}')
 
 
 async def create_config(guild):
@@ -57,17 +48,20 @@ async def create_config(guild):
             "aes": True
             }
         }
-    guilds.insert_one(newdata)
+    try:
+        guilds.insert_one(newdata)
+    except Exception as e:
+        main.log.critical(f'Could not create initial configuration for "{guild.id}": {e}')
 
     return True
 
 async def delete_config(guild):
     guilds = main.db.guilds
-
-    guilds.find_one_and_delete(filter={"server_id": guild.id})
-
-    return True
-
+    try:
+        guilds.find_one_and_delete(filter={"server_id": guild.id})
+        return True
+    except:
+        return False
 
 
 async def set_config(ctx, config, value):

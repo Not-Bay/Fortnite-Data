@@ -42,7 +42,6 @@ class Events(commands.Cog):
             return
 
 
-
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         
@@ -68,8 +67,8 @@ class Events(commands.Cog):
             await ctx.send(funcs.text(ctx, 'error_command_disabled'))
 
         else:
+            main.log.error('Error: {error}')
             funcs.log(f'Error:```\n{"".join(traceback.format_exception(None, error, error.__traceback__))}```')
-            raise error
 
 
 def setup(bot):

@@ -113,6 +113,15 @@ class General(commands.Cog):
             if left > 0:
                 await ctx.send(f'{main.text(ctx, value="max_items_sended").format(left)}')
 
+        elif response.status_code == 404:
+
+            embed = discord.Embed(
+                description = main.text(ctx, 'nothing_found'),
+                color = discord.Colour.red(),
+                timestamp = ctx.message.created_at
+            )
+            await ctx.send(embed=embed)
+
         else:
 
             embed = discord.Embed(
@@ -733,9 +742,9 @@ class BenBot(commands.Cog):
 
                 if len(r.json()) > 1:
                 
-                    string = '```\n'
-                    string += ''.join(f'{x}\n' for x in r.json())
-                    string += '```'
+                    string = '\n'
+                    string += ''.join(f'`{x}`\n' for x in r.json())
+                    string += ''
                     if len(string) < 2048:
 
                         embed = discord.Embed(
