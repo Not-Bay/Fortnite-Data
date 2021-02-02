@@ -1,6 +1,8 @@
 ## Fortnite Data
 
-Source code of the glorious Fortnite Data bot. Just dont laugh of me thanks uwu
+Source code of the glorious Fortnite Data bot.
+
+[![Discord Bots](https://top.gg/api/widget/729409703360069722.svg)](https://top.gg/bot/729409703360069722)
 
 ### To make it work:
 
@@ -11,4 +13,4 @@ Put your token in `config.json` file and other required data in `values.json`
 Sorry for the bad organization, i didn't plan from the beginning to make it open source xD
 
 
-**Use code BayGamerJJ in the item shop <3 #EpicPartner**
+**Use code BayGamerJJ in the item shop <3 #EpicPartner**[![Discord Bots](https://top.gg/api/widget/729409703360069722.svg)](https://top.gg/bot/729409703360069722)
