@@ -1,4 +1,12 @@
 {
-    "token": "",
-    "token_debug": ""
+    "bot_token": "",
+    "fortnite-api-key": "",
+    "default_prefix": "t!",
+    "database_connection_str": null,
+    "cogs": [
+        "general",
+        "settings",
+        "events",
+        "tasks"
+    ]
 }

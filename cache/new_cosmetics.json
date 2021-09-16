@@ -1,0 +1,1598 @@
+{
+    "status": 200,
+    "data": {
+        "build": "++Fortnite+Release-17.50-CL-17328477-Windows",
+        "previousBuild": "++Fortnite+Release-17.40-CL-17269705-Windows",
+        "hash": "3140308127d346f67eab50a8e383c81cda304814",
+        "date": "2021-08-31T08:28:52Z",
+        "lastAddition": "2021-09-02T15:31:05Z",
+        "items": [
+            {
+                "id": "BID_773_Carabus",
+                "name": "Protocol Pack",
+                "description": "The Legacy begins.",
+                "type": {
+                    "value": "backpack",
+                    "displayValue": "Back Bling",
+                    "backendValue": "AthenaBackpack"
+                },
+                "rarity": {
+                    "value": "legendary",
+                    "displayValue": "Legendary",
+                    "backendValue": "EFortRarity::Legendary"
+                },
+                "series": null,
+                "set": {
+                    "value": "The Fortnite Crew Legacy",
+                    "text": "Part of the The Fortnite Crew Legacy set.",
+                    "backendValue": "CrewTradition"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": [
+                    {
+                        "channel": "Parts",
+                        "type": "STYLE",
+                        "options": [
+                            {
+                                "tag": "Stage1",
+                                "name": "Protocol Pack",
+                                "unlockRequirements": "Unlocks when you subscribe to the Fortnite Crew",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/variants/parts/stage1.png"
+                            },
+                            {
+                                "tag": "Stage2",
+                                "name": "Protocol Elite",
+                                "unlockRequirements": "Unlocks when you subscribe to the Fortnite Crew for 2 months",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/variants/parts/stage2.png"
+                            },
+                            {
+                                "tag": "Stage3",
+                                "name": "Protocol Overdrive",
+                                "unlockRequirements": "Unlocks when you subscribe to the Fortnite Crew for 3 months",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/variants/parts/stage3.png"
+                            },
+                            {
+                                "tag": "Stage4",
+                                "name": "Protocol Signature",
+                                "unlockRequirements": "Unlocks when you subscribe to the Fortnite Crew for 4 months",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/variants/parts/stage4.png"
+                            },
+                            {
+                                "tag": "Stage5",
+                                "name": "Protocol Master",
+                                "unlockRequirements": "Unlocks when you subscribe to the Fortnite Crew for 5 months",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/variants/parts/stage5.png"
+                            },
+                            {
+                                "tag": "Stage6",
+                                "name": "Protocol Ultimate",
+                                "unlockRequirements": "Unlocks when you subscribe to the Fortnite Crew for 6 months",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/bid_773_carabus/variants/parts/stage6.png"
+                            }
+                        ]
+                    }
+                ],
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.CrewBling.Progressive",
+                    "Cosmetics.Variant.FilterSet.Carabus",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.CrewTradition",
+                    "Cosmetics.UserFacingFlags.HasUpgradeQuests"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Backpacks/BID_773_Carabus",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "BID_836_AlienAgent",
+                "name": "Inter-vertebral Implant",
+                "description": "A combination nerve-enhancing prosthesis and nightlight.",
+                "type": {
+                    "value": "backpack",
+                    "displayValue": "Back Bling",
+                    "backendValue": "AthenaBackpack"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Gray Matter",
+                    "text": "Part of the Gray Matter set.",
+                    "backendValue": "DrabGoop"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/bid_836_alienagent/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/bid_836_alienagent/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/bid_836_alienagent/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.DrabGoop"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "itemPreviewHeroPath": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_190_Athena_Commando_M_AlienAgent",
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Backpacks/BID_836_AlienAgent",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "BID_837_Dragonfruit_0IZM3",
+                "name": "Great Protector's Shield",
+                "description": "Enemies of the Five Weapons Society beware.",
+                "type": {
+                    "value": "backpack",
+                    "displayValue": "Back Bling",
+                    "backendValue": "AthenaBackpack"
+                },
+                "rarity": {
+                    "value": "marvel",
+                    "displayValue": "MARVEL SERIES",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": {
+                    "value": "MARVEL SERIES",
+                    "image": null,
+                    "backendValue": "MarvelSeries"
+                },
+                "set": {
+                    "value": "Master of Kung Fu",
+                    "text": "Part of the Master of Kung Fu set.",
+                    "backendValue": "FightingKing"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/bid_837_dragonfruit_0izm3/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/bid_837_dragonfruit_0izm3/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.FightingKing"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": "1002",
+                "itemPreviewHeroPath": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_193_Athena_Commando_M_Dragonfruit_7N3A3",
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Backpacks/BID_837_Dragonfruit_0IZM3",
+                "added": "2021-09-02T15:31:05Z",
+                "shopHistory": [
+                    "2021-09-03T00:00:00Z"
+                ]
+            },
+            {
+                "id": "BID_838_AngelDark",
+                "name": "Shattered Hope",
+                "description": "Nothing can keep you down.",
+                "type": {
+                    "value": "backpack",
+                    "displayValue": "Back Bling",
+                    "backendValue": "AthenaBackpack"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Fallen Light",
+                    "text": "Part of the Fallen Light set.",
+                    "backendValue": "DroppedSun"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/bid_838_angeldark/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/bid_838_angeldark/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.DroppedSun"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "itemPreviewHeroPath": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_194_Athena_Commando_F_AngelDark",
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Backpacks/BID_838_AngelDark",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "BID_839_AlienFloraMale",
+                "name": "Zoot",
+                "description": "Always down to hang.",
+                "type": {
+                    "value": "backpack",
+                    "displayValue": "Back Bling",
+                    "backendValue": "AthenaBackpack"
+                },
+                "rarity": {
+                    "value": "epic",
+                    "displayValue": "Epic",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": null,
+                "set": {
+                    "value": "Plant Based Patrol",
+                    "text": "Part of the Plant Based Patrol set.",
+                    "backendValue": "VeganVigilance"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/bid_839_alienfloramale/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/bid_839_alienfloramale/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.VeganVigilance"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "itemPreviewHeroPath": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_191_Athena_Commando_M_AlienFlora",
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Backpacks/BID_839_AlienFloraMale",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "BID_840_FNCSGreen",
+                "name": "FNCS Holoflair",
+                "description": "You earned it. Flaunt it.",
+                "type": {
+                    "value": "backpack",
+                    "displayValue": "Back Bling",
+                    "backendValue": "AthenaBackpack"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": {
+                    "value": "Fortnite Champion Series",
+                    "text": "Part of the Fortnite Champion Series set.",
+                    "backendValue": "FNCS"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/bid_840_fncsgreen/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/bid_840_fncsgreen/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/bid_840_fncsgreen/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.FNCS"
+                ],
+                "metaTags": null,
+                "showcaseVideo": "0LLtAtFTjOY",
+                "dynamicPakId": null,
+                "itemPreviewHeroPath": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_196_Athena_Commando_F_FNCSGreen",
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Backpacks/BID_840_FNCSGreen",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": [
+                    "2021-09-02T00:00:00Z",
+                    "2021-09-03T00:00:00Z"
+                ]
+            },
+            {
+                "id": "CID_A_047_Athena_Commando_F_Windwalker",
+                "name": "Windwalker Echo",
+                "description": "May the winds lead you home.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": {
+                    "value": "Wind Song",
+                    "text": "Part of the Wind Song set.",
+                    "backendValue": "BreezeTune"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_047_athena_commando_f_windwalker/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_047_athena_commando_f_windwalker/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/cid_a_047_athena_commando_f_windwalker/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.UserFacingFlags.Reactive",
+                    "Cosmetics.Set.BreezeTune"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_047_Athena_Commando_F_Windwalker",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_047_Athena_Commando_F_Windwalker",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "CID_A_190_Athena_Commando_M_AlienAgent",
+                "name": "Brainstorm",
+                "description": "This one's a thinker.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Gray Matter",
+                    "text": "Part of the Gray Matter set.",
+                    "backendValue": "DrabGoop"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_190_athena_commando_m_alienagent/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_190_athena_commando_m_alienagent/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/cid_a_190_athena_commando_m_alienagent/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.DrabGoop"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_190_Athena_Commando_M_AlienAgent",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_190_Athena_Commando_M_AlienAgent",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "CID_A_191_Athena_Commando_M_AlienFlora",
+                "name": "Bloom",
+                "description": "Lush and lively Pluxarian Plantsassin.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "epic",
+                    "displayValue": "Epic",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": null,
+                "set": {
+                    "value": "Plant Based Patrol",
+                    "text": "Part of the Plant Based Patrol set.",
+                    "backendValue": "VeganVigilance"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_191_athena_commando_m_alienflora/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_191_athena_commando_m_alienflora/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/cid_a_191_athena_commando_m_alienflora/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.UserFacingFlags.Reactive",
+                    "Cosmetics.Set.VeganVigilance"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_191_Athena_Commando_M_AlienFlora",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_191_Athena_Commando_M_AlienFlora",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "CID_A_192_Athena_Commando_F_Suspenders",
+                "name": "Joy",
+                "description": "She's ready to roll.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Free Skate",
+                    "text": "Part of the Free Skate set.",
+                    "backendValue": "OpenSkim"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_192_athena_commando_f_suspenders/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_192_athena_commando_f_suspenders/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/cid_a_192_athena_commando_f_suspenders/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "builtInEmoteIds": [
+                    "EID_Suspenders"
+                ],
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.OpenSkim",
+                    "Cosmetics.UserFacingFlags.BuiltInEmote"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_192_Athena_Commando_F_Suspenders",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_192_Athena_Commando_F_Suspenders",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "CID_A_193_Athena_Commando_M_Dragonfruit_7N3A3",
+                "name": "Shang-Chi",
+                "description": "Master of Kung Fu.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "marvel",
+                    "displayValue": "MARVEL SERIES",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": {
+                    "value": "MARVEL SERIES",
+                    "image": null,
+                    "backendValue": "MarvelSeries"
+                },
+                "set": {
+                    "value": "Master of Kung Fu",
+                    "text": "Part of the Master of Kung Fu set.",
+                    "backendValue": "FightingKing"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_193_athena_commando_m_dragonfruit_7n3a3/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_193_athena_commando_m_dragonfruit_7n3a3/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/cid_a_193_athena_commando_m_dragonfruit_7n3a3/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.FightingKing"
+                ],
+                "metaTags": null,
+                "showcaseVideo": "FbgWu0Xan5E",
+                "dynamicPakId": "1002",
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_193_Athena_Commando_M_Dragonfruit",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_193_Athena_Commando_M_Dragonfruit_7N3A3",
+                "added": "2021-09-02T15:31:05Z",
+                "shopHistory": [
+                    "2021-09-03T00:00:00Z"
+                ]
+            },
+            {
+                "id": "CID_A_194_Athena_Commando_F_AngelDark",
+                "name": "D'Ark",
+                "description": "Open your heart to victory.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Fallen Light",
+                    "text": "Part of the Fallen Light set.",
+                    "backendValue": "DroppedSun"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_194_athena_commando_f_angeldark/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_194_athena_commando_f_angeldark/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.DroppedSun"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_194_Athena_Commando_F_AngelDark",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_194_Athena_Commando_F_AngelDark",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "CID_A_195_Athena_Commando_M_Crisis",
+                "name": "Trespasser Elite",
+                "description": "Infiltrate. Dominate. Terminate.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "epic",
+                    "displayValue": "Epic",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_195_athena_commando_m_crisis/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_195_athena_commando_m_crisis/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/cid_a_195_athena_commando_m_crisis/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_195_Athena_Commando_M_Crisis",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_195_Athena_Commando_M_Crisis",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "CID_A_196_Athena_Commando_F_FNCSGreen",
+                "name": "Major Glory",
+                "description": "Celebrate the competition, savor the victory.",
+                "type": {
+                    "value": "outfit",
+                    "displayValue": "Outfit",
+                    "backendValue": "AthenaCharacter"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": {
+                    "value": "Fortnite Champion Series",
+                    "text": "Part of the Fortnite Champion Series set.",
+                    "backendValue": "FNCS"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/cid_a_196_athena_commando_f_fncsgreen/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/cid_a_196_athena_commando_f_fncsgreen/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/cid_a_196_athena_commando_f_fncsgreen/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.FNCS"
+                ],
+                "metaTags": null,
+                "showcaseVideo": "rD76NnvHnEY",
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Heroes/HID_A_196_Athena_Commando_F_FNCSGreen",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_196_Athena_Commando_F_FNCSGreen",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": [
+                    "2021-09-02T00:00:00Z",
+                    "2021-09-03T00:00:00Z"
+                ]
+            },
+            {
+                "id": "EID_Hoppin",
+                "name": "Square Up",
+                "description": "This one goes all the way to the hop.",
+                "type": {
+                    "value": "emote",
+                    "displayValue": "Emote",
+                    "backendValue": "AthenaDance"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/eid_hoppin/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/eid_hoppin/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.EmoteType.Dance",
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.UserFacingFlags.Emote.Traversal"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Dances/EID_Hoppin",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "EID_Suspenders",
+                "name": "Roller Vibes",
+                "description": "Just skatin' and vibin' out here.",
+                "type": {
+                    "value": "emote",
+                    "displayValue": "Emote",
+                    "backendValue": "AthenaDance"
+                },
+                "rarity": {
+                    "value": "icon",
+                    "displayValue": "Icon Series",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": {
+                    "value": "Icon Series",
+                    "image": "https://fortnite-api.com/images/cosmetics/br/series/creatorcollabseries.png",
+                    "backendValue": "CreatorCollabSeries"
+                },
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/eid_suspenders/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/eid_suspenders/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.EmoteType.Dance",
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.UserFacingFlags.BuiltInEmote",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.UserFacingFlags.Emote.Traversal"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Dances/EID_Suspenders",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Emoji_S17_FriendFrenzy",
+                "name": "Outer Space Handshake",
+                "description": "Express yourself on the battlefield.",
+                "type": {
+                    "value": "emoji",
+                    "displayValue": "Emoticon",
+                    "backendValue": "AthenaEmoji"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/emoji_s17_friendfrenzy/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/emoji_s17_friendfrenzy/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.EmoteType.Emoji",
+                    "Cosmetics.Filter.Season.17"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Dances/Emoji/Emoji_S17_FriendFrenzy",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Emoji_S17_Island",
+                "name": "On the Rise",
+                "description": "Express yourself on the battlefield.",
+                "type": {
+                    "value": "emoji",
+                    "displayValue": "Emoticon",
+                    "backendValue": "AthenaEmoji"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/emoji_s17_island/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/emoji_s17_island/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.EmoteType.Emoji",
+                    "Cosmetics.Filter.Season.17"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Dances/Emoji/Emoji_S17_Island",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Glider_ID_309_TacticalWoodlandBlue",
+                "name": "Blue Viper",
+                "description": "The cutting edge in aerial domination.",
+                "type": {
+                    "value": "glider",
+                    "displayValue": "Glider",
+                    "backendValue": "AthenaGlider"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Advanced Forces",
+                    "text": "Part of the Advanced Forces set.",
+                    "backendValue": "AdvancedForces"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/glider_id_309_tacticalwoodlandblue/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/glider_id_309_tacticalwoodlandblue/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Set.AdvancedForces",
+                    "Cosmetics.UserFacingFlags.Reactive"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Gliders/Glider_ID_309_TacticalWoodlandBlue",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "LSID_334_Suspenders",
+                "name": "Joyride",
+                "description": "Skate on.",
+                "type": {
+                    "value": "loadingscreen",
+                    "displayValue": "Loading Screen",
+                    "backendValue": "AthenaLoadingScreen"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/lsid_334_suspenders/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/lsid_334_suspenders/icon.png",
+                    "featured": null,
+                    "other": {
+                        "background": "https://fortnite-api.com/images/cosmetics/br/lsid_334_suspenders/background.png"
+                    }
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Source.ItemShop"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/LoadingScreens/LSID_334_Suspenders",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "LSID_335_WastelandWarrior",
+                "name": "Warrior of the Wastes",
+                "description": "Get a little sand in your tactical khakis.",
+                "type": {
+                    "value": "loadingscreen",
+                    "displayValue": "Loading Screen",
+                    "backendValue": "AthenaLoadingScreen"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/lsid_335_wastelandwarrior/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/lsid_335_wastelandwarrior/icon.png",
+                    "featured": null,
+                    "other": {
+                        "background": "https://fortnite-api.com/images/cosmetics/br/lsid_335_wastelandwarrior/background.png"
+                    }
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/LoadingScreens/LSID_335_WastelandWarrior",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "MusicPack_099_FNCS",
+                "name": "Dream Runner",
+                "description": "Press play and let your imagination go.",
+                "type": {
+                    "value": "music",
+                    "displayValue": "Music",
+                    "backendValue": "AthenaMusicPack"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Fortnite Champion Series",
+                    "text": "Part of the Fortnite Champion Series set.",
+                    "backendValue": "FNCS"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/musicpack_099_fncs/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/musicpack_099_fncs/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/musicpack_099_fncs/featured.png",
+                    "other": {
+                        "coverart": "https://fortnite-api.com/images/cosmetics/br/musicpack_099_fncs/coverart.png"
+                    }
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.FNCS",
+                    "Cosmetics.Source.FNCS"
+                ],
+                "metaTags": null,
+                "showcaseVideo": "v0yA5j0zz3A",
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/MusicPacks/MusicPack_099_FNCS",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": [
+                    "2021-09-02T00:00:00Z",
+                    "2021-09-03T00:00:00Z"
+                ]
+            },
+            {
+                "id": "Pickaxe_ID_621_CarabusMale",
+                "name": "Zen Axe",
+                "description": "Carve out your Legacy.",
+                "type": {
+                    "value": "pickaxe",
+                    "displayValue": "Harvesting Tool",
+                    "backendValue": "AthenaPickaxe"
+                },
+                "rarity": {
+                    "value": "legendary",
+                    "displayValue": "Legendary",
+                    "backendValue": "EFortRarity::Legendary"
+                },
+                "series": null,
+                "set": {
+                    "value": "The Fortnite Crew Legacy",
+                    "text": "Part of the The Fortnite Crew Legacy set.",
+                    "backendValue": "CrewTradition"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_621_carabusmale/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_621_carabusmale/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": [
+                    {
+                        "channel": "Mesh",
+                        "type": "Style",
+                        "options": [
+                            {
+                                "tag": "Stage1",
+                                "name": "Zen Axe",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_621_carabusmale/variants/mesh/stage1.png"
+                            },
+                            {
+                                "tag": "Stage2",
+                                "name": "Zen Striker Style",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_621_carabusmale/variants/mesh/stage2.png"
+                            },
+                            {
+                                "tag": "Stage3",
+                                "name": "Zen Ultra Style",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_621_carabusmale/variants/mesh/stage3.png"
+                            },
+                            {
+                                "tag": "Stage4",
+                                "name": "Zen Assault Axe Style",
+                                "image": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_621_carabusmale/variants/mesh/stage4.png"
+                            }
+                        ]
+                    }
+                ],
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Pickaxe.DualWield",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.CrewBling.Progressive",
+                    "Cosmetics.Source.CrewPack",
+                    "Cosmetics.Set.CrewTradition",
+                    "Cosmetics.UserFacingFlags.HasUpgradeQuests"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Items/Weapons/WID_Harvest_Pickaxe_CarabusMale",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Pickaxes/Pickaxe_ID_621_CarabusMale",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Pickaxe_ID_662_AlienFloraMale",
+                "name": "Pluxarian Floraxe",
+                "description": "Fiercely sharp and pleasantly fragrant.",
+                "type": {
+                    "value": "pickaxe",
+                    "displayValue": "Harvesting Tool",
+                    "backendValue": "AthenaPickaxe"
+                },
+                "rarity": {
+                    "value": "epic",
+                    "displayValue": "Epic",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": null,
+                "set": {
+                    "value": "Plant Based Patrol",
+                    "text": "Part of the Plant Based Patrol set.",
+                    "backendValue": "VeganVigilance"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_662_alienfloramale/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_662_alienfloramale/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Set.VeganVigilance"
+                ],
+                "metaTags": [
+                    "Cosmetics.MetaTags.AlienFlora"
+                ],
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "itemPreviewHeroPath": "FortniteGame/Content/Athena/Items/Cosmetics/Characters/CID_A_191_Athena_Commando_M_AlienFlora",
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Items/Weapons/WID_Harvest_Pickaxe_AlienFloraMale",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Pickaxes/Pickaxe_ID_662_AlienFloraMale",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Pickaxe_ID_663_AngelDarkFemale1H",
+                "name": "Dark Blessing",
+                "description": "A gift... and a curse.",
+                "type": {
+                    "value": "pickaxe",
+                    "displayValue": "Harvesting Tool",
+                    "backendValue": "AthenaPickaxe"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Fallen Light",
+                    "text": "Part of the Fallen Light set.",
+                    "backendValue": "DroppedSun"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_663_angeldarkfemale1h/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_663_angeldarkfemale1h/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Pickaxe.OneHanded",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Source.StarterPack",
+                    "Cosmetics.Set.DroppedSun"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Items/Weapons/WID_Harvest_Pickaxe_AngelDarkFemale1H",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Pickaxes/Pickaxe_ID_663_AngelDarkFemale1H",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Pickaxe_ID_664_DragonfruitMale1H_4BIXL",
+                "name": "Blades of Brother Hand",
+                "description": "The Deadly Hands just got deadlier.",
+                "type": {
+                    "value": "pickaxe",
+                    "displayValue": "Harvesting Tool",
+                    "backendValue": "AthenaPickaxe"
+                },
+                "rarity": {
+                    "value": "marvel",
+                    "displayValue": "MARVEL SERIES",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": {
+                    "value": "MARVEL SERIES",
+                    "image": null,
+                    "backendValue": "MarvelSeries"
+                },
+                "set": {
+                    "value": "Master of Kung Fu",
+                    "text": "Part of the Master of Kung Fu set.",
+                    "backendValue": "FightingKing"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_664_dragonfruitmale1h_4bixl/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_664_dragonfruitmale1h_4bixl/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_664_dragonfruitmale1h_4bixl/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Pickaxe.DualWield",
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.Set.FightingKing"
+                ],
+                "metaTags": null,
+                "showcaseVideo": "7h9VzY6ov-U",
+                "dynamicPakId": "1002",
+                "displayAssetPath": null,
+                "definitionPath": "FortniteGame/Content/Athena/Items/Weapons/WID_Harvest_Pickaxe_DragonfruitMale1H",
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/PickAxes/Pickaxe_ID_664_DragonfruitMale1H_4BIXL",
+                "added": "2021-09-02T15:31:05Z",
+                "shopHistory": [
+                    "2021-09-03T00:00:00Z"
+                ]
+            },
+            {
+                "id": "SPID_298_Console",
+                "name": "Saucer Fan",
+                "description": "Leave your mark.",
+                "type": {
+                    "value": "spray",
+                    "displayValue": "Spray",
+                    "backendValue": "AthenaSpray"
+                },
+                "rarity": {
+                    "value": "uncommon",
+                    "displayValue": "Uncommon",
+                    "backendValue": "EFortRarity::Uncommon"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/spid_298_console/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/spid_298_console/icon.png",
+                    "featured": null,
+                    "other": {
+                        "decal": "https://fortnite-api.com/images/cosmetics/br/spid_298_console/decal.png"
+                    }
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.EmoteType.Spray",
+                    "Cosmetics.Filter.Season.17"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Sprays/SPID_298_Console",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Trails_ID_123_TacticalWoodlandBlue",
+                "name": "Cobalt Cloudbreak",
+                "description": "Bluer skies guaranteed.",
+                "type": {
+                    "value": "contrail",
+                    "displayValue": "Contrail",
+                    "backendValue": "AthenaSkyDiveContrail"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": null,
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/trails_id_123_tacticalwoodlandblue/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/trails_id_123_tacticalwoodlandblue/icon.png",
+                    "featured": null,
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.BattlepassTrack.Display.DisableVFXDuringTransitionIn",
+                    "Cosmetics.BattlepassTrack.Display.DisableVFXDuringTransitionOut",
+                    "Cosmetics.Filter.Season.17"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/Contrails/Trails_ID_123_TacticalWoodlandBlue",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Wrap_391_Dragonfruit_YVN1M",
+                "name": "Dragon's Scale",
+                "description": "Show your style.",
+                "type": {
+                    "value": "wrap",
+                    "displayValue": "Wrap",
+                    "backendValue": "AthenaItemWrap"
+                },
+                "rarity": {
+                    "value": "marvel",
+                    "displayValue": "MARVEL SERIES",
+                    "backendValue": "EFortRarity::Epic"
+                },
+                "series": {
+                    "value": "MARVEL SERIES",
+                    "image": null,
+                    "backendValue": "MarvelSeries"
+                },
+                "set": {
+                    "value": "Master of Kung Fu",
+                    "text": "Part of the Master of Kung Fu set.",
+                    "backendValue": "FightingKing"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/wrap_391_dragonfruit_yvn1m/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/wrap_391_dragonfruit_yvn1m/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/wrap_391_dragonfruit_yvn1m/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.FightingKing",
+                    "Cosmetics.Source.ItemShop"
+                ],
+                "metaTags": null,
+                "showcaseVideo": "6UObWI-IVpA",
+                "dynamicPakId": "1002",
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/ItemWraps/Wrap_391_Dragonfruit_YVN1M",
+                "added": "2021-09-02T15:31:05Z",
+                "shopHistory": [
+                    "2021-09-03T00:00:00Z"
+                ]
+            },
+            {
+                "id": "Wrap_392_AlienFlora",
+                "name": "Alien Peepers",
+                "description": "Show your style.",
+                "type": {
+                    "value": "wrap",
+                    "displayValue": "Wrap",
+                    "backendValue": "AthenaItemWrap"
+                },
+                "rarity": {
+                    "value": "rare",
+                    "displayValue": "Rare",
+                    "backendValue": "EFortRarity::Rare"
+                },
+                "series": null,
+                "set": {
+                    "value": "Plant Based Patrol",
+                    "text": "Part of the Plant Based Patrol set.",
+                    "backendValue": "VeganVigilance"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/wrap_392_alienflora/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/wrap_392_alienflora/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/wrap_392_alienflora/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.VeganVigilance",
+                    "Cosmetics.Source.ItemShop",
+                    "Cosmetics.UserFacingFlags.Wrap.Animated"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/ItemWraps/Wrap_392_AlienFlora",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            },
+            {
+                "id": "Wrap_393_Suspenders",
+                "name": "Rainbow Bubblegum",
+                "description": "Show your style.",
+                "type": {
+                    "value": "wrap",
+                    "displayValue": "Wrap",
+                    "backendValue": "AthenaItemWrap"
+                },
+                "rarity": {
+                    "value": "common",
+                    "displayValue": "Common",
+                    "backendValue": "EFortRarity::Common"
+                },
+                "series": null,
+                "set": {
+                    "value": "Free Skate",
+                    "text": "Part of the Free Skate set.",
+                    "backendValue": "OpenSkim"
+                },
+                "introduction": {
+                    "chapter": "2",
+                    "season": "7",
+                    "text": "Introduced in Chapter 2, Season 7.",
+                    "backendValue": 17
+                },
+                "images": {
+                    "smallIcon": "https://fortnite-api.com/images/cosmetics/br/wrap_393_suspenders/smallicon.png",
+                    "icon": "https://fortnite-api.com/images/cosmetics/br/wrap_393_suspenders/icon.png",
+                    "featured": "https://fortnite-api.com/images/cosmetics/br/wrap_393_suspenders/featured.png",
+                    "other": null
+                },
+                "variants": null,
+                "searchTags": null,
+                "gameplayTags": [
+                    "Cosmetics.Filter.Season.17",
+                    "Cosmetics.Set.OpenSkim",
+                    "Cosmetics.Source.ItemShop"
+                ],
+                "metaTags": null,
+                "showcaseVideo": null,
+                "dynamicPakId": null,
+                "displayAssetPath": null,
+                "definitionPath": null,
+                "path": "FortniteGame/Content/Athena/Items/Cosmetics/ItemWraps/Wrap_393_Suspenders",
+                "added": "2021-08-31T08:28:52Z",
+                "shopHistory": null
+            }
+        ]
+    }
+}
