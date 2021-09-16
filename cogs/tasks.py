@@ -1,8 +1,9 @@
 from discord.ext import commands, tasks
 import traceback
-import requests
+import aiohttp
 import discord
 import logging
+import json
 
 import util
 
@@ -12,15 +13,17 @@ class Tasks(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.ClientSession = aiohttp.ClientSession
 
         log.debug('Starting tasks...')
         try:
             self.cosmetics_cache_refresh.start()
+            self.new_cosmetics_cache_refresh.start()
             self.updates_check.start()
         except:
             log.critical(f'An error ocurred starting one or more tasks. Traceback:\n{traceback.format_exc()}')
 
-    @tasks.loop(minutes=20)
+    @tasks.loop(minutes=10)
     async def cosmetics_cache_refresh(self):
 
         log.debug('Executing "tasks.cosmetics_cache_refresh" task')
@@ -30,7 +33,7 @@ class Tasks(commands.Cog):
 
         try:
             await util.fortniteapi._load_cosmetics()
-            return
+
         except Exception:
             log.error(f'Failed while updating cosmetics. Traceback:\n{traceback.format_exc()}')
 
@@ -38,50 +41,57 @@ class Tasks(commands.Cog):
     ## Updates Channel Stuff
     ###
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=2)
     async def updates_check(self):
 
         log.debug('Executing "tasks.updates_check" task')
 
         try: # New cosmetics
 
-            new_cosmetics = []
+            new_raw_cosmetics = await util.fortniteapi.get_new_items()
+            cached_raw_cosmetics = json.load(open('cache/new_cosmetics.json', 'r', encoding='utf-8'))
 
-            current_data = util.fortniteapi.new_cosmetics
-            new_data = await util.fortniteapi.get_new_items()
+            if new_raw_cosmetics['data']['hash'] != cached_raw_cosmetics['data']['hash']:
 
-            for cosmetic in new_data:
-                if cosmetic not in current_data:
+                new_cosmetics = []
 
-                    new_cosmetics.append(cosmetic)
+                for i in new_cosmetics['data']['items']:
+                    if i not in cached_raw_cosmetics['data']['items']:
 
-            log.debug(f'Detected {len(new_cosmetics)} new cosmetics.')
+                        new_cosmetics.append(i)
 
-            if len(new_cosmetics) > 0:
+                if len(new_cosmetics) > 0:
 
-                embeds = []
+                    embeds = []
 
-                count = 0
-                for i in new_cosmetics:
+                    count = 0
+                    for i in new_cosmetics:
 
-                    embed = discord.Embed(
-                        title = 'New cosmetics detected!' if count == 0 else None,
-                        color = util.get_color_by_rarity(i['rarity']['value'])
-                    )
+                        embed = discord.Embed(
+                            title = 'New cosmetics detected!' if count == 0 else None,
+                            color = util.get_color_by_rarity(i['rarity']['value'])
+                        )
 
-                    embed.add_field(name='ID', value=f'`{i["id"]}`', inline=False)
-                    embed.add_field(name='Rarity', value=f'`{i["rarity"]["displayValue"]}`', inline=False)
-                    embed.add_field(name='Introduction', value=f'`{i["introduction"]["text"]}`' if i['introduction'] else 'Not introduced yet', inline=False)
-                    embed.add_field(name='Set', value=f'`{i["set"]["text"]}`' if i['set'] else 'None', inline=False)
+                        embed.add_field(name='ID', value=f'`{i["id"]}`', inline=False)
+                        embed.add_field(name='Rarity', value=f'`{i["rarity"]["displayValue"]}`', inline=False)
+                        embed.add_field(name='Introduction', value=f'`{i["introduction"]["text"]}`' if i['introduction'] else 'Not introduced yet', inline=False)
+                        embed.add_field(name='Set', value=f'`{i["set"]["text"]}`' if i['set'] else 'None', inline=False)
 
-                    embed.set_thumbnail(url=i['images']['icon'])
+                        embed.set_thumbnail(url=i['images']['icon'])
 
-                    if count+1 == len(new_cosmetics):
-                        embed.set_footer(text=f'{len(new_cosmetics)} new cosmetics • Provided by Fortnite-API.com')
+                        if count +1 == len(new_cosmetics):
+                            embed.set_footer(text=f'{len(new_cosmetics)} new cosmetics • Provided by Fortnite-API.com')
 
-                    embeds.append(embed)
+                        embeds.append(embed)
 
-                await self.updates_channel_send(embeds=embeds, type_='cosmetics')
+                    await self.updates_channel_send(embeds=embeds, type_='cosmetics')
+
+                    with open('cache/new_cosmetics.json', 'w', encoding='utf-8') as f:
+                        json.dump(new_raw_cosmetics, f, indent=4, ensure_ascii=False)
+            
+            else:
+
+                log.debug('No cosmetic changes detected.')
 
         except Exception:
             log.error(f'Failed while checking upcoming cosmetics changes. Traceback:\n{traceback.format_exc()}')
@@ -132,20 +142,23 @@ class Tasks(commands.Cog):
     
     async def _updates_send(self, url, embeds): # POST to Discord
 
-        try:
+        async with self.ClientSession() as session:
 
-            data = {
-                "embeds": embeds
-            }
-            post = requests.post(url, data=data)
+            try:
 
-            if post.status_code == 200:
-                return True
-            else:
-                return post
+                payload = {
+                    "embeds": embeds
+                }
+                
+                post = await session.post(url, payload=payload)
 
-        except Exception:
-            log.error(f'Failed post to webhook {url}. Traceback:\n{traceback.format_exc()}')
+                if post.status == 200:
+                    return True
+                else:
+                    return post
+
+            except Exception:
+                log.error(f'Failed post to webhook {url}. Traceback:\n{traceback.format_exc()}')
 
 
 def setup(bot):

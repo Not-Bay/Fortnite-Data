@@ -1,7 +1,7 @@
 from discord.ext import commands
 from discord_components import *
 import traceback
-import requests
+import aiohttp
 import asyncio
 import discord
 import logging
@@ -204,59 +204,62 @@ class General(commands.Cog):
     async def shop(self, ctx, language = 'en'):
         """Shows the latest fortnite item shop image."""
 
-        URL = f'https://fortool.fr/cm/api/v1/shop?lang={language}'
-        response = requests.get(URL)
-        data = response.json()
+        async with aiohttp.ClientSession() as session:
 
-        if response.status != 200:
+            URL = f'https://fortool.fr/cm/api/v1/shop?lang={language}'
 
-            if data['result'] == False:
+            response = await session.get(URL)
+            data = await response.json()
 
-                await ctx.send(embed=discord.Embed(
-                    description = f'Sorry but that language is not supported.',
-                    color = discord.Colour.blue()
-                ))
-                return
+            if response.status != 200:
+
+                if data['result'] == False:
+
+                    await ctx.send(embed=discord.Embed(
+                        description = f'Sorry but that language is not supported.',
+                        color = discord.Colour.blue()
+                    ))
+                    return
+                
+                else:
+
+                    await ctx.send(embed=discord.Embed(
+                        description = f'An error ocurred getting item shop. API returned status {response.status}.',
+                        color = discord.Colour.blue()
+                    ))
+                    return
             
             else:
 
-                await ctx.send(embed=discord.Embed(
-                    description = f'An error ocurred getting item shop. API returned status {response.status}.',
-                    color = discord.Colour.blue()
-                ))
-                return
-        
-        else:
+                try:
 
-            try:
+                    data = await response.json()
 
-                data = response.json()
+                    embed = discord.Embed(
+                        title = 'Current fortnite item shop',
+                        color = discord.Colour.blue()
+                    )
+                    embed.set_image(url=f'{data["images"]["carousel"]}?cache={time.time()}')
 
-                embed = discord.Embed(
-                    title = 'Current fortnite item shop',
-                    color = discord.Colour.blue()
-                )
-                embed.set_image(url=f'{data["images"]["carousel"]}?cache={time.time()}')
+                    await ctx.send(embed=embed)
 
-                await ctx.send(embed=embed)
+                except KeyError:
 
-            except KeyError:
+                    await ctx.send(embed=discord.Embed(
+                        description = 'Sorry but that language is not supported by the API.',
+                        color = discord.Colour.blue()
+                    ))
+                    return
 
-                await ctx.send(embed=discord.Embed(
-                    description = 'Sorry but that language is not supported by the API.',
-                    color = discord.Colour.blue()
-                ))
-                return
+                except Exception:
 
-            except Exception:
+                    log.error(f'An error ocurred sendind shop image. Traceback: {traceback.format_exc()}')
 
-                log.error(f'An error ocurred sendind shop image. Traceback: {traceback.format_exc()}')
-
-                await ctx.send(embed=discord.Embed(
-                    description = f'An error ocurred sending item shop image.',
-                    color = discord.Colour.red()
-                ))
-                return
+                    await ctx.send(embed=discord.Embed(
+                        description = f'An error ocurred sending item shop image.',
+                        color = discord.Colour.red()
+                    ))
+                    return
 
     @commands.command(usage='news [language]')
     @commands.cooldown(1, 30, commands.BucketType.user)

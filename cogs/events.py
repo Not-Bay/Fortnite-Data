@@ -15,6 +15,17 @@ class Events(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+
+        util.database_store_server(guild)
+
+    @commands.Cog.listener()
+    async def on_guild_remove(self, guild):
+
+        util.database_remove_server(guild)
+
+
+    @commands.Cog.listener()
     async def on_button_click(self, interaction):
 
         if interaction.custom_id == 'SERVER_PREFIX_CONFIGURE':
@@ -194,7 +205,7 @@ class Events(commands.Cog):
 
                     await interaction.message.edit(embed=discord.Embed(
                         description = 'Operation canceled by user.',
-                        color = discord.Colur.red()
+                        color = discord.Colour.red()
                     ))
                     return
 

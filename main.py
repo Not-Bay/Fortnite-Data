@@ -5,6 +5,7 @@ import traceback
 import logging
 import discord
 import asyncio
+import time
 import sys
 
 import util
@@ -40,7 +41,8 @@ async def on_ready():
     await util.wait_cache_load()
 
     util.ready = True
-    log.info('Fortnite Data is ready!')
+
+    log.info(f'Fortnite Data is ready! • Took {int((time.time() - util.start_time))} seconds.')
 
 
 def run():

@@ -4,6 +4,7 @@ import discord
 import logging
 import pymongo
 import aiohttp
+import time
 import json
 import sys
 
@@ -24,6 +25,7 @@ languages = []
 fortniteapi = None
 
 on_ready_count = 0
+start_time = time.time()
 
 ###
 ## Needed for start
@@ -179,6 +181,7 @@ def database_update_server(guild: discord.Guild, changes: dict):
 ###
 ## API
 ###
+
 class FortniteAPI:
 
     def __init__(self):
@@ -189,10 +192,8 @@ class FortniteAPI:
         }
 
         self._loaded_all = False
-        self._loaded_new = False
-
+        
         self.all_cosmetics = []
-        self.new_cosmetics = []
 
 
     async def _load_cosmetics(self):
@@ -202,12 +203,12 @@ class FortniteAPI:
         if debug == False:
             async with self.ClientSession() as session:
                 
-                response = session.get('https://fortnite-api.com/v2/cosmetics/br', headers=self.headers)
+                response = await session.get('https://fortnite-api.com/v2/cosmetics/br', headers=self.headers)
 
                 if response.status != 200:
                     data = None
                 else:
-                    data = response.json()
+                    data = await response.json()
 
                 if data == None:
                     log.warning('Something was wrong with cosmetics API. Using cached cosmetics')
@@ -231,37 +232,6 @@ class FortniteAPI:
         log.debug(f'Updated cosmetic cache. Loaded {len(self.all_cosmetics)} cosmetics.')
 
         return self.all_cosmetics
-
-    async def _load_upcoming_cosmetics(self):
-
-        log.debug('Updating upcoming cosmetic cache...')
-
-        async with self.ClientSession() as session:
-                
-            response = session.get('https://fortnite-api.com/v2/cosmetics/br/new', headers=self.headers)
-
-            if response.status != 200:
-                data = None
-            else:
-                data = response.json()
-
-            if data == None:
-                log.warning('Something was wrong with cosmetics API. Using cached new cosmetics')
-                data = json.load(open('cache/new_cosmetics.json', 'r', encoding='utf-8'))
-
-            for cosmetic in data['data']:
-
-                if cosmetic not in self.new_cosmetics:
-                    self.new_cosmetics.append(cosmetic)
-
-            with open('cache/new_cosmetics.json', 'w', encoding='utf-8') as f:
-                json.dump(data, f, indent=4, ensure_ascii=False)
-
-            self._loaded_new = True
-
-            log.debug(f'Updated upcoming cosmetics cache. Loaded {len(self.new_cosmetics)} cosmetics.')
-
-            return self.new_cosmetics
 
         
     async def get_cosmetic(self, query: str, **kwargs):
@@ -316,56 +286,57 @@ class FortniteAPI:
 
         async with self.ClientSession() as session:
                 
-            response = session.get(f'https://fortnite-api.com/v2/cosmetics/br/new?lang={language}', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/cosmetics/br/new?lang={language}', headers=self.headers)
 
             if response.status != 200:
                 return False
             else:
-                return response.json()
+                return await response.json()
 
     async def get_news(self, language='en'):
 
         async with self.ClientSession() as session:
 
-            response = session.get(f'https://fortnite-api.com/v2/news?lang={language}', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/news?lang={language}', headers=self.headers)
 
             if response.status != 200:
                 return False
             else:
-                return response.json()
+                return await response.json()
 
     async def get_aes(self, keyformat='hex'):
 
         async with self.ClientSession() as session:
 
-            response = session.get(f'https://fortnite-api.com/v2/aes?keyFormat={keyformat}', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/aes?keyFormat={keyformat}', headers=self.headers)
 
             if response.status != 200:
                 return False
             else:
-                return response.json()
+                return await response.json()
 
     async def get_stats(self, account_name=None, account_type='epic'):
 
         async with self.ClientSession() as session:
 
-            response = session.get(f'https://fortnite-api.com/v2/stats/br/v2?name={account_name}&accountType={account_type}&image=all', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/stats/br/v2?name={account_name}&accountType={account_type}&image=all', headers=self.headers)
 
-            return response.json()
+            return await response.json()
 
     async def get_cc(self, code=None):
 
         async with self.ClientSession() as session:
 
-            response = session.get(f'https://fortnite-api.com/v2/creatorcode/search?name={code}', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/creatorcode/search?name={code}', headers=self.headers)
 
             if response.status != 200:
                 return False
             else:
-                return response.json()
+                return await response.json()
 
 
 def get_color_by_rarity(value):
+    
     if value == 'legendary':
         return 0xf0b132
     elif value == 'epic':
