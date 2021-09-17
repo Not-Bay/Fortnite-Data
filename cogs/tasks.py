@@ -1,9 +1,10 @@
+from discord_webhook import DiscordWebhook, DiscordEmbed
 from discord.ext import commands, tasks
 import traceback
 import aiohttp
-import discord
 import logging
 import json
+import time
 
 import util
 
@@ -18,7 +19,6 @@ class Tasks(commands.Cog):
         log.debug('Starting tasks...')
         try:
             self.cosmetics_cache_refresh.start()
-            self.new_cosmetics_cache_refresh.start()
             self.updates_check.start()
         except:
             log.critical(f'An error ocurred starting one or more tasks. Traceback:\n{traceback.format_exc()}')
@@ -53,9 +53,11 @@ class Tasks(commands.Cog):
 
             if new_raw_cosmetics['data']['hash'] != cached_raw_cosmetics['data']['hash']:
 
+                start_timestamp = time.time()
+
                 new_cosmetics = []
 
-                for i in new_cosmetics['data']['items']:
+                for i in new_raw_cosmetics['data']['items']:
                     if i not in cached_raw_cosmetics['data']['items']:
 
                         new_cosmetics.append(i)
@@ -67,15 +69,15 @@ class Tasks(commands.Cog):
                     count = 0
                     for i in new_cosmetics:
 
-                        embed = discord.Embed(
+                        embed = DiscordEmbed(
                             title = 'New cosmetics detected!' if count == 0 else None,
                             color = util.get_color_by_rarity(i['rarity']['value'])
                         )
 
-                        embed.add_field(name='ID', value=f'`{i["id"]}`', inline=False)
-                        embed.add_field(name='Rarity', value=f'`{i["rarity"]["displayValue"]}`', inline=False)
-                        embed.add_field(name='Introduction', value=f'`{i["introduction"]["text"]}`' if i['introduction'] else 'Not introduced yet', inline=False)
-                        embed.add_field(name='Set', value=f'`{i["set"]["text"]}`' if i['set'] else 'None', inline=False)
+                        embed.add_embed_field(name='ID', value=f'`{i["id"]}`', inline=False)
+                        embed.add_embed_field(name='Rarity', value=f'`{i["rarity"]["displayValue"]}`', inline=False)
+                        embed.add_embed_field(name='Introduction', value=f'`{i["introduction"]["text"]}`' if i['introduction'] else 'Not introduced yet', inline=False)
+                        embed.add_embed_field(name='Set', value=f'`{i["set"]["text"]}`' if i['set'] else 'None', inline=False)
 
                         embed.set_thumbnail(url=i['images']['icon'])
 
@@ -88,6 +90,8 @@ class Tasks(commands.Cog):
 
                     with open('cache/new_cosmetics.json', 'w', encoding='utf-8') as f:
                         json.dump(new_raw_cosmetics, f, indent=4, ensure_ascii=False)
+
+                print(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True})))} guilds in {int((time.time() - util.start_time))} seconds!')
             
             else:
 
@@ -99,8 +103,9 @@ class Tasks(commands.Cog):
 
     async def updates_channel_send(self, embeds, type_):
         
-        servers = util.database.guilds.find({'updates_channel.enabled': True})
-        
+        servers = list(util.database.guilds.find({'updates_channel.enabled': True}))
+
+        webhooks = []
         queue = await self._create_queue(embeds)
 
         for i in servers:
@@ -108,16 +113,19 @@ class Tasks(commands.Cog):
             if i['updates_channel']['config'][type_] == False:
                 continue
 
-            try:
-                guild = self.bot.get_guild(i['server_id'])
+            guild = self.bot.get_guild(i['server_id'])
 
-                if guild != None:
+            if guild != None:
 
-                    for embeds in queue:
-                        await self._updates_send(url=i['updates_channel']['webhook'], embeds=embeds)
+                webhooks.append(i['updates_channel']['webhook'])
 
-            except Exception:
-                log.error(f'Failed while trying to send updates message to guild {i["server_id"]}. Traceback:\n{traceback.format_exc()}')
+        for embeds in queue:
+
+            webhook = DiscordWebhook(url=webhooks, rate_limit_retry=True)
+            for page in embeds:
+                webhook.add_embed(page)
+
+            webhook.execute()
 
 
     async def _create_queue(self, embeds): # Separate embeds in lists of 10
@@ -139,26 +147,6 @@ class Tasks(commands.Cog):
                 continue
 
         return queue
-    
-    async def _updates_send(self, url, embeds): # POST to Discord
-
-        async with self.ClientSession() as session:
-
-            try:
-
-                payload = {
-                    "embeds": embeds
-                }
-                
-                post = await session.post(url, payload=payload)
-
-                if post.status == 200:
-                    return True
-                else:
-                    return post
-
-            except Exception:
-                log.error(f'Failed post to webhook {url}. Traceback:\n{traceback.format_exc()}')
 
 
 def setup(bot):
