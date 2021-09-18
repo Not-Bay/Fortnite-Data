@@ -93,7 +93,7 @@ class General(commands.Cog):
     @commands.command(usage='item <name or ID>', aliases=['cosmetic'])
     @commands.cooldown(3, 15, commands.BucketType.user)
     async def item(self, ctx, *, name_or_id = None):
-        """Let you search cosmetics by name or ID."""
+        """Search for cosmetics by their name or ID. Special arguments available."""
 
         if name_or_id == None:
 
@@ -105,7 +105,43 @@ class General(commands.Cog):
 
         else:
 
-            results = await util.fortniteapi.get_cosmetic(query = name_or_id)
+            special_args = [  # this acts like a filter. For example if you type "f!item ren --outfit"
+                '--outfit',   # will return only outfits with "re"
+                '--emote',
+                '--backpack',
+                '--pickaxe',
+                '--wrap',
+                '--loadingscreen',
+                '--spray',
+                '--glider'
+            ]
+
+            cosmetic_type = None
+
+            for i in name_or_id:
+
+                if i.lower() in special_args:
+
+                    cosmetic_type = i.lower().replace('--', '')
+                    name_or_id.replace(i, '')
+
+                    break
+
+                else:
+                    continue
+
+            if cosmetic_type == None:
+
+                results = await util.fortniteapi.get_cosmetic(query = name_or_id)
+
+                log.debug(f'Searching cosmetics with args: "{name_or_id}". Cosmetic type undefined')
+            
+            else:
+
+                results = await util.fortniteapi.get_cosmetic(query = name_or_id, cosmetic_type=cosmetic_type)
+
+                log.debug(f'Searching cosmetics with args: "{name_or_id}". Cosmetic type "{cosmetic_type}"')
+                
 
             if len(results) == 0:
 
@@ -135,6 +171,18 @@ class General(commands.Cog):
                     i.add_field(name='Rarity', value=f'`{cosmetic["rarity"]["displayValue"]}`', inline=False)
                     i.add_field(name='Introduction', value=f'`{cosmetic["introduction"]["text"]}`' if cosmetic['introduction'] else 'Not introduced yet', inline=False)
                     i.add_field(name='Set', value=f'`{cosmetic["set"]["text"]}`' if cosmetic['set'] else 'None', inline=False)
+
+                    if cosmetic['search_tags'] != None:
+
+                        search_tags_str = ''
+                        for i in cosmetic['search_tags']:
+                            search_tags_str + f'`{i}`' + '\n'
+
+                        i.add_field(name='Search Tags', value=search_tags_str, inline=False)
+
+                    else:
+                        i.add_field(name='Search Tags', value=f'None', inline=False)
+                        
 
                     i.set_thumbnail(url=cosmetic['images']['icon'])
 
