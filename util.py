@@ -204,6 +204,7 @@ class FortniteAPI:
         self.loadingscreens = []
         self.sprays = []
         self.gliders = []
+        self.banners = []
 
 
     async def _load_cosmetics(self):
@@ -278,6 +279,11 @@ class FortniteAPI:
                 if cosmetic not in self.gliders:
                     self.gliders.append(cosmetic)
                     continue
+
+            if cosmetic['type']['value'] == 'banner':
+                if cosmetic not in self.banners:
+                    self.banners.append(cosmetic)
+                    continue
                 
 
         with open('cache/cosmetics.json', 'w', encoding='utf-8') as f:
@@ -319,6 +325,8 @@ class FortniteAPI:
                 list_to_search = self.sprays
             elif cosmetic_type == 'glider':
                 list_to_search = self.gliders
+            elif cosmetic_type == 'banner':
+                list_to_search = self.banners
             else:
                 list_to_search = self.all_cosmetics
                 log.debug(f'[FortniteAPI] Unknown cosmetic type "{cosmetic_type}". Searching in "all_cosmetics" list')
@@ -328,7 +336,7 @@ class FortniteAPI:
             list_to_search = self.all_cosmetics
 
         results = []
-        is_id = query.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_'))
+        is_id = query.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_', 'bannertoken_'))
 
         for item in list_to_search:
 

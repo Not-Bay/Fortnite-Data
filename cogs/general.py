@@ -121,7 +121,8 @@ class General(commands.Cog):
                 '--wrap',
                 '--loadingscreen',
                 '--spray',
-                '--glider'
+                '--glider',
+                '--banner'
             ]
 
             cosmetic_type = None
