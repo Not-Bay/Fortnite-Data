@@ -71,18 +71,24 @@ class Tasks(commands.Cog):
 
                         embed = DiscordEmbed(
                             title = 'New cosmetics detected!' if count == 0 else None,
+                            description = f'**{i["name"]}**\n{i["description"]}',
                             color = util.get_color_by_rarity(i['rarity']['value'])
                         )
 
                         embed.add_embed_field(name='ID', value=f'`{i["id"]}`', inline=False)
+                        embed.add_embed_field(name='Type', value=f'`{i["type"]["displayValue"]}`', inline=False)
                         embed.add_embed_field(name='Rarity', value=f'`{i["rarity"]["displayValue"]}`', inline=False)
                         embed.add_embed_field(name='Introduction', value=f'`{i["introduction"]["text"]}`' if i['introduction'] else 'Not introduced yet', inline=False)
                         embed.add_embed_field(name='Set', value=f'`{i["set"]["text"]}`' if i['set'] else 'None', inline=False)
 
                         embed.set_thumbnail(url=i['images']['icon'])
+                        count += 1
 
-                        if count +1 == len(new_cosmetics):
-                            embed.set_footer(text=f'{len(new_cosmetics)} new cosmetics • Provided by Fortnite-API.com')
+                        embed.set_footer(text=f'{count} of {len(new_cosmetics)}')
+
+                        if count == len(new_cosmetics):
+                            embed.set_footer(text=f'{count} of {len(new_cosmetics)} • Provided by Fortnite-API.com')
+                        
 
                         embeds.append(embed)
 
@@ -91,7 +97,7 @@ class Tasks(commands.Cog):
                     with open('cache/new_cosmetics.json', 'w', encoding='utf-8') as f:
                         json.dump(new_raw_cosmetics, f, indent=4, ensure_ascii=False)
 
-                print(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True})))} guilds in {int((time.time() - util.start_time))} seconds!')
+                log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True})))} guilds in {int((time.time() - start_timestamp))} seconds!')
             
             else:
 
