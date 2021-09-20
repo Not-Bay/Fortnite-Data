@@ -95,6 +95,14 @@ class General(commands.Cog):
     async def item(self, ctx, *, name_or_id = None):
         """Search for cosmetics by their name or ID. Special arguments available."""
 
+        if util.fortniteapi._loaded_all == False:
+
+            await ctx.send(embed=discord.Embed(
+                description = f'Sorry but the cosmetics data are currently loading. Please wait',
+                color = discord.Colour.orange()
+            ))
+            return
+
         if name_or_id == None:
 
             await ctx.send(embed=discord.Embed(
@@ -117,30 +125,40 @@ class General(commands.Cog):
             ]
 
             cosmetic_type = None
+            splitted_name_or_id = name_or_id.split()
 
-            for i in name_or_id:
+            log.debug(f'Checking for special args in "{name_or_id}"')
 
-                if i.lower() in special_args:
+            if len(splitted_name_or_id) != 1:
 
-                    cosmetic_type = i.lower().replace('--', '')
-                    name_or_id.replace(i, '')
+                for i in splitted_name_or_id:
 
-                    break
+                    if i.lower() in special_args:
 
-                else:
-                    continue
+                        cosmetic_type = str(i.replace('--', ''))
+                        name_or_id = name_or_id.replace(f' {i}', '')
+
+                        log.debug(f'Detected special arg: "{i}"')
+
+                        break
+
+                    else:
+
+                        continue
+
 
             if cosmetic_type == None:
 
+                log.debug(f'Searching with args: "{name_or_id}"')
+
                 results = await util.fortniteapi.get_cosmetic(query = name_or_id)
 
-                log.debug(f'Searching cosmetics with args: "{name_or_id}". Cosmetic type undefined')
             
             else:
 
-                results = await util.fortniteapi.get_cosmetic(query = name_or_id, cosmetic_type=cosmetic_type)
+                log.debug(f'Searching {cosmetic_type} with args: "{name_or_id}"')
 
-                log.debug(f'Searching cosmetics with args: "{name_or_id}". Cosmetic type "{cosmetic_type}"')
+                results = await util.fortniteapi.get_cosmetic(query = name_or_id, cosmetic_type=cosmetic_type)
                 
 
             if len(results) == 0:
@@ -172,10 +190,10 @@ class General(commands.Cog):
                     i.add_field(name='Introduction', value=f'`{cosmetic["introduction"]["text"]}`' if cosmetic['introduction'] else 'Not introduced yet', inline=False)
                     i.add_field(name='Set', value=f'`{cosmetic["set"]["text"]}`' if cosmetic['set'] else 'None', inline=False)
 
-                    if cosmetic['search_tags'] != None:
+                    if cosmetic['searchTags'] != None:
 
                         search_tags_str = ''
-                        for i in cosmetic['search_tags']:
+                        for i in cosmetic['searchTags']:
                             search_tags_str + f'`{i}`' + '\n'
 
                         i.add_field(name='Search Tags', value=search_tags_str, inline=False)

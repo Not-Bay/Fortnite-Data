@@ -195,6 +195,16 @@ class FortniteAPI:
         
         self.all_cosmetics = []
 
+        self.outfits = []
+        self.emotes = []
+        self.backpacks = []
+        self.pickaxes = []
+        self.wraps = []
+        self.contrails = []
+        self.loadingscreens = []
+        self.sprays = []
+        self.gliders = []
+
 
     async def _load_cosmetics(self):
 
@@ -224,6 +234,52 @@ class FortniteAPI:
             if cosmetic not in self.all_cosmetics:
                 self.all_cosmetics.append(cosmetic)
 
+            if cosmetic['type']['value'] == 'outfit':
+                if cosmetic not in self.outfits:
+                    self.outfits.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'emote':
+                if cosmetic not in self.emotes:
+                    self.emotes.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'backpack':
+                if cosmetic not in self.backpacks:
+                    self.backpacks.append(cosmetic)
+                    continue
+            
+            if cosmetic['type']['value'] == 'pickaxe':
+                if cosmetic not in self.pickaxes:
+                    self.pickaxes.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'wrap':
+                if cosmetic not in self.wraps:
+                    self.wraps.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'contrail':
+                if cosmetic not in self.contrails:
+                    self.contrails.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'loadingscreen':
+                if cosmetic not in self.loadingscreens:
+                    self.loadingscreens.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'spray':
+                if cosmetic not in self.sprays:
+                    self.sprays.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'glider':
+                if cosmetic not in self.gliders:
+                    self.gliders.append(cosmetic)
+                    continue
+                
+
         with open('cache/cosmetics.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
@@ -236,7 +292,7 @@ class FortniteAPI:
         
     async def get_cosmetic(self, query: str, **kwargs):
 
-        cosmetic_type = kwargs.get('type', None)
+        cosmetic_type = kwargs.get('cosmetic_type', None)
 
         if len(self.all_cosmetics) == 0:
             self._load_cosmetics()
@@ -263,6 +319,9 @@ class FortniteAPI:
                 list_to_search = self.sprays
             elif cosmetic_type == 'glider':
                 list_to_search = self.gliders
+            else:
+                list_to_search = self.all_cosmetics
+                log.debug(f'[FortniteAPI] Unknown cosmetic type "{cosmetic_type}". Searching in "all_cosmetics" list')
 
         else:
 

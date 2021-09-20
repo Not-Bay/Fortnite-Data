@@ -38,8 +38,6 @@ async def on_ready():
     for guild in bot.guilds:
         util.database_store_server(guild)
 
-    await util.wait_cache_load()
-
     util.ready = True
 
     log.info(f'Fortnite Data is ready! • Took {int((time.time() - util.start_time))} seconds.')
@@ -47,11 +45,9 @@ async def on_ready():
 
 def run():
 
-    i = True
-    if i:
-        for v in list(logging.Logger.manager.loggerDict):
-            if v != 'FortniteData':
-                logging.getLogger(v).disabled = True
+    for logger in list(logging.Logger.manager.loggerDict):
+        if logger.startswith('FortniteData') == False: # this disable the logger of 3rd party modules
+            logging.getLogger(logger).disabled = True
 
     log.info('Booting...')
 
