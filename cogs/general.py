@@ -85,13 +85,13 @@ class General(commands.Cog):
                 embed.add_field(name='Usage:', value=f'`{prefix}{cmd.usage}`', inline=False)
                 embed.add_field(name='Aliases:', value=aliases_str, inline=False)
 
-                embed.set_thumbnail(url='https://cdn.discordapp.com/avatars/761360995117170748/02c9a2ba3b4cafed2d05c690f9ea3bdb.webp')
+                embed.set_thumbnail(url='https://images-ext-2.discordapp.net/external/BZlqfymUFg4jvrOetFhqr6u6YbaptHhYkPCR7yZUb10/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.webp')
 
                 await ctx.send(embed=embed)
 
     
     @commands.command(usage='item <name or ID>', aliases=['cosmetic'])
-    @commands.cooldown(3, 15, commands.BucketType.user)
+    @commands.cooldown(5, 5, commands.BucketType.user)
     async def item(self, ctx, *, name_or_id = None):
         """Search for cosmetics by their name or ID. Special arguments available."""
 
