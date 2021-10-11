@@ -14,3 +14,7 @@ Sorry for the bad organization, i didn't plan from the beginning to make it open
 
 
 **Use code BayGamerJJ in the item shop <3 #EpicPartner**[![Discord Bots](https://top.gg/api/widget/729409703360069722.svg)](https://top.gg/bot/729409703360069722)
+
+Hope this helps you.
+
+Thank You.
