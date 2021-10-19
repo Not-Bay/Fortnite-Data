@@ -7,6 +7,7 @@
         "general",
         "settings",
         "events",
-        "tasks"
+        "tasks",
+        "admin"
     ]
 }
