@@ -36,7 +36,7 @@ class Events(commands.Cog):
             server = util.database_get_server(interaction.guild)
             
             msg = await interaction.respond(
-                type = InteractionType.UpdateMessage,
+                type = 7,
                 embed = discord.Embed(
                     description = 'Send the new prefix to use',
                     color = discord.Colour.blue()
@@ -118,7 +118,7 @@ class Events(commands.Cog):
             ]]
 
             msg = await interaction.respond(
-                type = InteractionType.UpdateMessage,
+                type = 7,
                 embed = discord.Embed(
                     description = 'Select the language to use',
                     color = discord.Colour.blue()
@@ -135,7 +135,7 @@ class Events(commands.Cog):
                     change = util.database_update_server(interaction.guild, {'$set': {'language': 'en'}})
 
                     await i.respond(
-                        type = InteractionType.UpdateMessage,
+                        type = 7,
                         embed = discord.Embed(
                             description = f'Language changed to `English`!',
                             color = discord.Colour.blue()
@@ -148,7 +148,7 @@ class Events(commands.Cog):
                     change = util.database_update_server(interaction.guild, {'$set': {'language': 'es'}})
 
                     await i.respond(
-                        type = InteractionType.UpdateMessage,
+                        type = 7,
                         embed = discord.Embed(
                             description = f'Language changed to `Español`!',
                             color = discord.Colour.blue()
@@ -161,7 +161,7 @@ class Events(commands.Cog):
                     change = util.database_update_server(interaction.guild, {'$set': {'language': 'ja'}})
 
                     await i.respond(
-                        type = InteractionType.UpdateMessage,
+                        type = 7,
                         embed = discord.Embed(
                             description = f'Language changed to `日本語`!',
                             color = discord.Colour.blue()
@@ -189,7 +189,7 @@ class Events(commands.Cog):
             embed.set_footer(text='Type "cancel" to cancel')
 
             msg = await interaction.respond(
-                type = InteractionType.UpdateMessage,
+                type = 7,
                 embed = embed,
                 components = []
             )

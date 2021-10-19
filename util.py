@@ -211,23 +211,18 @@ class FortniteAPI:
 
         log.debug('Updating cosmetic cache...')
 
-        if debug == False:
-            async with self.ClientSession() as session:
-                
-                response = await session.get('https://fortnite-api.com/v2/cosmetics/br', headers=self.headers)
+        async with self.ClientSession() as session:
+            
+            response = await session.get('https://fortnite-api.com/v2/cosmetics/br', headers=self.headers)
 
-                if response.status != 200:
-                    data = None
-                else:
-                    data = await response.json()
+            if response.status != 200:
+                data = None
+            else:
+                data = await response.json()
 
-                if data == None:
-                    log.warning('Something was wrong with cosmetics API. Using cached cosmetics')
-                    data = json.load(open('cache/cosmetics.json', 'r', encoding='utf-8'))
-
-        else:
-            log.debug('Debug is enabled, loading from cache...')
-            data = json.load(open('cache/cosmetics.json', 'r', encoding='utf-8'))
+            if data == None:
+                log.warning('Something was wrong with cosmetics API. Using cached cosmetics')
+                data = json.load(open('cache/cosmetics/all.json', 'r', encoding='utf-8'))
 
 
         for cosmetic in data['data']:
@@ -279,14 +274,9 @@ class FortniteAPI:
                 if cosmetic not in self.gliders:
                     self.gliders.append(cosmetic)
                     continue
+      
 
-            if cosmetic['type']['value'] == 'banner':
-                if cosmetic not in self.banners:
-                    self.banners.append(cosmetic)
-                    continue
-                
-
-        with open('cache/cosmetics.json', 'w', encoding='utf-8') as f:
+        with open('cache/cosmetics/all.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
         self._loaded_all = True

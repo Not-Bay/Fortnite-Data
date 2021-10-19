@@ -98,7 +98,7 @@ class General(commands.Cog):
         if util.fortniteapi._loaded_all == False:
 
             await ctx.send(embed=discord.Embed(
-                description = f'Sorry but the cosmetics data are currently loading. Please wait',
+                description = f'Sorry but the cosmetics data are currently loading. Please try again in a few seconds.',
                 color = discord.Colour.orange()
             ))
             return
