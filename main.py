@@ -1,4 +1,4 @@
-bot_version = '3.3.2'
+bot_version = '3.3.3'
 
 from discord.ext import commands
 import logging

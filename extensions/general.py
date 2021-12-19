@@ -331,8 +331,16 @@ class General(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
+        
+        with open('values.json', 'r', encoding='utf-8') as f:
+            api_key = json.load(f)['fortnite-api_key']
 
-        response = requests.get(f'https://fortnite-api.com/v1/stats/br/v2?name={account.replace(" ", "+")}&image=all')
+        response = requests.get(
+            f'https://fortnite-api.com/v1/stats/br/v2?name={account.replace(" ", "+")}&image=all',
+            headers = {
+                'Authorization': api_key
+            }
+        )
 
         if response.status_code == 200:
 
