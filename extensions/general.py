@@ -28,22 +28,53 @@ class General(commands.Cog):
 
         serverconfig = main.db.guilds.find_one({"server_id": ctx.guild.id})
 
-        if args.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_')):
-            params = {
-                "language": serverconfig['lang'],
-                "searchLanguage": serverconfig['search_lang'],
-                "matchMethod": "contains",
-                "id": args
-            }
-        else:
-            params = {
-                "language": serverconfig['lang'],
-                "searchLanguage": serverconfig['search_lang'],
-                "matchMethod": "contains",
-                "name": args
-            }
+        if ctx.guild.id == 718709023427526697: #Custom stuff for Fortnite-LobbyBot Server. hi <3
 
-        response = requests.get('https://fortnite-api.com/v2/cosmetics/br/search/all', params=params)
+            searchLanguage = 'en'
+            language = 'en'
+
+            if ctx.channel.category_id == 719713694874992681: # ja
+                searchLanguage = 'ja'
+                language = 'ja'
+
+            elif ctx.channel.category_id == 719714076087025706: # es
+                searchLanguage = 'es'
+                language = 'es'
+
+            if args.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_')):
+                params = {
+                    "language": language,
+                    "searchLanguage": searchLanguage,
+                    "matchMethod": "contains",
+                    "id": args
+                }
+            else:
+                params = {
+                    "language": language,
+                    "searchLanguage": searchLanguage,
+                    "matchMethod": "contains",
+                    "name": args
+                }
+
+            response = requests.get('https://fortnite-api.com/v2/cosmetics/br/search/all', params=params)
+
+        else:
+
+            if args.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_')):
+                    "language": serverconfig['lang'],
+                    "searchLanguage": serverconfig['search_lang'],
+                    "matchMethod": "contains",
+                    "id": args
+                }
+            else:
+                params = {
+                    "language": serverconfig['lang'],
+                    "searchLanguage": serverconfig['search_lang'],
+                    "matchMethod": "contains",
+                    "name": args
+                }
+
+            response = requests.get('https://fortnite-api.com/v2/cosmetics/br/search/all', params=params)
 
         if response.status_code == 200:
 
