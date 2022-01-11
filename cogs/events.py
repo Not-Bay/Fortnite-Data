@@ -15,6 +15,41 @@ class Events(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+
+        if isinstance(error, commands.CommandNotFound):
+            return
+
+        if isinstance(error, commands.CommandOnCooldown):
+
+            end_seconds = int(error.retry_after[0]) + 1
+
+            embed = discord.Embed(
+                description = 'You are on cooldown!',
+                color = discord.Colour.orange()
+            )
+            embed.set_footer(text=f'Try again in {end_seconds}')
+            
+            await ctx.send(
+                embed=embed
+            )
+            return
+
+        if isinstance(error, commands.DisabledCommand):
+
+            embed = discord.Embed(
+                title = 'Command disabled',
+                description = 'Sorry but this command is temporarily disabled.',
+                color = discord.Colour.red()
+            )
+            embed.set_footer(text='Check our support server for more information')
+
+            await ctx.send(
+                embed = embed
+            )
+            return
+
+    @commands.Cog.listener()
     async def on_guild_join(self, guild):
 
         util.database_store_server(guild)
