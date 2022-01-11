@@ -1,7 +1,9 @@
 {
     "bot_token": "",
     "fortnite-api-key": "",
-    "default_prefix": "t!",
+    "languages": [
+        "es"
+    ],
     "database_connection_str": null,
     "cogs": [
         "general",
