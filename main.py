@@ -28,6 +28,14 @@ async def on_ready():
 
     DiscordComponents(bot)
 
+    for i in util.configuration.get('languages'):
+        lang = util.Language(i)
+        load = await lang.load_language_data()
+        if load == True:
+            util.languages[i] = lang
+        else:
+            util.languages[i] = False
+
     for cog in util.configuration.get('cogs'):
         try:
             bot.load_extension(f'cogs.{cog}')
@@ -46,7 +54,7 @@ async def on_ready():
 def run():
 
     for logger in list(logging.Logger.manager.loggerDict):
-        if logger.startswith('FortniteData') == False: # this disable the logger of 3rd party modules
+        if logger.startswith('FortniteData') == False: # 3rd party modules loggers go brrrrrr
             logging.getLogger(logger).disabled = True
 
     log.info('Booting...')

@@ -21,14 +21,14 @@ log = None
 configuration = None
 database = None
 ready = False
-languages = []
+languages = {}
 fortniteapi = None
 
 on_ready_count = 0
 start_time = time.time()
 
 ###
-## Needed for start
+## Critical
 ###
 
 def get_prefix(bot, message):
@@ -76,6 +76,17 @@ def get_mongoclient():
     except Exception as e:
         log.critical(f'Failed while connecting to database. Traceback:\n{traceback.format_exc()}')
         sys.exit(1)
+
+def get_string(lang: str, string: str):
+
+    if languages[lang] == False:
+
+        return languages[lang].get_item(item = string)
+    
+    else:
+
+        return languages['en'].get_item(item = string)
+
 
 async def wait_cache_load():
 
@@ -177,6 +188,52 @@ def database_update_server(guild: discord.Guild, changes: dict):
 ## Language Stuff
 ###
 
+class Language:
+
+    def __init__(self, language: str):
+        self.language = language
+        self.data = None
+
+        self._loaded = False
+
+    def get_item(self, item: str):
+        if self._loaded == False:
+            return False
+
+        try:
+            return self.data[item]
+        except:
+            return None
+
+    async def load_language_data(self):
+
+        log.debug(f'Loading languge {self.language}...')
+
+        try:
+
+            with open(f'langs/{self.language}', 'r', encoding='utf-8') as f:
+                self.data = json.load(f)
+                self._loaded = True
+            
+            return True
+        
+        except:
+
+            try:
+
+                with open(f'langs/{self.language}', 'r', encoding='utf-8-sig') as f:
+                    self.data = json.load(f)
+                    self._loaded = True
+
+                log.debug(f'Language {self.language} loaded!')
+                
+                return True
+            
+            except:
+
+                log.error(f'An error ocurred loading language {self.language}.')
+
+                return False
 
 ###
 ## API
