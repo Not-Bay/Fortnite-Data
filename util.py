@@ -22,7 +22,7 @@ configuration = None
 database = None
 ready = False
 languages = {}
-fortniteapi = None
+fortniteapi = {}
 server_cache = {}
 
 on_ready_count = 0
@@ -251,7 +251,9 @@ class Language:
 
 class FortniteAPI:
 
-    def __init__(self):
+    def __init__(self, language: str):
+
+        self.language = language
 
         self.ClientSession = aiohttp.ClientSession
         self.headers = {
@@ -276,11 +278,11 @@ class FortniteAPI:
 
     async def _load_cosmetics(self):
 
-        log.debug('Updating cosmetic cache...')
+        log.debug(f'[{self.language}] Updating cosmetic cache...')
 
         async with self.ClientSession() as session:
             
-            response = await session.get('https://fortnite-api.com/v2/cosmetics/br', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/cosmetics/br?language={self.language}', headers=self.headers)
 
             if response.status != 200:
                 data = None
@@ -289,7 +291,7 @@ class FortniteAPI:
 
             if data == None:
                 log.warning('Something was wrong with cosmetics API. Using cached cosmetics')
-                data = json.load(open('cache/cosmetics/all.json', 'r', encoding='utf-8'))
+                data = json.load(open(f'cache/cosmetics/all_{self.language}.json', 'r', encoding='utf-8'))
 
 
         for cosmetic in data['data']:
@@ -343,12 +345,12 @@ class FortniteAPI:
                     continue
       
 
-        with open('cache/cosmetics/all.json', 'w', encoding='utf-8') as f:
+        with open(f'cache/cosmetics/all_{self.language}.json', 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
         self._loaded_all = True
 
-        log.debug(f'Updated cosmetic cache. Loaded {len(self.all_cosmetics)} cosmetics.')
+        log.debug(f'[{self.language}] Updated cosmetic cache. Loaded {len(self.all_cosmetics)} cosmetics.')
 
         return self.all_cosmetics
 
@@ -356,6 +358,7 @@ class FortniteAPI:
     async def get_cosmetic(self, query: str, **kwargs):
 
         cosmetic_type = kwargs.get('cosmetic_type', None)
+        match_method = kwargs.get('match_method', 'starts')
 
         if len(self.all_cosmetics) == 0:
             await self._load_cosmetics()
@@ -393,16 +396,28 @@ class FortniteAPI:
             list_to_search = self.all_cosmetics
 
         results = []
+
         is_id = query.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_', 'bannertoken_'))
 
         for item in list_to_search:
 
             if is_id:
-                if item['id'].lower().startswith(query.lower()):
-                    results.append(item)
+                if match_method == 'starts':
+                    if item['id'].lower().startswith(query.lower()):
+                        results.append(item)
+
+                elif match_method == 'contains':
+                    if query.lower() in item['id'].lower():
+                        results.append(item)
+
             else:
-                if item['name'].lower().startswith(query.lower()):
-                    results.append(item)
+                if match_method == 'starts':
+                    if item['name'].lower().startswith(query.lower()):
+                        results.append(item)
+                
+                elif match_method == 'contains':
+                    if query.lower() in item['name'].lower():
+                        results.append(item)
 
         return results
 

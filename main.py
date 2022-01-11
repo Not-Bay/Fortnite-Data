@@ -36,6 +36,9 @@ async def on_ready():
         else:
             util.languages[i] = False
 
+        util.fortniteapi[i] = util.FortniteAPI(i)
+        await util.fortniteapi[i]._load_cosmetics()
+
     for cog in util.configuration.get('cogs'):
         try:
             bot.load_extension(f'cogs.{cog}')
@@ -63,7 +66,6 @@ def run():
 
     util.configuration = util.get_config()
     util.database = util.get_mongoclient().fortnitedata
-    util.fortniteapi = util.FortniteAPI()
 
     log.debug('Starting discord bot...')
 

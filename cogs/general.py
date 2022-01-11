@@ -99,7 +99,6 @@ class General(commands.Cog):
 
         server = util.database_get_server(ctx.guild)
         lang = server['language']
-        search_language = server['search_language']
 
         if name_or_id == None:
 
@@ -120,10 +119,13 @@ class General(commands.Cog):
                 '--loadingscreen',
                 '--spray',
                 '--glider',
-                '--banner'
+                '--banner',
+                '--contains',
+                '--starts'
             ]
 
             cosmetic_type = None
+            match_method = None
             splitted_name_or_id = name_or_id.split()
 
             log.debug(f'Checking for special args in "{name_or_id}"')
@@ -134,7 +136,12 @@ class General(commands.Cog):
 
                     if i.lower() in special_args:
 
-                        cosmetic_type = str(i.replace('--', ''))
+                        if i.lower() in ['--contains', '--starts']:
+                            match_method = str(i.replace('--', ''))
+
+                        else:
+                            cosmetic_type = str(i.replace('--', ''))
+
                         name_or_id = name_or_id.replace(f' {i}', '')
 
                         log.debug(f'Detected special arg: "{i}"')
@@ -150,14 +157,23 @@ class General(commands.Cog):
 
                 log.debug(f'Searching with args: "{name_or_id}"')
 
-                results = await util.fortniteapi.get_cosmetic(query = name_or_id, language=search_language)
+                if match_method == None:
+                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id)
+                
+                else:
+
+                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, match_method = match_method)
 
             
             else:
 
                 log.debug(f'Searching {cosmetic_type} with args: "{name_or_id}"')
 
-                results = await util.fortniteapi.get_cosmetic(query = name_or_id, cosmetic_type=cosmetic_type, language=search_language)
+                if match_method == None:
+                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_type = cosmetic_type)
+                
+                else:
+                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_type = cosmetic_type, match_method = match_method)
 
             if results == False:
                 await ctx.send(embed=discord.Embed(
@@ -342,7 +358,7 @@ class General(commands.Cog):
 
         lang = util.get_guild_lang(ctx.guild)
 
-        data = await util.fortniteapi.get_news()
+        data = await util.fortniteapi[lang].get_news()
 
         if data == False:
 
@@ -494,7 +510,7 @@ class General(commands.Cog):
 
         else:
 
-            data = await util.fortniteapi.get_aes(keyformat=keyformat)
+            data = await util.fortniteapi[lang].get_aes(keyformat=keyformat)
 
             if data == False:
 
@@ -618,13 +634,13 @@ class General(commands.Cog):
             interaction = await self.bot.wait_for('button_click', check=check, timeout=180)
 
             if interaction.custom_id == 'SEARCH_TYPE_EPIC':
-                data = await util.fortniteapi.get_stats(account_name=account_name, account_type='epic')
+                data = await util.fortniteapi[lang].get_stats(account_name=account_name, account_type='epic')
             
             elif interaction.custom_id == 'SEARCH_TYPE_PSN':
-                data = await util.fortniteapi.get_stats(account_name=account_name, account_type='psn')
+                data = await util.fortniteapi[lang].get_stats(account_name=account_name, account_type='psn')
 
             elif interaction.custom_id == 'SEARCH_TYPE_XBOX':
-                data = await util.fortniteapi.get_stats(account_name=account_name, account_type='xbl')
+                data = await util.fortniteapi[lang].get_stats(account_name=account_name, account_type='xbl')
 
             
             if data['status'] == 404:
@@ -694,7 +710,7 @@ class General(commands.Cog):
 
         else:
 
-            data = await util.fortniteapi.get_cc(code=creator_code)
+            data = await util.fortniteapi[lang].get_cc(code=creator_code)
 
             if data == False:
 
@@ -727,7 +743,7 @@ class General(commands.Cog):
 
         lang = util.get_guild_lang(ctx.guild)
 
-        data = await util.fortniteapi.get_new_items()
+        data = await util.fortniteapi[lang].get_new_items()
 
         if data == False:
 
