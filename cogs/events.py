@@ -17,18 +17,20 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
 
+        lang = util.get_guild_lang(ctx.guild)
+
         if isinstance(error, commands.CommandNotFound):
             return
 
         if isinstance(error, commands.CommandOnCooldown):
 
-            end_seconds = int(error.retry_after[0]) + 1
+            end_seconds = int(str(error.retry_after)[0]) + 1
 
             embed = discord.Embed(
-                description = 'You are on cooldown!',
+                description = util.get_str(lang, 'command_string_on_cooldown'),
                 color = discord.Colour.orange()
             )
-            embed.set_footer(text=f'Try again in {end_seconds}')
+            embed.set_footer(text=util.get_str(lang, 'command_string_on_cooldown_retry_after').format(seconds = end_seconds))
             
             await ctx.send(
                 embed=embed
@@ -38,11 +40,11 @@ class Events(commands.Cog):
         if isinstance(error, commands.DisabledCommand):
 
             embed = discord.Embed(
-                title = 'Command disabled',
-                description = 'Sorry but this command is temporarily disabled.',
+                title = util.get_str(lang, 'command_string_disabled_command'),
+                description = util.get_str(lang, 'command_string_disabled_command_description'),
                 color = discord.Colour.red()
             )
-            embed.set_footer(text='Check our support server for more information')
+            embed.set_footer(text=util.get_str(lang, 'command_string_disabled_command_footer'))
 
             await ctx.send(
                 embed = embed
