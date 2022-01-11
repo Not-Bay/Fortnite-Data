@@ -22,6 +22,8 @@ class General(commands.Cog):
         Shows the commands of the bot. Shows info about a command if you enter it as argument
         """
 
+        lang = util.get_guild_lang(ctx.guild)
+
         if command_ == None:
 
             prefix = util.get_prefix(self.bot, ctx.message)
@@ -37,17 +39,17 @@ class General(commands.Cog):
                     continue
 
             embed = discord.Embed(
-                title = 'Help',
-                description = f'Use `{prefix}help <command>` to see more info about a command.',
+                title = util.get_str(lang, 'command_string_help'),
+                description = util.get_str(lang, 'command_string_to_see_more_info_about_a_command').format(prefix = ctx.prefix),
                 color = 0x349eeb
             )
-            embed.add_field(name='Commands:', value=general_cmds_str, inline=False)
+            embed.add_field(name=util.get_str(lang, 'command_string_commands'), value=general_cmds_str, inline=False)
 
-            embed.set_footer(text=f'Made by Bay#4384 • Version {util.version}')
+            embed.set_footer(text=util.get_str(lang, 'command_string_footer_credits').format(version = util.version))
             embed.set_thumbnail(url='https://images-ext-2.discordapp.net/external/BZlqfymUFg4jvrOetFhqr6u6YbaptHhYkPCR7yZUb10/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.webp')
 
             components = [
-                Button(style=ButtonStyle.URL, label='Support Server', url='https://discord.gg/UU9HjA5')
+                Button(style=ButtonStyle.URL, label=util.get_str(lang, 'command_button_support_server'), url='https://discord.gg/UU9HjA5')
             ]
 
             await ctx.send(embed=embed, components=components)
@@ -60,7 +62,7 @@ class General(commands.Cog):
             if cmd == None:
 
                 await ctx.send(embed=discord.Embed(
-                    description = 'That command was not found',
+                    description = util.get_str(lang, 'command_string_command_not_found'),
                     color = 0xff2929
                 ))
                 return
@@ -74,16 +76,16 @@ class General(commands.Cog):
                     aliases_str += f'`{alias}` '
 
                 if aliases_str == '':
-                    aliases_str = 'There\'s no aliases'
+                    aliases_str = util.get_str(lang, 'command_string_no_alias_found')
 
                 embed = discord.Embed(
-                    title = 'Help',
-                    description = f'Command `{prefix}{cmd.name}`:',
+                    title = util.get_str(lang, 'command_string_help'),
+                    description = util.get_str(lang, 'command_string_command').format(prefix = ctx.prefix, command = cmd.name),
                     color = 0x349eeb
                 )
-                embed.add_field(name='Description:', value=f'`{cmd.help}`', inline=False)
-                embed.add_field(name='Usage:', value=f'`{prefix}{cmd.usage}`', inline=False)
-                embed.add_field(name='Aliases:', value=aliases_str, inline=False)
+                embed.add_field(name=util.get_str(lang, 'command_string_description'), value=f'`{cmd.help}`', inline=False)
+                embed.add_field(name=util.get_str(lang, 'command_string_usage'), value=f'`{prefix}{cmd.usage}`', inline=False)
+                embed.add_field(name=util.get_str(lang, 'command_string_aliases'), value=aliases_str, inline=False)
 
                 embed.set_thumbnail(url='https://images-ext-2.discordapp.net/external/BZlqfymUFg4jvrOetFhqr6u6YbaptHhYkPCR7yZUb10/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.webp')
 
@@ -96,12 +98,13 @@ class General(commands.Cog):
         """Search for cosmetics by their name or ID. Special arguments available."""
 
         server = util.database_get_server(ctx.guild)
-        search_language = server['language']
+        lang = server['language']
+        search_language = server['search_language']
 
         if name_or_id == None:
 
             await ctx.send(embed=discord.Embed(
-                description = f'Missing parameters! Usage: `{ctx.prefix}item <name or ID>`',
+                description = util.get_str(lang, 'command_string_item_missing_parameters').format(prefix = ctx.prefix),
                 color = discord.Colour.blue()
             ))
             return
@@ -158,7 +161,7 @@ class General(commands.Cog):
 
             if results == False:
                 await ctx.send(embed=discord.Embed(
-                    description = f'Sorry but the cosmetics data for this language is currently loading. Please try again in a few seconds.',
+                    description = util.get_str(lang, 'command_string_cosmetics_data_loading'),
                     color = discord.Colour.orange()
                 ))
                 return
@@ -167,7 +170,7 @@ class General(commands.Cog):
             if len(results) == 0:
 
                 await ctx.send(embed=discord.Embed(
-                    description = 'No cosmetics were found with that name/id.',
+                    description = util.get_str(lang, 'command_string_no_cosmetics_found'),
                     color = discord.Colour.red()
                 ))
                 return
@@ -188,10 +191,10 @@ class General(commands.Cog):
                         color = util.get_color_by_rarity(cosmetic['rarity']['value'])
                     )
 
-                    i.add_field(name='ID', value=f'`{cosmetic["id"]}`', inline=False)
-                    i.add_field(name='Rarity', value=f'`{cosmetic["rarity"]["displayValue"]}`', inline=False)
-                    i.add_field(name='Introduction', value=f'`{cosmetic["introduction"]["text"]}`' if cosmetic['introduction'] else 'Not introduced yet', inline=False)
-                    i.add_field(name='Set', value=f'`{cosmetic["set"]["text"]}`' if cosmetic['set'] else 'None', inline=False)
+                    i.add_field(name=util.get_str(lang, 'command_string_id'), value=f'`{cosmetic["id"]}`', inline=False)
+                    i.add_field(name=util.get_str(lang, 'command_string_rarity'), value=f'`{cosmetic["rarity"]["displayValue"]}`', inline=False)
+                    i.add_field(name=util.get_str(lang, 'command_string_introduction'), value=f'`{cosmetic["introduction"]["text"]}`' if cosmetic['introduction'] else 'Not introduced yet', inline=False)
+                    i.add_field(name=util.get_str(lang, 'command_string_set'), value=f'`{cosmetic["set"]["text"]}`' if cosmetic['set'] else 'None', inline=False)
 
                     if cosmetic['searchTags'] != None:
 
@@ -199,15 +202,15 @@ class General(commands.Cog):
                         for i in cosmetic['searchTags']:
                             search_tags_str + f'`{i}`' + '\n'
 
-                        i.add_field(name='Search Tags', value=search_tags_str, inline=False)
+                        i.add_field(name=util.get_str(lang, 'command_string_search_tags'), value=search_tags_str, inline=False)
 
                     else:
-                        i.add_field(name='Search Tags', value=f'None', inline=False)
+                        i.add_field(name=util.get_str(lang, 'command_string_search_tags'), value=util.get_str(lang, 'command_string_none'), inline=False)
                         
 
                     i.set_thumbnail(url=cosmetic['images']['icon'])
 
-                    i.set_footer(text=f'Result {count} of {len(results)}')
+                    i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(results)))
 
                     pages.append(i)
 
@@ -217,8 +220,8 @@ class General(commands.Cog):
                 if len(results) > 1:
                     components = [[
                         Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                        Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                        Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
+                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
                         Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
                     ]]
 
@@ -253,8 +256,8 @@ class General(commands.Cog):
                             embed = pages[current_page],
                             components = [[
                                 Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                                Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                                Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
+                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
                                 Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
                             ]]
                         )
@@ -273,6 +276,8 @@ class General(commands.Cog):
     async def shop(self, ctx, language = 'en'):
         """Shows the latest fortnite item shop image."""
 
+        lang = util.get_guild_lang(ctx.guild)
+
         async with aiohttp.ClientSession() as session:
 
             URL = f'https://fortool.fr/cm/api/v1/shop?lang={language}'
@@ -285,7 +290,7 @@ class General(commands.Cog):
                 if data['result'] == False:
 
                     await ctx.send(embed=discord.Embed(
-                        description = f'Sorry but that language is not supported.',
+                        description = util.get_str(lang, 'command_string_not_supported_language'),
                         color = discord.Colour.blue()
                     ))
                     return
@@ -293,7 +298,7 @@ class General(commands.Cog):
                 else:
 
                     await ctx.send(embed=discord.Embed(
-                        description = f'An error ocurred getting item shop. API returned status {response.status}.',
+                        description = util.get_str(lang, 'command_string_item_shop_fetch_error').format(status = response.status),
                         color = discord.Colour.blue()
                     ))
                     return
@@ -305,7 +310,7 @@ class General(commands.Cog):
                     data = await response.json()
 
                     embed = discord.Embed(
-                        title = 'Current fortnite item shop',
+                        title = util.get_str(lang, 'command_string_current_item_shop'),
                         color = discord.Colour.blue()
                     )
                     embed.set_image(url=f'{data["images"]["carousel"]}?cache={int(time.time())}')
@@ -315,7 +320,7 @@ class General(commands.Cog):
                 except KeyError:
 
                     await ctx.send(embed=discord.Embed(
-                        description = 'Sorry but that language is not supported by the API.',
+                        description = util.get_str(lang, 'command_string_api_not_supported_language'),
                         color = discord.Colour.blue()
                     ))
                     return
@@ -325,7 +330,7 @@ class General(commands.Cog):
                     log.error(f'An error ocurred sendind shop image. Traceback: {traceback.format_exc()}')
 
                     await ctx.send(embed=discord.Embed(
-                        description = f'An error ocurred sending item shop image.',
+                        description = util.get_str(lang, 'command_string_error_sending_item_shop'),
                         color = discord.Colour.red()
                     ))
                     return
@@ -335,12 +340,14 @@ class General(commands.Cog):
     async def news(self, ctx, language = 'en'):
         """Shows an interactive message with all the game news (Battle Royale, Creative and Save The World)"""
 
+        lang = util.get_guild_lang(ctx.guild)
+
         data = await util.fortniteapi.get_news()
 
         if data == False:
 
             await ctx.send(embed=discord.Embed(
-                description = 'An error ocurred getting news data. Please try again later.',
+                description = util.get_str(lang, 'command_string_error_fetching_news'),
                 color = discord.Colour.blue()
             ))
             return
@@ -352,46 +359,49 @@ class General(commands.Cog):
             stw_motds = []
 
             count = 0
-            for motd in data['data']['br']['motds']:
-                count += 1
+            if data['data']['br'] != None:
+                for motd in data['data']['br']['motds']:
+                    count += 1
 
-                embed = discord.Embed(
-                    title = motd['tabTitle'],
-                    description = f'**{motd["title"]}**\n{motd["body"]}',
-                    color = discord.Colour.blue()
-                )
-                embed.set_footer(text=f'Page {count} of {len(data["data"]["br"]["motds"])}')
-                embed.set_image(url=motd['image'])
-                
-                br_motds.append(embed)
-
-            count = 0
-            for motd in data['data']['creative']['motds']:
-                count += 1
-
-                embed = discord.Embed(
-                    title = motd['tabTitle'],
-                    description = f'**{motd["title"]}**\n{motd["body"]}',
-                    color = discord.Colour.blue()
-                )
-                embed.set_image(url=motd['image'])
-                embed.set_footer(text=f'Page {count} of {len(data["data"]["creative"]["motds"])}')
-                
-                cr_motds.append(embed)
+                    embed = discord.Embed(
+                        title = motd['tabTitle'],
+                        description = f'**{motd["title"]}**\n{motd["body"]}',
+                        color = discord.Colour.blue()
+                    )
+                    embed.set_footer(text=f'Page {count} of {len(data["data"]["br"]["motds"])}')
+                    embed.set_image(url=motd['image'])
+                    
+                    br_motds.append(embed)
 
             count = 0
-            for message in data['data']['stw']['messages']:
-                count += 1
+            if data['data']['creative'] != None:
+                for motd in data['data']['creative']['motds']:
+                    count += 1
 
-                embed = discord.Embed(
-                    title = message['adspace'],
-                    description = f'**{message["title"]}**\n{message["body"]}',
-                    color = discord.Colour.blue()
-                )
-                embed.set_image(url=message['image'])
-                embed.set_footer(text=f'Page {count} of {len(data["data"]["stw"]["messages"])}')
-                
-                stw_motds.append(embed)
+                    embed = discord.Embed(
+                        title = motd['tabTitle'],
+                        description = f'**{motd["title"]}**\n{motd["body"]}',
+                        color = discord.Colour.blue()
+                    )
+                    embed.set_image(url=motd['image'])
+                    embed.set_footer(text=f'Page {count} of {len(data["data"]["creative"]["motds"])}')
+                    
+                    cr_motds.append(embed)
+
+            count = 0
+            if data['data']['stw'] != None:
+                for message in data['data']['stw']['messages']:
+                    count += 1
+
+                    embed = discord.Embed(
+                        title = message['adspace'],
+                        description = f'**{message["title"]}**\n{message["body"]}',
+                        color = discord.Colour.blue()
+                    )
+                    embed.set_image(url=message['image'])
+                    embed.set_footer(text=f'Page {count} of {len(data["data"]["stw"]["messages"])}')
+                    
+                    stw_motds.append(embed)
 
 
             books = [br_motds, cr_motds, stw_motds]
@@ -402,13 +412,13 @@ class General(commands.Cog):
                 embed = books[current_book][current_page],
                 components = [
                     [
-                        Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label='Battle Royale', custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                        Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label='Creative', custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
-                        Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label='Save the World', custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
+                        Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
+                        Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
+                        Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
                     ],
                     [
-                        Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                        Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(books[current_book]) else False)
+                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(books[current_book]) else False)
                     ]
                 ]
             )
@@ -442,13 +452,13 @@ class General(commands.Cog):
 
                     components = [
                         [
-                            Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label='Battle Royale', custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                            Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label='Creative', custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
-                            Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label='Save the World', custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
+                            Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
+                            Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
+                            Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
                         ],
                         [
-                            Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(books[current_book]) else False)
+                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(books[current_book]) else False)
                         ]
                     ]
 
@@ -472,10 +482,12 @@ class General(commands.Cog):
     async def aes(self, ctx, keyformat = 'hex'):
         """Shows the current AES keys to decrypt game files"""
 
+        lang = util.get_guild_lang(ctx.guild)
+
         if keyformat.lower() not in ['base64', 'hex']:
 
             await ctx.send(embed=discord.Embed(
-                description = f'Key format must be `base64` or `hex`. Example: `{ctx.prefix}aes base64`',
+                description = util.get_str(lang, 'command_string_key_format_example').format(prefix = ctx.prefix),
                 color = discord.Colour.red()
             ))
             return
@@ -487,14 +499,14 @@ class General(commands.Cog):
             if data == False:
 
                 await ctx.send(embed=discord.Embed(
-                    description = f'Could not get AES keys right now. Try again later',
+                    description = util.get_str(lang, 'command_string_unavailable_aes'),
                     color = discord.Colour.red()
                 ))
                 return
 
             embed = discord.Embed(
-                title = f'AES for build {data["data"]["build"]}', 
-                description = f'Main key: {data["data"]["mainKey"]}',
+                title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
+                description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
                 color = discord.Colour.blue()
             )
 
@@ -510,13 +522,13 @@ class General(commands.Cog):
                     pages.append(embed)
 
                     embed = discord.Embed(
-                        title = f'AES for build {data["data"]["build"]}', 
-                        description = f'Main key: {data["data"]["mainKey"]}',
+                        title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
+                        description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
                         color = discord.Colour.blue()
                     )
                     count = 0
 
-                embed.add_field(name=key['pakFilename'], value=f'GUID: {key["pakGuid"]}\nKey: {key["key"]}', inline=False)
+                embed.add_field(name=key['pakFilename'], value=f'GUID: {key["pakGuid"]}\n{util.get_str(lang, "command_string_key")}: {key["key"]}', inline=False)
 
             if len(pages) == 1:
 
@@ -528,8 +540,8 @@ class General(commands.Cog):
             else:
 
                 components = [[
-                    Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                    Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False)
+                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False)
                 ]]
 
                 msg = await ctx.send(
@@ -556,8 +568,8 @@ class General(commands.Cog):
                             type = 7,
                             embed = pages[current_page],
                             components = [[
-                                Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                                Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False)
+                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False)
                             ]]
                         )
                         continue
@@ -575,9 +587,11 @@ class General(commands.Cog):
     async def stats(self, ctx, *, account_name = None):
         """Search for player stats. Search can be made for Epic, PSN and XBOX accounts"""
 
+        lang = util.get_guild_lang(ctx.guild)
+
         if account_name == None:
             await ctx.send(embed=discord.Embed(
-                description = f'Missing parameters! Usage: `{ctx.prefix}stats <account name>`',
+                description = util.get_str(lang, 'command_string_stats_missing_parameters').format(prefix = ctx.prefix),
                 color = discord.Colour.blue()
             ))
             return
@@ -590,7 +604,7 @@ class General(commands.Cog):
 
         msg = await ctx.send(
             embed=discord.Embed(
-                description = 'Select the account type to search stats',
+                description = util.get_str(lang, 'command_string_select_account_type'),
                 color = discord.Colour.blue()
             ),
             components=components
@@ -616,7 +630,7 @@ class General(commands.Cog):
             if data['status'] == 404:
 
                 embed = discord.Embed(
-                    description = 'There is no stats for this account or it does not exists.',
+                    description = util.get_str(lang, 'command_string_no_stats_or_not_exists'),
                     color = discord.Colour.red()
                 )
                 await interaction.respond(
@@ -629,7 +643,7 @@ class General(commands.Cog):
             elif data['status'] == 403:
 
                 embed = discord.Embed(
-                    description = 'Sorry but the stats of this account are private.',
+                    description = util.get_str(lang, 'command_string_stats_are_private'),
                     color = discord.Colour.red()
                 )
                 await interaction.respond(
@@ -642,11 +656,11 @@ class General(commands.Cog):
             elif data['status'] == 200:
 
                 embed = discord.Embed(
-                    title = f'{data["data"]["account"]["name"]} stats',
+                    title = util.get_str(lang, 'command_string_stats_of_name').format(name = data['data']['account']['name']),
                     color = discord.Colour.blue()
                 )
                 embed.set_image(url=f'{data["data"]["image"]}?cache={time.time()}')
-                embed.set_footer(text=f'Level {data["data"]["battlePass"]["level"]} • Account ID {data["data"]["account"]["id"]}')
+                embed.set_footer(text=util.get_str(lang, 'command_string_stats_footer').format(level = data['data']['battlePass']['level'], accountId = data['data']['account']['id']))
 
                 await interaction.respond(
                     type = 7,
@@ -658,7 +672,7 @@ class General(commands.Cog):
         except asyncio.TimeoutError:
 
             await msg.edit(embed=discord.Embed(
-                description = 'Search canceled by timeout.',
+                description = util.get_str(lang, 'command_string_search_canceled_by_timeout'),
                 color = discord.Colour.red()
             ), components=[])
 
@@ -668,10 +682,12 @@ class General(commands.Cog):
     async def code(self, ctx, *, creator_code = None):
         """Shows info about a creator code"""
 
+        lang = util.get_guild_lang(ctx.guild)
+
         if creator_code == None:
 
             await ctx.send(embed=discord.Embed(
-                description = f'Missing parameters! Usage: `{ctx.prefix}code <creator code>`',
+                description = util.get_str(lang, 'command_string_code_missing_parameters').format(prefix = ctx.prefix),
                 color = discord.Colour.red()
             ))
             return
@@ -683,7 +699,7 @@ class General(commands.Cog):
             if data == False:
 
                 await ctx.send(embed=discord.Embed(
-                    description = 'No creator code found.',
+                    description = util.get_str(lang, 'command_string_no_code_found'),
                     color = discord.Colour.red()
                 ))
                 return
@@ -691,15 +707,15 @@ class General(commands.Cog):
             else:
 
                 embed = discord.Embed(
-                    title = 'Creator code search',
+                    title = util.get_str(lang, 'command_string_creator_code_search'),
                     color = discord.Colour.blue()
                 )
 
-                embed.add_field(name='Code', value=f'`{data["data"]["code"]}`')
-                embed.add_field(name='Account', value=f'`{data["data"]["account"]["name"]}`')
-                embed.add_field(name='Status', value=f'`{data["data"]["status"]}`')
+                embed.add_field(name=util.get_str(lang, 'command_string_code'), value=f'`{data["data"]["code"]}`')
+                embed.add_field(name=util.get_str(lang, 'command_string_account'), value=f'`{data["data"]["account"]["name"]}`')
+                embed.add_field(name=util.get_str(lang, 'command_string_status'), value=f'`{data["data"]["status"]}`')
 
-                embed.set_footer(text=f'Account id {data["data"]["account"]["id"]}')
+                embed.set_footer(text=util.get_str(lang, 'command_string_account_id').format(id = data['data']['account']['id']))
 
                 await ctx.send(embed=embed)
                 
@@ -709,12 +725,14 @@ class General(commands.Cog):
     async def upcoming(self, ctx):
         """Shows an interactive message with all the new/upcoming cosmetics"""
 
+        lang = util.get_guild_lang(ctx.guild)
+
         data = await util.fortniteapi.get_new_items()
 
         if data == False:
 
             await ctx.send(embed=discord.Embed(
-                description = 'Could not get upcoming items right now. Try again later',
+                description = util.get_str(lang, 'command_string_upcoming_cosmetics_fetch_error'),
                 color = discord.Colour.red()
             ))
             return
@@ -731,20 +749,20 @@ class General(commands.Cog):
                 count += 1
 
                 i = discord.Embed(
-                    title = f'Upcoming cosmetics',
-                    description = f'Upcoming cosmetics of build {data["data"]["build"]}',
+                    title = util.get_str(lang, 'command_string_upcoming_cosmetics'),
+                    description = util.get_str(lang, 'command_string_upcoming_cosmetics_for_build').format(build = data['data']['build']),
                     color = util.get_color_by_rarity(cosmetic['rarity']['value'])
                 )
 
-                i.add_field(name='Name', value=f'`{cosmetic["name"]}`', inline=False)
-                i.add_field(name='Description', value=f'`{cosmetic["description"]}`', inline=False)
-                i.add_field(name='ID', value=f'`{cosmetic["id"]}`', inline=False)
-                i.add_field(name='Rarity', value=f'`{cosmetic["rarity"]["displayValue"]}`', inline=False)
-                i.add_field(name='Set', value=f'`{cosmetic["set"]["text"]}`' if cosmetic['set'] else 'None', inline=False)
+                i.add_field(name=util.get_str(lang, 'command_string_name'), value=f'`{cosmetic["name"]}`', inline=False)
+                i.add_field(name=util.get_str(lang, 'command_string_description_no_dots'), value=f'`{cosmetic["description"]}`', inline=False)
+                i.add_field(name=util.get_str(lang, 'command_string_id'), value=f'`{cosmetic["id"]}`', inline=False)
+                i.add_field(name=util.get_str(lang, 'command_string_rarity'), value=f'`{cosmetic["rarity"]["displayValue"]}`', inline=False)
+                i.add_field(name=util.get_str(lang, 'command_string_set'), value=f'`{cosmetic["set"]["text"]}`' if cosmetic['set'] else util.get_str(lang, 'command_string_none'), inline=False)
 
                 i.set_thumbnail(url=cosmetic['images']['icon'])
 
-                i.set_footer(text=f'Result {count} of {len(data["data"]["items"])}')
+                i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(data['data']['items'])))
 
                 pages.append(i)
 
@@ -754,8 +772,8 @@ class General(commands.Cog):
             if len(pages) > 1:
                 components = [[
                     Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                    Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                    Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
+                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
                     Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
                 ]]
 
@@ -790,8 +808,8 @@ class General(commands.Cog):
                         embed = pages[current_page],
                         components = [[
                             Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label='Next', custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
+                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
                             Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
                         ]]
                     )

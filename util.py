@@ -23,6 +23,7 @@ database = None
 ready = False
 languages = {}
 fortniteapi = None
+server_cache = {}
 
 on_ready_count = 0
 start_time = time.time()
@@ -32,14 +33,7 @@ start_time = time.time()
 ###
 
 def get_prefix(bot, message):
-    if isinstance(message.channel, discord.DMChannel):
-        return configuration.get('default_prefix')
-    else:
-        server = database.guilds.find_one({'server_id': message.guild.id})
-        if server == None:
-            return configuration.get('default_prefix')
-        else:
-            return server.get('prefix')
+    return 't!'
 
 
 def get_config():
@@ -77,16 +71,25 @@ def get_mongoclient():
         log.critical(f'Failed while connecting to database. Traceback:\n{traceback.format_exc()}')
         sys.exit(1)
 
-def get_string(lang: str, string: str):
+def get_str(lang: str, string: str):
 
-    if languages[lang] == False:
-
+    try:
         return languages[lang].get_item(item = string)
     
-    else:
+    except KeyError:
 
-        return languages['en'].get_item(item = string)
+        return languages['es'].get_item(item = string)
 
+
+def get_guild_lang(guild: discord.Guild):
+
+    try:
+        return server_cache[str(guild.id)]['language']
+    except KeyError:
+        try:
+            return database_get_server(guild)['language']
+        except KeyError:
+            return 'en'
 
 async def wait_cache_load():
 
@@ -104,8 +107,13 @@ async def wait_cache_load():
 # Servers
 def database_get_server(guild: discord.Guild):
 
-    data = database.guilds.find_one({'server_id': guild.id})
-    return data
+    try:
+        return server_cache[str(guild.id)]
+    except KeyError:
+        data = database.guilds.find_one({'server_id': guild.id})
+        server_cache[str(guild.id)] = data
+
+        return data
 
 def database_store_server(guild: discord.Guild):
 
@@ -162,6 +170,7 @@ def database_remove_server(guild: discord.Guild):
     if isinstance(delete, pymongo.results.DeleteResult):
 
         log.debug(f'Guild "{guild.id}" removed successfully.')
+        server_cache.pop(str(guild.id))
         return delete
 
     else:
@@ -178,6 +187,7 @@ def database_update_server(guild: discord.Guild, changes: dict):
     if isinstance(update, pymongo.results.UpdateResult):
 
         log.debug(f'Updated guild "{guild.id}" data successfully.')
+        server_cache.pop(str(guild.id))
         return update
 
     else:
@@ -203,7 +213,7 @@ class Language:
         try:
             return self.data[item]
         except:
-            return None
+            return f'missing {item} in {self.language}*'
 
     async def load_language_data(self):
 
@@ -211,7 +221,7 @@ class Language:
 
         try:
 
-            with open(f'langs/{self.language}', 'r', encoding='utf-8') as f:
+            with open(f'langs/{self.language}.json', 'r', encoding='utf-8') as f:
                 self.data = json.load(f)
                 self._loaded = True
             
@@ -221,7 +231,7 @@ class Language:
 
             try:
 
-                with open(f'langs/{self.language}', 'r', encoding='utf-8-sig') as f:
+                with open(f'langs/{self.language}.json', 'r', encoding='utf-8-sig') as f:
                     self.data = json.load(f)
                     self._loaded = True
 
@@ -348,7 +358,7 @@ class FortniteAPI:
         cosmetic_type = kwargs.get('cosmetic_type', None)
 
         if len(self.all_cosmetics) == 0:
-            self._load_cosmetics()
+            await self._load_cosmetics()
 
         list_to_search = None
 
