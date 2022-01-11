@@ -47,7 +47,7 @@ class General(commands.Cog):
             embed.set_thumbnail(url='https://images-ext-2.discordapp.net/external/BZlqfymUFg4jvrOetFhqr6u6YbaptHhYkPCR7yZUb10/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.webp')
 
             components = [
-                #Button(style=ButtonStyle.URL, label='Support Server', url='https://discord.gg/YJ8wK9H')
+                Button(style=ButtonStyle.URL, label='Support Server', url='https://discord.gg/UU9HjA5')
             ]
 
             await ctx.send(embed=embed, components=components)
@@ -95,13 +95,8 @@ class General(commands.Cog):
     async def item(self, ctx, *, name_or_id = None):
         """Search for cosmetics by their name or ID. Special arguments available."""
 
-        if util.fortniteapi._loaded_all == False:
-
-            await ctx.send(embed=discord.Embed(
-                description = f'Sorry but the cosmetics data are currently loading. Please try again in a few seconds.',
-                color = discord.Colour.orange()
-            ))
-            return
+        server = util.database_get_server(ctx.guild)
+        search_language = server['language']
 
         if name_or_id == None:
 
@@ -152,14 +147,21 @@ class General(commands.Cog):
 
                 log.debug(f'Searching with args: "{name_or_id}"')
 
-                results = await util.fortniteapi.get_cosmetic(query = name_or_id)
+                results = await util.fortniteapi.get_cosmetic(query = name_or_id, language=search_language)
 
             
             else:
 
                 log.debug(f'Searching {cosmetic_type} with args: "{name_or_id}"')
 
-                results = await util.fortniteapi.get_cosmetic(query = name_or_id, cosmetic_type=cosmetic_type)
+                results = await util.fortniteapi.get_cosmetic(query = name_or_id, cosmetic_type=cosmetic_type, language=search_language)
+
+            if results == False:
+                await ctx.send(embed=discord.Embed(
+                    description = f'Sorry but the cosmetics data for this language is currently loading. Please try again in a few seconds.',
+                    color = discord.Colour.orange()
+                ))
+                return
                 
 
             if len(results) == 0:
@@ -247,7 +249,7 @@ class General(commands.Cog):
                             current_page = len(pages) - 1
 
                         await interaction.respond(
-                            type = InteractionType.UpdateMessage,
+                            type = 7,
                             embed = pages[current_page],
                             components = [[
                                 Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
@@ -306,7 +308,7 @@ class General(commands.Cog):
                         title = 'Current fortnite item shop',
                         color = discord.Colour.blue()
                     )
-                    embed.set_image(url=f'{data["images"]["carousel"]}?cache={time.time()}')
+                    embed.set_image(url=f'{data["images"]["carousel"]}?cache={int(time.time())}')
 
                     await ctx.send(embed=embed)
 
@@ -451,7 +453,7 @@ class General(commands.Cog):
                     ]
 
                     await interaction.respond(
-                        type = InteractionType.UpdateMessage,
+                        type = 7,
                         embed = books[current_book][current_page],
                         components = components
                     )
@@ -551,7 +553,7 @@ class General(commands.Cog):
                             current_page -= 1
 
                         await interaction.respond(
-                            type = InteractionType.UpdateMessage,
+                            type = 7,
                             embed = pages[current_page],
                             components = [[
                                 Button(style=ButtonStyle.blue, label='Back', custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
@@ -618,7 +620,7 @@ class General(commands.Cog):
                     color = discord.Colour.red()
                 )
                 await interaction.respond(
-                    type = InteractionType.UpdateMessage,
+                    type = 7,
                     embed = embed,
                     components = []
                 )
@@ -631,7 +633,7 @@ class General(commands.Cog):
                     color = discord.Colour.red()
                 )
                 await interaction.respond(
-                    type = InteractionType.UpdateMessage,
+                    type = 7,
                     embed = embed,
                     components = []
                 )
@@ -647,7 +649,7 @@ class General(commands.Cog):
                 embed.set_footer(text=f'Level {data["data"]["battlePass"]["level"]} • Account ID {data["data"]["account"]["id"]}')
 
                 await interaction.respond(
-                    type = InteractionType.UpdateMessage,
+                    type = 7,
                     embed = embed,
                     components = []
                 )
@@ -784,7 +786,7 @@ class General(commands.Cog):
                         current_page = len(pages) - 1
 
                     await interaction.respond(
-                        type = InteractionType.UpdateMessage,
+                        type = 7,
                         embed = pages[current_page],
                         components = [[
                             Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
