@@ -42,7 +42,7 @@ class Tasks(commands.Cog):
 
         try: # New cosmetics
 
-            log.debug(f'Checking cosmetic updates...')
+            log.debug('Checking cosmetic updates...')
 
             for lang in util.configuration['languages']:
 
@@ -123,7 +123,7 @@ class Tasks(commands.Cog):
 
         try: # ingame news
 
-            log.debug(f'Checking ingame news updates...')
+            log.debug('Checking ingame news updates...')
 
             for lang in util.configuration['languages']:
 
@@ -235,7 +235,7 @@ class Tasks(commands.Cog):
 
                             count += 1
 
-                            if count == len(br_motds):
+                            if count == len(stw_motds):
                                 embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds)))
                             else:
                                 embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds)))
@@ -263,7 +263,7 @@ class Tasks(commands.Cog):
 
         try: # playlists
 
-            log.debug(f'Checking cosmetic updates...')
+            log.debug('Checking playlists updates...')
 
             for lang in util.configuration['languages']:
 
@@ -310,7 +310,7 @@ class Tasks(commands.Cog):
 
                             count += 1
 
-                            if count == len(br_motds):
+                            if count == len(added_playlists):
                                 embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(added_playlists)), icon_url = footer_icon)
                             else:
                                 embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(added_playlists)), icon_url = footer_icon)
@@ -325,9 +325,107 @@ class Tasks(commands.Cog):
 
                     log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
 
+                else:
+                    break
+
 
         except:
             log.error(f'Failed while checking playlists changes. Traceback:\n{traceback.format_exc()}')
+
+        try: # aes (using hex format)
+
+            log.debug('Checking aes updates...')
+
+            thereIsChanges = False
+
+            for lang in util.configuration['languages']:
+
+                to_send_list = []
+
+                cached_aes = json.load(open(f'cache/aes/hex.json', 'r', encoding='utf-8'))
+                new_aes = await util.fortniteapi[lang].get_aes()
+
+                if cached_aes['data']['mainKey'] != new_aes['data']['mainKey']:
+
+                    thereIsChanges = True
+
+                    embed = DiscordEmbed()
+                    embed.set_author(name=util.get_str(lang, 'update_message_string_aes_mainkey_changed'))
+
+                    embed_description = ''
+                    embed_description += f'{util.get_str(lang, "update_message_string_aes_old")} ~~`{cached_aes["data"]["mainKey"]}`~~\n'
+                    embed_description += f'{util.get_str(lang, "update_message_string_aes_new")} `{new_aes["data"]["mainKey"]}`'
+
+                    embed.color = 0x3498db
+
+                    embed.set_footer(text=util.get_str(lang, 'command_string_api_footer_credits'))
+
+                    to_send_list.append(embed)
+
+                if len(cached_aes['data']['dynamicKeys']) != len(new_aes['data']['dynamickeys']):
+
+                    thereIsChanges = True
+
+                    new_keys = []
+
+                    count = 0
+
+                    for key in new_aes['data']['dynamicKeys']:
+                        if key not in cached_aes['data']['dynamicKeys']:
+
+                            new_keys.append(key)
+
+                    for key in new_keys:
+
+                        embed = DiscordEmbed()
+
+                        if count == 0:
+                            embed.set_author(name=util.get_str(lang, 'update_message_string_aes_dynamickeys_changes_detected'))
+
+                        embed.add_embed_field(
+                            name = util.get_str(lang, 'update_message_string_aes_dynamickey_filename'),
+                            value = f'`{key["pakFilename"]}`',
+                            inline = False
+                        )
+                        embed.add_embed_field(
+                            name = util.get_str(lang, 'update_message_string_aes_dynamickey_guid'),
+                            value = f'`{key["pakGuid"]}`',
+                            inline = False
+                        )
+                        embed.add_embed_field(
+                            name = util.get_str(lang, 'update_message_string_aes_dynamickey_key'),
+                            value = f'`{key["key"]}`',
+                            inline = False
+                        )
+
+                        embed.color = 0x3498db
+
+                        count += 1
+
+                        if count == len(new_keys):
+                            embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(new_keys)))
+                        else:
+                            embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(new_keys)))
+
+                        to_send_list.append(embed)
+
+                if thereIsChanges == False:
+                    break
+
+                else:
+
+                    if lang == util.configuration['languages'][0]: # only update cache once
+                        with open(f'cache/aes/hex.json', 'w', encoding='utf-8') as f:
+                            json.dump(new_aes, f)
+
+                    result = await self.updates_channel_send(embeds=to_send_list, type_='aes', lang=lang)
+
+                    log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+
+                    continue
+
+        except:
+            log.error(f'Failed while checking aes changes. Traceback:\n{traceback.format_exc()}')
 
 
     async def updates_channel_send(self, embeds, type_, lang):
