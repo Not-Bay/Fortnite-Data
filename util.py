@@ -440,7 +440,7 @@ class FortniteAPI:
 
         async with self.ClientSession() as session:
                 
-            response = await session.get(f'https://fortnite-api.com/v2/cosmetics/br/new?lang={language}', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/cosmetics/br/new?language={language}', headers=self.headers)
 
             if response.status != 200:
                 return False
@@ -451,7 +451,7 @@ class FortniteAPI:
 
         async with self.ClientSession() as session:
 
-            response = await session.get(f'https://fortnite-api.com/v2/news?lang={language}', headers=self.headers)
+            response = await session.get(f'https://fortnite-api.com/v2/news?language={language}', headers=self.headers)
 
             if response.status != 200:
                 return False
