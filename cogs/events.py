@@ -65,6 +65,8 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_button_click(self, interaction):
 
+        lang = util.get_guild_lang(interaction.guild)
+
         if interaction.custom_id == 'SERVER_PREFIX_CONFIGURE':
 
             def check(message):
@@ -75,9 +77,9 @@ class Events(commands.Cog):
             msg = await interaction.respond(
                 type = 7,
                 embed = discord.Embed(
-                    description = 'Send the new prefix to use',
+                    description = util.get_str(lang, 'interaction_string_send_new_prefix'),
                     color = discord.Colour.blue()
-                ).set_footer(text='Type "cancel" to cancel'),
+                ).set_footer(text=util.get_Str(lang, 'interaction_string_cancel_text')),
                 components = []
             )
 
@@ -89,7 +91,7 @@ class Events(commands.Cog):
 
                     await interaction.message.edit(
                         embed = discord.Embed(
-                            description = f'Operation canceled by the user.',
+                            description = util.get_str(lang, 'interaction_string_canceled_by_user'),
                             color = discord.Colour.green()
                         )
                     )
@@ -99,7 +101,7 @@ class Events(commands.Cog):
 
                     await interaction.message.edit(
                         embed = discord.Embed(
-                            description = 'Sorry but the prefix must be a maximum of 4 characters.',
+                            description = util.get_str(lang, 'interaction_string_error_new_prefix_too_long'),
                             color = discord.Colour.red()
                         )
                     )
@@ -113,7 +115,7 @@ class Events(commands.Cog):
 
                         await interaction.message.edit(
                             embed = discord.Embed(
-                                description = 'The new prefix must be different from the old one.',
+                                description = util.get_str(lang, 'interaction_string_error_new_prefix_duplicate'),
                                 color = discord.Colour.red()
                             )
                         )
@@ -125,7 +127,7 @@ class Events(commands.Cog):
 
                         await interaction.message.edit(
                             embed = discord.Embed(
-                                description = f'Prefix changed to `{new_prefix}` successfully!',
+                                description = util.get_str(lang, 'interaction_string_changed_prefix'),
                                 color = discord.Colour.green()
                             )
                         )
@@ -135,7 +137,7 @@ class Events(commands.Cog):
 
                 await interaction.message.edit(
                     embed = discord.Embed(
-                        description = 'Canceled by timeout',
+                        description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
                         color = discord.Colour.red()
                     )
                 )
@@ -157,7 +159,7 @@ class Events(commands.Cog):
             msg = await interaction.respond(
                 type = 7,
                 embed = discord.Embed(
-                    description = 'Select the language to use',
+                    description = util.get_str(lang, 'interaction_string_select_language'),
                     color = discord.Colour.blue()
                 ),
                 components = components
@@ -174,7 +176,7 @@ class Events(commands.Cog):
                     await i.respond(
                         type = 7,
                         embed = discord.Embed(
-                            description = f'Language changed to `English`!',
+                            description = util.get_str(lang, 'interaction_string_language_changed_to').format(lang = 'English'),
                             color = discord.Colour.blue()
                         ),
                         components = []
@@ -187,7 +189,7 @@ class Events(commands.Cog):
                     await i.respond(
                         type = 7,
                         embed = discord.Embed(
-                            description = f'Language changed to `Español`!',
+                            description = util.get_str(lang, 'interaction_string_language_changed_to').format(lang = 'Español'),
                             color = discord.Colour.blue()
                         ),
                         components = []
@@ -200,7 +202,7 @@ class Events(commands.Cog):
                     await i.respond(
                         type = 7,
                         embed = discord.Embed(
-                            description = f'Language changed to `日本語`!',
+                            description = util.get_str(lang, 'interaction_string_language_changed_to').format(lang = '日本語'),
                             color = discord.Colour.blue()
                         ),
                         components = []
@@ -209,7 +211,7 @@ class Events(commands.Cog):
             except asyncio.TimeoutError:
 
                 await msg.edit(embed=discord.Embed(
-                    description = 'Canceled by timeout.',
+                    description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
                     color = discord.Colour.blue()
                 ))
 
@@ -220,10 +222,10 @@ class Events(commands.Cog):
             already_configurated = server['updates_channel']['enabled']
 
             embed = discord.Embed(
-                description = 'Send the ID/mention of the channel' if already_configurated == False else 'Type "disable" to disable it or send the ID/mention of the new channel',
+                description = util.get_str(lang, 'interaction_string_send_channel') if already_configurated == False else util.get_str(lang, 'interaction_string_send_channel_extra_to_disable'),
                 color = discord.Colour.blue()
             )
-            embed.set_footer(text='Type "cancel" to cancel')
+            embed.set_footer(text=util.get_Str(lang, 'interaction_string_cancel_text'))
 
             msg = await interaction.respond(
                 type = 7,
@@ -241,7 +243,7 @@ class Events(commands.Cog):
                 if usrmsg.content.lower() == 'cancel':
 
                     await interaction.message.edit(embed=discord.Embed(
-                        description = 'Operation canceled by user.',
+                        description = util.get_str(lang, 'interaction_string_canceled_by_user'),
                         color = discord.Colour.red()
                     ))
                     return
@@ -251,7 +253,7 @@ class Events(commands.Cog):
                     if already_configurated == False:
 
                         await interaction.message.edit(embed=discord.Embed(
-                            description = 'The channel is\'nt configurated yet!.',
+                            description = util.get_str(lang, 'interaction_string_error_channel_not_configurated'),
                             color = discord.Colour.red()
                         ))
                         return
@@ -267,7 +269,7 @@ class Events(commands.Cog):
                         except discord.Forbidden:
 
                             await interaction.message.edit(embed=discord.Embed(
-                                description = 'An error ocurred deleting webhook. Please make sure the bot has `Manage Webhooks` permission or delete it yourself.',
+                                description = util.get_str(lang, 'interaction_string_error_webhook_delete'),
                                 color = discord.Colour.red()
                             ))
                             return
@@ -280,7 +282,7 @@ class Events(commands.Cog):
                         change = util.database_update_server(interaction.guild, {'$set': {'updates_channel.enabled': False, 'updates_channel.webhook': None, 'updates_channel.channel': None, 'updates_channel.webhook_id': None}})
 
                         await interaction.message.edit(embed=discord.Embed(
-                            description = 'The updates channel was disabled correctly!',
+                            description = util.get_str(lang, 'interaction_string_channel_disabled'),
                             color = discord.Colour.blue()
                         ))
                         return
@@ -293,7 +295,7 @@ class Events(commands.Cog):
                         channel = await self.bot.fetch_channel(int(channel_id))
                     except:
                         await interaction.message.edit(embed=discord.Embed(
-                            description = 'You have to send the channel ID or mention **only**!',
+                            description = util.get_str(lang, 'interaction_string_send_channel_only'),
                             color = discord.Colour.red()
                         ))
                         return
@@ -301,7 +303,7 @@ class Events(commands.Cog):
                     if channel == None:
 
                         await interaction.message.edit(embed=discord.Embed(
-                            description = 'Sorry but the channel is\'nt valid or i do\'nt have access to it.',
+                            description = util.get_str(lang, 'interaction_string_error_invalid_channel_or_not_accesible'),
                             color = discord.Colour.red()
                         ))
                         return
@@ -315,7 +317,7 @@ class Events(commands.Cog):
                         except:
 
                             await interaction.message.edit(embed=discord.Embed(
-                                description = 'An error ocurred setting up updates channel. Make sure the bot has `Manage Webhooks` permission!',
+                                description = util.get_str(lang, 'interaction_string_error_webhook_create'),
                                 color = discord.Colour.red()
                             ))
                             return
@@ -325,7 +327,7 @@ class Events(commands.Cog):
                         if change != None:
 
                             await interaction.message.edit(embed=discord.Embed(
-                                description = f'Channel <#{channel.id}> is now set as updates channel!',
+                                description = util.get_str(lang, 'interaction_string_channel_configured').format(channel = f'<#{channel.id}>'),
                                 color = discord.Colour.blue()
                             ))
                             return
@@ -333,7 +335,7 @@ class Events(commands.Cog):
                         else:
 
                             await interaction.message.edit(embed=discord.Embed(
-                                description = f'An unknown error ocurred while setting updates channel.',
+                                description = util.get_str(lang, 'interaction_string_error_unknown'),
                                 color = discord.Colour.red()
                             ))
                             return
@@ -341,7 +343,7 @@ class Events(commands.Cog):
             except asyncio.TimeoutError:
 
                 await interaction.message.edit(embed=discord.Embed(
-                    description = 'Operation canceled by timeout.',
+                    description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
                     color = discord.Colour.red()
                 ))
                 return
