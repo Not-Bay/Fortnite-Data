@@ -33,7 +33,19 @@ start_time = time.time()
 ###
 
 def get_prefix(bot, message):
-    return 't!'
+    
+    if isinstance(message.channel, discord.DMChannel):
+        return 't!'
+
+    else:
+
+        try:
+            return server_cache[str(message.guild.id)]['prefix']
+        except KeyError:
+            try:
+                return database_get_server(message.guild)['prefix']
+            except KeyError:
+                return 'en'
 
 
 def get_config():
@@ -83,6 +95,9 @@ def get_str(lang: str, string: str):
 
 def get_guild_lang(guild: discord.Guild):
 
+    if guild == None:
+        return 'en'
+
     try:
         return server_cache[str(guild.id)]['language']
     except KeyError:
@@ -125,7 +140,7 @@ def database_store_server(guild: discord.Guild):
 
         data = {
             "server_id": guild.id,
-            "prefix": configuration.get('default_prefix'),
+            "prefix": "f!",
             "language": "en",
             "search_language": "en",
             "shop_channel": {
