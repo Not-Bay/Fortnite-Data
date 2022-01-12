@@ -39,13 +39,6 @@ async def on_ready():
         util.fortniteapi[i] = util.FortniteAPI(i)
         await util.fortniteapi[i]._load_cosmetics()
 
-    for cog in util.configuration.get('cogs'):
-        try:
-            bot.load_extension(f'cogs.{cog}')
-            log.debug(f'Loaded cog {cog}.')
-        except:
-            log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
-
     for guild in bot.guilds:
         util.database_store_server(guild)
 
@@ -68,6 +61,13 @@ def run():
     util.database = util.get_mongoclient().fortnitedata
 
     log.debug('Starting discord bot...')
+
+    for cog in util.configuration.get('cogs'):
+        try:
+            bot.load_extension(f'cogs.{cog}')
+            log.debug(f'Loaded cog {cog}.')
+        except:
+            log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
 
     loop = asyncio.get_event_loop()
 
