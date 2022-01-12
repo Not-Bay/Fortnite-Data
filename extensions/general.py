@@ -61,6 +61,7 @@ class General(commands.Cog):
         else:
 
             if args.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_')):
+                params = {
                     "language": serverconfig['lang'],
                     "searchLanguage": serverconfig['search_lang'],
                     "matchMethod": "contains",
@@ -766,7 +767,7 @@ class BenBot(commands.Cog):
 
         else:
 
-            r = requests.get('https://benbotfn.tk/api/v1/files/search', params=convert(["path", path] + list(params)))
+            r = requests.get('https://benbot.app/api/v1/files/search', params=convert(["path", path] + list(params)))
 
             if r.status_code != 200:
 
@@ -821,7 +822,7 @@ class BenBot(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        response = requests.get('https://benbotfn.tk/api/v1/exportAsset',params=convert(["path", path] + list(params)))
+        response = requests.get('https://benbot.app/api/v1/exportAsset',params=convert(["path", path] + list(params)))
 
         if response.status_code == 404:
             
