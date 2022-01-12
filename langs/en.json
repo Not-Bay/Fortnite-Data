@@ -104,5 +104,7 @@
     "update_message_string_new_cosmetics_detected": "New cosmetics detected!",
     "update_message_string_br_news_updated": "Battle Royale news updated",
     "update_message_string_creative_news_updated": "Creative news updated",
-    "update_message_string_stw_news_updated": "Save the World news updated"
+    "update_message_string_stw_news_updated": "Save the World news updated",
+    "update_message_string_new_playlists_detected": "New playlists detected!",
+    "update_message_string_playlist_no_description": "No description"
 }
