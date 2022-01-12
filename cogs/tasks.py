@@ -33,6 +33,8 @@ class Tasks(commands.Cog):
 
         try: # New cosmetics
 
+            log.debug(f'Checking cosmetic updates...')
+
             for lang in util.configuration['languages']:
 
                 cached_cosmetics = json.load(open(f'cache/cosmetics/all_{lang}.json', 'r', encoding='utf-8'))
@@ -100,14 +102,148 @@ class Tasks(commands.Cog):
 
                     result = await self.updates_channel_send(embeds=embeds, type_='cosmetics', lang=lang)
 
-                    log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True})))} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+                    log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True, "language": lang})))} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
                 
                 else:
 
                     log.debug('No cosmetic changes detected.')
+                    break
 
         except Exception:
             log.error(f'Failed while checking upcoming cosmetics changes. Traceback:\n{traceback.format_exc()}')
+
+        try: # ingame news
+
+            log.debug(f'Checking ingame news updates...')
+
+            for lang in util.configuration['languages']:
+
+                cached_news = json.load(open(f'cache/news/{lang}.json', 'r', encoding='utf-8'))
+                new_news = await util.fortniteapi[lang].get_news(language = lang)
+
+                to_send_list = []
+
+                if new_news['data']['br'] != None:
+
+                    br_motds = []
+
+                    if cached_news['data']['br']['hash'] != new_news['data']['br']['hash']:
+
+                        for motd in new_news['data']['br']['motds']:
+                            if motd not in cached_news['data']['br']['motds']:
+                                br_motds.append(motd)
+
+                        sorted_br_motds = sorted(br_motds, key = lambda x: x['sortingPriority'], reverse = True)
+                        count = 0
+                        for motd in sorted_br_motds:
+
+                            embed = DiscordEmbed()
+                            if count == 0:
+                                embed.set_author(name='Battle Royale news updated')
+
+                            embed.title = motd["title"]
+
+                            embed.description = motd["body"]
+
+                            embed.image = motd["image"]
+
+                            count += 1
+
+                            if count == len(br_motds):
+                                embed.footer = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds))
+                            else:
+                                embed.footer = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds))
+                            
+                            to_send_list.append(embed)
+                    
+                    else:
+                        log.debug(f'[{lang}] No br news changes found')
+
+                if new_news['data']['creative'] != None:
+
+                    cr_motds = []
+
+                    if cached_news['data']['creative']['hash'] != new_news['data']['creative']['hash']:
+
+                        for motd in new_news['data']['creative']['motds']:
+                            if motd not in cached_news['data']['creative']['motds']:
+                                cr_motds.append(motd)
+
+                        sorted_cr_motds = sorted(cr_motds, key = lambda x: x['sortingPriority'], reverse = True)
+                        count = 0
+                        for motd in sorted_cr_motds:
+
+                            embed = DiscordEmbed()
+                            if count == 0:
+                                embed.set_author(name='Creative news updated')
+
+                            embed.title = motd["title"]
+
+                            embed.description = motd["body"]
+
+                            embed.image = motd["image"]
+
+                            count += 1
+
+                            if count == len(br_motds):
+                                embed.footer = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds))
+                            else:
+                                embed.footer = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds))
+                            
+                            to_send_list.append(embed)
+                    
+                    else:
+                        log.debug(f'[{lang}] No creative news changes found')
+
+                if new_news['data']['stw'] != None:
+
+                    stw_motds = []
+
+                    if cached_news['data']['stw']['hash'] != new_news['data']['stw']['hash']:
+
+                        for motd in new_news['data']['stw']['messages']:
+                            if motd not in cached_news['data']['stw']['messages']:
+                                stw_motds.append(motd)
+
+                        count = 0
+                        for motd in stw_motds:
+
+                            embed = DiscordEmbed()
+                            if count == 0:
+                                embed.set_author(name='Save the World news updated')
+
+                            embed.title = motd["title"]
+
+                            embed.description = motd["body"]
+
+                            embed.image = motd["image"]
+
+                            count += 1
+
+                            if count == len(br_motds):
+                                embed.footer = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds))
+                            else:
+                                embed.footer = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds))
+                            
+                            to_send_list.append(embed)
+                    
+                    else:
+                        log.debug(f'[{lang}] No stw news changes found')
+
+                if len(to_send_list) != 0:
+
+                    with open(f'cache/news/{lang}.json', 'w', encoding='utf-8') as f:
+                        json.dump(new_news, f)
+
+                    result = await self.updates_channel_send(embeds=to_send_list, type_='news', lang=lang)
+                    log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True, "language": lang})))} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+
+                else:
+
+                    break
+
+        except:
+            log.error(f'Failed while checking ingame news changes. Traceback:\n{traceback.format_exc()}')
 
 
     async def updates_channel_send(self, embeds, type_, lang):
