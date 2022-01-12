@@ -101,5 +101,8 @@
     "interaction_string_error_webhook_create": "An error ocurred configuring the channel. Make sure the bot has \"Manage Webhooks\" permission on the channel and try again",
     "interaction_string_channel_configured": "The channel {channel} has been configurated successfully",
     "interaction_string_error_unknown": "An unknown error ocurred configurating the channel",
-    "update_message_string_new_cosmetics_detected": "New cosmetics detected!"
+    "update_message_string_new_cosmetics_detected": "New cosmetics detected!",
+    "update_message_string_br_news_updated": "Battle Royale news updated",
+    "update_message_string_creative_news_updated": "Creative news updated",
+    "update_message_string_stw_news_updated": "Save the World news updated"
 }
