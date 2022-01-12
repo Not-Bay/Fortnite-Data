@@ -93,7 +93,7 @@ class General(commands.Cog):
 
     
     @commands.command(usage='item <name or ID>', aliases=['cosmetic'])
-    @commands.cooldown(5, 5, commands.BucketType.user)
+    @commands.cooldown(5, 8, commands.BucketType.user)
     async def item(self, ctx, *, name_or_id = None):
         """Search for cosmetics by their name or ID. Special arguments available."""
 
@@ -288,7 +288,7 @@ class General(commands.Cog):
                         return
 
     @commands.command(usage='shop [language]', aliases=['itemshop'])
-    @commands.cooldown(2, 30, commands.BucketType.user)
+    @commands.cooldown(3, 9, commands.BucketType.user)
     async def shop(self, ctx, language = 'en'):
         """Shows the latest fortnite item shop image."""
 
@@ -352,13 +352,14 @@ class General(commands.Cog):
                     return
 
     @commands.command(usage='news [language]')
-    @commands.cooldown(1, 30, commands.BucketType.user)
-    async def news(self, ctx, language = 'en'):
+    @commands.cooldown(3, 12, commands.BucketType.user)
+    async def news(self, ctx, language = None):
         """Shows an interactive message with all the game news (Battle Royale, Creative and Save The World)"""
 
         lang = util.get_guild_lang(ctx.guild)
+        data_lang = language if language != None else lang
 
-        data = await util.fortniteapi[lang].get_news()
+        data = await util.fortniteapi[lang].get_news(language = data_lang)
 
         if data == False:
 
@@ -494,7 +495,7 @@ class General(commands.Cog):
                     return
 
     @commands.command(usage='aes [base64 / hex]')
-    @commands.cooldown(3, 15, commands.BucketType.user)
+    @commands.cooldown(3, 12, commands.BucketType.user)
     async def aes(self, ctx, keyformat = 'hex'):
         """Shows the current AES keys to decrypt game files"""
 
@@ -528,7 +529,7 @@ class General(commands.Cog):
 
             pages = []
             current_page = 0
-            
+
             count = 0
             for key in data['data']['dynamicKeys']:
                 count += 1
@@ -599,7 +600,7 @@ class General(commands.Cog):
                         return
     
     @commands.command(usage='stats <account name>')
-    @commands.cooldown(2, 14, commands.BucketType.user)
+    @commands.cooldown(3, 15, commands.BucketType.user)
     async def stats(self, ctx, *, account_name = None):
         """Search for player stats. Search can be made for Epic, PSN and XBOX accounts"""
 
@@ -737,7 +738,7 @@ class General(commands.Cog):
                 
 
     @commands.command(usage='upcoming', aliases=['leaked'])
-    @commands.cooldown(2, 10, commands.BucketType.user)
+    @commands.cooldown(3, 12, commands.BucketType.user)
     async def upcoming(self, ctx):
         """Shows an interactive message with all the new/upcoming cosmetics"""
 
