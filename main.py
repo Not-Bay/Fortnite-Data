@@ -37,7 +37,6 @@ async def on_ready():
             util.languages[i] = False
 
         util.fortniteapi[i] = util.FortniteAPI(i)
-        await util.fortniteapi[i]._load_cosmetics()
 
     for guild in bot.guilds:
         util.database_store_server(guild)
