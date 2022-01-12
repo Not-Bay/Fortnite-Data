@@ -1,0 +1,80 @@
+{
+    "status": 200,
+    "data": {
+        "br": {
+            "hash": "dbde0cb79c12f40c4847fb7350e5e4c58c2101b3",
+            "date": "2022-01-12T00:00:11Z",
+            "image": "https://cdn.fortnite-api.com/news/v2/dbde0cb79c12f40c4847fb7350e5e4c58c2101b3.gif",
+            "motds": [
+                {
+                    "id": "9fe4d3b6-4318-4d5d-816d-3cd2b517ec50",
+                    "title": "トルネード&雷",
+                    "tabTitle": "荒天を観測",
+                    "body": "島全体で天候が荒れている。危険など気にせずに行動しよう。",
+                    "image": "https://cdn-live.prm.ol.epicgames.com/prod/d49656be3395606b28607b50eb27f50dfb695f9b27f2e960c3d691fd54adaf32-f29bd38c-07c2-4c76-bc6e-fcf8afffd946.jpeg?width=1920",
+                    "tileImage": "https://cdn-live.prm.ol.epicgames.com/prod/4c5ebd9a0650d06431a56e62a4ec9e8e49b9db7ed7757832448fd829da027101-faa26e0d-a649-4654-b7b5-a87d0951bd7a.jpeg?width=1024",
+                    "sortingPriority": 100,
+                    "hidden": false
+                },
+                {
+                    "id": "7898fb38-cf29-46c1-a0d7-61e14c4b32dc",
+                    "title": "フレアガン",
+                    "tabTitle": "保管庫から戻ってきたアイテム",
+                    "body": "戦場の様子をうかがい、建築物に火をつけよう！",
+                    "image": "https://cdn-live.prm.ol.epicgames.com/prod/99238b5772ac74f8d68dcb970f68b40a181a21383386fa5a5f682704aad4e85d06993e76855ca819b43e9009f6c5bbad-6371a92f-2ab0-42b8-89c0-01da4f416742.jpeg?width=1920",
+                    "tileImage": "https://cdn-live.prm.ol.epicgames.com/prod/99238b5772ac74f8d68dcb970f68b40a800b62604e0df94a4d21a12a70bfffe341a23f169e68657f5e606973a214f42d-840dfdee-8801-4f73-8d67-da62da90a431.jpeg?width=1024",
+                    "sortingPriority": 90,
+                    "hidden": false
+                },
+                {
+                    "id": "c82a8ada-41cc-41cc-b36f-a4e60f0eaa31",
+                    "title": "ヘンチマン バンドル",
+                    "tabTitle": null,
+                    "body": "一人はシャドーの一員で、もう一人はゴーストの一員だが、彼らは共に任務を遂行する。",
+                    "image": "https://cdn-live.prm.ol.epicgames.com/prod/e5315c76f1dd543298b8276a5aa572919d9689303bfea6d1b1b6e5b916878def529fc1dc772711db6d56f56b7a483618-b5c60a85-ff2f-40ae-a3fe-9a9622d030d8.jpeg?width=1920",
+                    "tileImage": "https://cdn-live.prm.ol.epicgames.com/prod/e5315c76f1dd543298b8276a5aa57291ab73f9eb5cfbea8a4a0009388b7f920a5f7116b39a900f8fbcb9b8ccc47474e5-1af46e1e-1e53-4806-96ef-bff07f0c3a7f.jpeg?width=1024",
+                    "sortingPriority": 80,
+                    "hidden": false
+                },
+                {
+                    "id": "274d49f5-b279-41e9-a760-c6dc4361c617",
+                    "title": "ヴォイドランダー パック",
+                    "tabTitle": null,
+                    "body": "虚空の中心からの一撃。あとに残るのは破壊の痕跡のみ。",
+                    "image": "https://cdn-live.prm.ol.epicgames.com/prod/c3dab88ff4a4bb221b70741830fb7971b58fa92f03e5ca45f234f3fd2677a14f83ffd4be182e510adc631dc0273a2ac0-7b5119bf-7d3f-4065-8a93-988582a3f5f2.jpeg?width=1920",
+                    "tileImage": "https://cdn-live.prm.ol.epicgames.com/prod/c3dab88ff4a4bb221b70741830fb7971b58fa92f03e5ca45f234f3fd2677a14faa7783600956eca15e9dd27214a329b3-6a8519b2-3596-4a14-a730-e029449c40ed.jpeg?width=1024",
+                    "sortingPriority": 70,
+                    "hidden": false
+                }
+            ],
+            "messages": null
+        },
+        "stw": {
+            "hash": "0da2f6119dd69879160229b26bdc7ffa14fe6f26",
+            "date": "2022-01-09T05:01:13Z",
+            "image": null,
+            "motds": null,
+            "messages": [
+                {
+                    "title": "フロストナイトウィークリーチャレンジ7: ファイナルフロスト",
+                    "body": "最後のフロストナイトチャレンジは「フロスティターフ」、「ニューウェーブホリデー」、「スーパーヒート」、「満タンで行こう」の要素が組み合わせられている。ファイナルフロストをクリアして、「シャークアタックランチャー」をアンロックしよう！",
+                    "image": "https://cdn2.unrealengine.com/stw07-motd-frostnite-banner-burnbright-1024x512-2d969d75d60e.jpg",
+                    "adspace": "シーズンイベント"
+                },
+                {
+                    "title": "クロークシャドー",
+                    "body": "影の支配者。",
+                    "image": "https://cdn2.unrealengine.com/br07-motd-cloakedshadow-1024x512-a8e92ea137f6.jpg",
+                    "adspace": "イベントストア"
+                },
+                {
+                    "title": "ロボ・ケビン パック",
+                    "body": "ロボ・ケビン パックをゲットして新ヒーローとロッカーのコスチューム、ロボ・ケビンのバックアクセサリー、ロボ・ケビンのツルハシを手に入れよう。ロボ・ケビン チャレンジをクリアすれば1,000 V-Bucksも獲得できるぞ。",
+                    "image": "https://cdn2.unrealengine.com/18br-stw-robokevin-pack-motd-1024x512-01-1024x512-d8e52a1d0ded.jpg",
+                    "adspace": "「世界を救え」のパック！"
+                }
+            ]
+        },
+        "creative": null
+    }
+}
