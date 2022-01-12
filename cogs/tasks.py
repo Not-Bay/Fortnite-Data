@@ -3,8 +3,11 @@ from discord.ext import commands, tasks
 import traceback
 import aiohttp
 import logging
+import asyncio
 import json
 import time
+
+import discord_webhook
 
 import util
 
@@ -29,6 +32,12 @@ class Tasks(commands.Cog):
     @tasks.loop(minutes=4)
     async def updates_check(self):
 
+        while True:
+            if util.ready == True: # start checking only if the bot is completely ready
+                break
+            else:
+                await asyncio.sleep(1)
+
         log.debug('Executing "tasks.updates_check" task')
 
         try: # New cosmetics
@@ -38,7 +47,7 @@ class Tasks(commands.Cog):
             for lang in util.configuration['languages']:
 
                 cached_cosmetics = json.load(open(f'cache/cosmetics/all_{lang}.json', 'r', encoding='utf-8'))
-                new_cosmetics = await util.fortniteapi[lang]._load_cosmetics(language = lang)
+                new_cosmetics = await util.fortniteapi[lang]._load_cosmetics()
 
                 cached_cosmetic_ids = [i['id'] for i in cached_cosmetics['data']] # List of every cosmetic ID
 
@@ -102,7 +111,7 @@ class Tasks(commands.Cog):
 
                     result = await self.updates_channel_send(embeds=embeds, type_='cosmetics', lang=lang)
 
-                    log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True, "language": lang})))} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+                    log.debug(f'Sent {len(embeds)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
                 
                 else:
 
@@ -139,20 +148,22 @@ class Tasks(commands.Cog):
 
                             embed = DiscordEmbed()
                             if count == 0:
-                                embed.set_author(name='Battle Royale news updated')
+                                embed.set_author(name=util.get_str(lang, 'update_message_string_br_news_updated'))
 
-                            embed.title = motd["title"]
+                            embed.title = motd['title']
 
-                            embed.description = motd["body"]
+                            embed.description = motd['body']
 
-                            embed.image = motd["image"]
+                            embed.color = 0x3498db
+
+                            embed.set_image(url = motd['image'])
 
                             count += 1
 
                             if count == len(br_motds):
-                                embed.footer = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds))
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(sorted_br_motds)))
                             else:
-                                embed.footer = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds))
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(sorted_br_motds)))
                             
                             to_send_list.append(embed)
                     
@@ -175,20 +186,22 @@ class Tasks(commands.Cog):
 
                             embed = DiscordEmbed()
                             if count == 0:
-                                embed.set_author(name='Creative news updated')
+                                embed.set_author(name=util.get_str(lang, 'update_message_string_creative_news_updated'))
 
-                            embed.title = motd["title"]
+                            embed.title = motd['title']
 
-                            embed.description = motd["body"]
+                            embed.description = motd['body']
 
-                            embed.image = motd["image"]
+                            embed.color = 0x3498db
+
+                            embed.set_image(url = motd['image'])
 
                             count += 1
 
-                            if count == len(br_motds):
-                                embed.footer = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds))
+                            if count == len(sorted_cr_motds):
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(sorted_cr_motds)))
                             else:
-                                embed.footer = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds))
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(sorted_cr_motds)))
                             
                             to_send_list.append(embed)
                     
@@ -210,20 +223,22 @@ class Tasks(commands.Cog):
 
                             embed = DiscordEmbed()
                             if count == 0:
-                                embed.set_author(name='Save the World news updated')
+                                embed.set_author(name=util.get_str(lang, 'update_message_string_stw_news_updated'))
 
-                            embed.title = motd["title"]
+                            embed.title = motd['title']
 
-                            embed.description = motd["body"]
+                            embed.description = motd['body']
 
-                            embed.image = motd["image"]
+                            embed.color = 0x3498db
+
+                            embed.set_image(url = motd['image'])
 
                             count += 1
 
                             if count == len(br_motds):
-                                embed.footer = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds))
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(br_motds)))
                             else:
-                                embed.footer = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds))
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(br_motds)))
                             
                             to_send_list.append(embed)
                     
@@ -236,7 +251,8 @@ class Tasks(commands.Cog):
                         json.dump(new_news, f)
 
                     result = await self.updates_channel_send(embeds=to_send_list, type_='news', lang=lang)
-                    log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True, "language": lang})))} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+
+                    log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
 
                 else:
 
