@@ -272,7 +272,7 @@ class FortniteAPI:
 
         self.ClientSession = aiohttp.ClientSession
         self.headers = {
-            'x-api-key': configuration.get('fortnite-api-key')
+            'Authorization': configuration.get('fortnite-api-key')
         }
 
         self._loaded_all = False
@@ -482,6 +482,17 @@ class FortniteAPI:
         async with self.ClientSession() as session:
 
             response = await session.get(f'https://fortnite-api.com/v2/creatorcode/search?name={code}', headers=self.headers)
+
+            if response.status != 200:
+                return False
+            else:
+                return await response.json()
+
+    async def get_playlists(self, language='en'):
+
+        async with self.ClientSession() as session:
+                
+            response = await session.get(f'https://fortnite-api.com/v1/playlists?language={language}', headers=self.headers)
 
             if response.status != 200:
                 return False
