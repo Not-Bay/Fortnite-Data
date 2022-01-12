@@ -17,10 +17,12 @@ class General(commands.Cog):
     @commands.command(usage='settings', aliases=['config'])
     async def settings(self, ctx, setting=None):
 
+        lang = util.get_guild_lang(ctx.guild)
+
         if ctx.author.guild_permissions.administrator == False:
 
             await ctx.send(embed=discord.Embed(
-                description = 'Sorry but this command is only for server administrators.',
+                description = util.get_str(lang, 'command_string_only_admin_command'),
                 color = discord.Colour.red()
             ))
 
@@ -29,12 +31,12 @@ class General(commands.Cog):
             data = util.database_get_server(ctx.guild)
 
             embed = discord.Embed(
-                title = 'Server configuration',
+                title = util.get_str(lang, 'command_string_server_configuration'),
                 color = discord.Colour.blue()
             )
-            embed.add_field(name='Prefix', value=f'`{data["prefix"]}`', inline=False)
-            embed.add_field(name='Language', value=f'`{data["language"]}`', inline=False)
-            embed.add_field(name='Updates channel', value=f'`{"Enabled" if data["updates_channel"]["enabled"] == True else "Not configurated"}`', inline=False)
+            embed.add_field(name=util.get_str(lang, 'command_string_prefix'), value=f'`{data["prefix"]}`', inline=False)
+            embed.add_field(name=util.get_str(lang, 'command_string_language'), value=f'`{data["language"]}`', inline=False)
+            embed.add_field(name=util.get_str(lang, 'command_string_updates_channel'), value=f'`{util.get_str(lang, "command_string_configured") if data["updates_channel"]["enabled"] == True else util.get_str(lang, "command_string_not_configurated")}`', inline=False)
 
             components = [
                 [
