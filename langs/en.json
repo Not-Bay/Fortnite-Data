@@ -37,6 +37,7 @@
     "command_string_error_fetching_news": "An error ocurred fetching the ingame news. Try again later",
     "command_string_page_int_of_int": "Page {count} of {total}",
     "command_string_int_of_int_with_credits": "{count} of {total} • Provided by Fortnite-API.com",
+    "command_string_api_footer_credits": "Provided by Fortnite-API.com",
     "command_string_int_of_int": "{count} of {total}",
     "command_string_key_format_example": "The key format must be `base64` or `hex`. Example: `{prefix}aes base64`",
     "command_string_unavailable_aes": "Unable to fetch AES keys. Try again later",
@@ -106,5 +107,12 @@
     "update_message_string_creative_news_updated": "Creative news updated",
     "update_message_string_stw_news_updated": "Save the World news updated",
     "update_message_string_new_playlists_detected": "New playlists detected!",
-    "update_message_string_playlist_no_description": "No description"
+    "update_message_string_playlist_no_description": "No description",
+    "update_message_string_aes_mainkey_changed": "Main AES key changed",
+    "update_message_string_aes_old": "Old:",
+    "update_message_string_aes_new": "New:",
+    "update_message_string_aes_dynamickeys_changes_detected": "Dynamic keys changes detected",
+    "update_message_string_aes_dynamickey_filename": "Pak name",
+    "update_message_string_aes_dynamickey_guid": "Guid",
+    "update_message_string_aes_dynamickey_key": "Key"
 }
