@@ -33,84 +33,86 @@ class Tasks(commands.Cog):
 
         try: # New cosmetics
 
-            cached_cosmetics = json.load(open('cache/cosmetics/all.json', 'r', encoding='utf-8'))
-            new_cosmetics = await util.fortniteapi._load_cosmetics()
+            for lang in util.configuration['languages']:
 
-            cached_cosmetic_ids = [i['id'] for i in cached_cosmetics['data']] # List of every cosmetic ID
+                cached_cosmetics = json.load(open(f'cache/cosmetics/all_{lang}.json', 'r', encoding='utf-8'))
+                new_cosmetics = await util.fortniteapi[lang]._load_cosmetics(language = lang)
 
-            start_timestamp = time.time()
-            new_cosmetics_list = []
+                cached_cosmetic_ids = [i['id'] for i in cached_cosmetics['data']] # List of every cosmetic ID
 
-            for cosmetic in new_cosmetics:
+                start_timestamp = time.time()
+                new_cosmetics_list = []
 
-                if cosmetic['id'] not in cached_cosmetic_ids:
+                for cosmetic in new_cosmetics:
 
-                    new_cosmetics_list.append(cosmetic)
+                    if cosmetic['id'] not in cached_cosmetic_ids:
 
-
-            if len(new_cosmetics_list) > 0:
-
-                log.debug(f'Building embeds for {len(new_cosmetics_list)} new cosmetics...')
-
-                embeds = []
-
-                count = 0
-                for i in new_cosmetics_list:
-
-                    color = str(util.get_color_by_rarity(i['rarity']['value']))
-
-                    embed = DiscordEmbed()
-                    if count == 0:
-                        embed.set_author(name='New cosmetics detected!')
-
-                    embed.title = f'{i["name"]}'
-
-                    embed.description = f'{i["description"]}'
-
-                    embed.color = color.replace('0x', '')
-
-                    embed.add_embed_field(name='ID', value=f'`{i["id"]}`', inline=False)
-
-                    embed.add_embed_field(name='Type', value=f'`{i["type"]["displayValue"]}`', inline=False)
-
-                    embed.add_embed_field(name='Rarity', value=f'`{i["rarity"]["displayValue"]}`', inline=False)
-
-                    if i['introduction'] != None:
-                        embed.add_embed_field(name='Introduction', value=f'`{i["introduction"]["text"]}`', inline=False)
-                    else:
-                        embed.add_embed_field(name='Introduction', value=f'Not introduced yet', inline=False)
-
-                    if i['set'] != None:
-                        embed.add_embed_field(name='Set', value=f'`{i["set"]["text"]}`', inline=False)
-                    else:
-                        embed.add_embed_field(name='Set', value=f'None', inline=False)
-
-                    embed.set_thumbnail(url=i['images']['icon'])
-                    count += 1
-
-                    if count == len(new_cosmetics):
-                        embed.set_footer(text=f'{count} of {len(new_cosmetics_list)} • Provided by Fortnite-API.com')
-                    else:
-                        embed.set_footer(text=f'{count} of {len(new_cosmetics_list)}')
+                        new_cosmetics_list.append(cosmetic)
 
 
-                    embeds.append(embed)
+                if len(new_cosmetics_list) > 0:
 
-                result = await self.updates_channel_send(embeds=embeds, type_='cosmetics')
+                    log.debug(f'Building embeds for {len(new_cosmetics_list)} new cosmetics...')
 
-                log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True})))} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
-            
-            else:
+                    embeds = []
 
-                log.debug('No cosmetic changes detected.')
+                    count = 0
+                    for i in new_cosmetics_list:
+
+                        color = str(util.get_color_by_rarity(i['rarity']['value']))
+
+                        embed = DiscordEmbed()
+                        if count == 0:
+                            embed.set_author(name=util.get_str(lang, 'update_message_string_new_cosmetics_detected'))
+
+                        embed.title = f'{i["name"]}'
+
+                        embed.description = f'{i["description"]}'
+
+                        embed.color = color.replace('0x', '')
+
+                        embed.add_embed_field(name=util.get_str(lang, 'command_string_id'), value=f'`{i["id"]}`', inline=False)
+
+                        embed.add_embed_field(name=util.get_str(lang, 'command_string_type'), value=f'`{i["type"]["displayValue"]}`', inline=False)
+
+                        embed.add_embed_field(name=util.get_str(lang, 'command_string_rarity'), value=f'`{i["rarity"]["displayValue"]}`', inline=False)
+
+                        if i['introduction'] != None:
+                            embed.add_embed_field(name=util.get_str(lang, 'command_string_introduction'), value=f'`{i["introduction"]["text"]}`', inline=False)
+                        else:
+                            embed.add_embed_field(name=util.get_str(lang, 'command_string_introduction'), value=util.get_str(lang, 'command_string_not_introduced_yet'), inline=False)
+
+                        if i['set'] != None:
+                            embed.add_embed_field(name=util.get_str(lang, 'command_string_set'), value=f'`{i["set"]["text"]}`', inline=False)
+                        else:
+                            embed.add_embed_field(name=util.get_str(lang, 'command_string_set'), value=util.get_str(lang, 'command_string_none'), inline=False)
+
+                        embed.set_thumbnail(url=i['images']['icon'])
+                        count += 1
+
+                        if count == len(new_cosmetics):
+                            embed.set_footer(text=util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(new_cosmetics_list)))
+                        else:
+                            embed.set_footer(text=util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(new_cosmetics_list)))
+
+
+                        embeds.append(embed)
+
+                    result = await self.updates_channel_send(embeds=embeds, type_='cosmetics', lang=lang)
+
+                    log.debug(f'Sent {len(embeds)} embeds to {len(list(util.database.guilds.find({"updates_channel.enabled": True})))} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+                
+                else:
+
+                    log.debug('No cosmetic changes detected.')
 
         except Exception:
             log.error(f'Failed while checking upcoming cosmetics changes. Traceback:\n{traceback.format_exc()}')
 
 
-    async def updates_channel_send(self, embeds, type_):
+    async def updates_channel_send(self, embeds, type_, lang):
         
-        servers = list(util.database.guilds.find({'updates_channel.enabled': True}))
+        servers = list(util.database.guilds.find({'updates_channel.enabled': True, 'language': lang}))
 
         queues = await self._create_queue(embeds)
         urls = []
