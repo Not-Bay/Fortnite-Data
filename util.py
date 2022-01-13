@@ -38,14 +38,11 @@ def get_prefix(bot, message):
         return 't!'
 
     else:
-
+        
         try:
-            return server_cache[str(message.guild.id)]['prefix']
-        except KeyError:
-            try:
-                return database_get_server(message.guild)['prefix']
-            except KeyError:
-                return 'en'
+            return database_get_server(message.guild)['prefix']
+        except:
+            return 'f!'
 
 
 def get_config():
