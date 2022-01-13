@@ -6,6 +6,10 @@ import asyncio
 import discord
 import logging
 import time
+import json
+import cgi
+import io
+
 import util
 
 log = logging.getLogger('FortniteData.cogs.general')
@@ -28,7 +32,7 @@ class General(commands.Cog):
 
             prefix = util.get_prefix(self.bot, ctx.message)
 
-            commands_list = ['help', 'item', 'news', 'shop', 'stats', 'aes', 'upcoming', 'code', 'settings']
+            commands_list = ['help', 'item', 'news', 'shop', 'stats', 'aes', 'upcoming', 'code', 'search', 'export', 'settings']
 
             general_cmds_str = ''
             for command in commands_list:
@@ -109,6 +113,14 @@ class General(commands.Cog):
             return
 
         else:
+
+            if util.fortniteapi[lang]._loaded_all == False:
+
+                await ctx.send(embed=discord.Embed(
+                    description = util.get_str(lang, 'command_string_cosmetics_data_loading'),
+                    color = discord.Colour.orange()
+                ))
+                return
 
             special_args = [  # this acts like a filter. For example if you type "f!item ren --outfit"
                 '--outfit',   # will return only outfits with "re"
@@ -840,6 +852,174 @@ class General(commands.Cog):
                     )
                     return
 
+    @commands.command(usage='search <query>')
+    @commands.cooldown(3, 12, commands.BucketType.user)
+    async def search(self, ctx, query = None):
+        """
+        Searches for .uasset files using the BenBot API
+        """
+
+        lang = util.get_guild_lang(ctx.guild)
+
+        if query == None:
+            await ctx.send(embed=discord.Embed(
+                description = util.get_str(lang, 'command_string_search_missing_parameters').format(prefix = ctx.prefix),
+                color = discord.Colour.blue()
+            ))
+            return
+
+        else:
+
+            async with aiohttp.ClientSession() as session:
+
+                response = await session.get(f'https://benbot.app/api/v1/files/search?path={query}')
+
+                if response.status == 200:
+
+                    if len(await response.text()) == 2: # empty list
+                        await ctx.send(embed=discord.Embed(
+                            description = util.get_str(lang, 'command_string_search_nothing_found'),
+                            color = discord.Colour.red()
+                        ))
+                        return
+
+                    else:
+
+                        results = await response.json()
+
+                        embed_description = f'{util.get_str(lang, "command_string_search_results").format(query = query)}\n'
+
+                        fileNeeded = False
+                        
+                        for i in results:
+                            embed_description += f'`{i}`\n'
+
+                            if len(embed_description) > 2048:
+                                fileNeeded = True
+                                break
+                        
+                        if fileNeeded:
+
+                            file = discord.File(
+                                io.StringIO(json.dumps(results, indent=2, ensure_ascii=False)),
+                                filename = 'results.json'
+                            )
+                            await ctx.send(file = file)
+                            return
+
+                        else:
+
+                            embed = discord.Embed(
+                                title = util.get_str(lang, 'command_string_file_search'),
+                                description = embed_description,
+                                color = discord.Colour.blue()
+                            )
+                            await ctx.send(embed = embed)
+                            return
+
+                else:
+
+                    embed = discord.Embed(
+                        description = util.get_str(lang, 'command_string_api_error_on_file_search').format(status = response.status),
+                        color = discord.Colour.red()
+                    )
+                    await ctx.send(embed = embed)
+
+
+    
+    @commands.command(usage='export <file name>', aliases=['extract'])
+    @commands.cooldown(3, 12, commands.BucketType.user)
+    async def export(self, ctx, filename: str):
+        """
+        Exports .uasset files using the BenBot API
+        """
+
+        lang = util.get_guild_lang(ctx.guild)
+
+        if filename == None:
+
+            await ctx.send(embed=discord.Embed(
+                description = util.get_str(lang, 'command_string_export_missing_parameters').format(prefix = ctx.prefix),
+                color = discord.Colour.blue()
+            ))
+            return
+        
+        else:
+
+            if filename.endswith('.uasset') == False:
+
+                await ctx.send(embed=discord.Embed(
+                    description = util.get_str(lang, 'command_string_export_error_no_uasset_filename'),
+                    color = discord.Colour.red()
+                ))
+                return
+
+            else:
+
+                async with aiohttp.ClientSession() as session:
+
+                    response = await session.get(f'https://benbot.app/api/v1/exportAsset?path={filename}')
+
+                    if response.status == 404:
+
+                        await ctx.send(embed=discord.Embed(
+                            description = util.get_str(lang, 'command_string_export_error_no_file_found'),
+                            color = discord.Colour.red()
+                        ))
+                        return
+
+                    elif response.status == 200:
+
+                        value, params = cgi.parse_header(response.headers['Content-Disposition'])
+                        filename = params['filename']
+
+                        if response.headers['Content-Type'] == 'application/json':
+
+                            file = discord.File(
+                                io.StringIO(json.dumps(await response.text())),
+                                filename
+                            )
+
+                        elif response.headers['Content-Type'] == 'image/png':
+
+                            file = discord.File(
+                                io.BytesIO(await response.read()),
+                                filename
+                            )
+
+                        elif response.headers['Content-Type'] == 'audio/ogg':
+
+                            file = discord.File(
+                                io.BytesIO(await response.read()),
+                                filename
+                            )
+
+                        else:
+
+                            file = discord.File(
+                                io.BytesIO(await response.read()),
+                                filename
+                            )
+
+                        try:
+                            await ctx.send(file = file)
+
+                        except:
+
+                            embed = discord.Embed(
+                            description = util.get_str(lang, 'command_string_export_error_sending_file').format(traceback = traceback.format_exc()),
+                            color = discord.Colour.red()
+                        )
+                        await ctx.send(embed = embed)
+
+                    else:
+
+                        embed = discord.Embed(
+                            description = util.get_str(lang, 'command_string_api_error_on_file_export').format(status = response.status),
+                            color = discord.Colour.red()
+                        )
+                        await ctx.send(embed = embed)
+   
     
 def setup(bot):
     bot.add_cog(General(bot))
