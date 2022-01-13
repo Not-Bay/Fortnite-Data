@@ -465,7 +465,8 @@ class Tasks(commands.Cog):
 
         webhook = DiscordWebhook(
             url=urls,
-            rate_limit_retry=True
+            rate_limit_retry=True,
+            avatar_url='https://cdn.discordapp.com/icons/757406708300644483/96089c25e20aaa4058c84dbfbeaa226a.png'
         )
 
         for i in queues:
