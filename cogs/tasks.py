@@ -1,6 +1,7 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 from discord.ext import commands, tasks
 import traceback
+import aiofiles
 import aiohttp
 import logging
 import asyncio
@@ -46,7 +47,8 @@ class Tasks(commands.Cog):
 
             for lang in util.configuration['languages']:
 
-                cached_cosmetics = json.load(open(f'cache/cosmetics/all_{lang}.json', 'r', encoding='utf-8'))
+                async with aiofiles.open(f'cache/cosmetics/all_{lang}.json', 'r', encoding='utf-8') as f:
+                    cached_cosmetics = json.loads(await f.read())
                 new_cosmetics = await util.fortniteapi[lang]._load_cosmetics()
 
                 cached_cosmetic_ids = [i['id'] for i in cached_cosmetics['data']] # List of every cosmetic ID
@@ -127,7 +129,8 @@ class Tasks(commands.Cog):
 
             for lang in util.configuration['languages']:
 
-                cached_news = json.load(open(f'cache/news/{lang}.json', 'r', encoding='utf-8'))
+                async with aiofiles.open(f'cache/news/{lang}.json', 'r', encoding='utf-8') as f:
+                    cached_news = json.loads(await f.read())
                 new_news = await util.fortniteapi[lang].get_news(language = lang)
 
                 to_send_list = []
@@ -247,8 +250,8 @@ class Tasks(commands.Cog):
 
                 if len(to_send_list) != 0:
 
-                    with open(f'cache/news/{lang}.json', 'w', encoding='utf-8') as f:
-                        json.dump(new_news, f)
+                    async with aiofiles.open(f'cache/news/{lang}.json', 'w', encoding='utf-8') as f:
+                        await f.write(json.dumps(new_news))
 
                     result = await self.updates_channel_send(embeds=to_send_list, type_='news', lang=lang)
 
@@ -267,7 +270,8 @@ class Tasks(commands.Cog):
 
             for lang in util.configuration['languages']:
 
-                cached_playlists = json.load(open(f'cache/playlists/{lang}.json', 'r', encoding='utf-8'))
+                async with aiofiles.open(f'cache/playlists/{lang}.json', 'r', encoding='utf-8') as f:
+                    cached_playlists = json.loads(await f.read())
                 new_playlists = await util.fortniteapi[lang].get_playlists(language = lang)
 
                 added_playlists = []
@@ -318,8 +322,8 @@ class Tasks(commands.Cog):
                             to_send_list.append(embed)
 
 
-                    with open(f'cache/playlists/{lang}.json', 'w', encoding='utf-8') as f:
-                        json.dump(new_playlists, f)
+                    async with aiofiles.open(f'cache/playlists/{lang}.json', 'w', encoding='utf-8') as f:
+                        await f.write(json.dumps(new_playlists))
 
                     result = await self.updates_channel_send(embeds=to_send_list, type_='playlists', lang=lang)
 
@@ -342,7 +346,8 @@ class Tasks(commands.Cog):
 
                 to_send_list = []
 
-                cached_aes = json.load(open(f'cache/aes/hex.json', 'r', encoding='utf-8'))
+                async with aiofiles.open(f'cache/aes/hex.json', 'r', encoding='utf-8') as f:
+                    cached_aes = json.loads(await f.read())
                 new_aes = await util.fortniteapi[lang].get_aes()
 
                 if cached_aes['data']['mainKey'] != new_aes['data']['mainKey']:
@@ -415,8 +420,8 @@ class Tasks(commands.Cog):
                 else:
 
                     if lang == util.configuration['languages'][0]: # only update cache once
-                        with open(f'cache/aes/hex.json', 'w', encoding='utf-8') as f:
-                            json.dump(new_aes, f)
+                        async with aiofiles.open(f'cache/aes/hex.json', 'w', encoding='utf-8') as f:
+                            await f.write(json.dumos(new_aes, f))
 
                     result = await self.updates_channel_send(embeds=to_send_list, type_='aes', lang=lang)
 
