@@ -32,7 +32,7 @@ class General(commands.Cog):
 
             prefix = util.get_prefix(self.bot, ctx.message)
 
-            commands_list = ['help', 'item', 'news', 'shop', 'stats', 'aes', 'upcoming', 'code', 'search', 'export', 'settings']
+            commands_list = ['help', 'item', 'news', 'shop', 'stats', 'aes', 'upcoming', 'code', 'search', 'export', 'invite', 'ping', 'info', 'settings']
 
             general_cmds_str = ''
             for command in commands_list:
