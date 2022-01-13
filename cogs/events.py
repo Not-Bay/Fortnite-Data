@@ -79,7 +79,7 @@ class Events(commands.Cog):
                 embed = discord.Embed(
                     description = util.get_str(lang, 'interaction_string_send_new_prefix'),
                     color = discord.Colour.blue()
-                ).set_footer(text=util.get_Str(lang, 'interaction_string_cancel_text')),
+                ).set_footer(text=util.get_str(lang, 'interaction_string_cancel_text')),
                 components = []
             )
 
@@ -225,7 +225,7 @@ class Events(commands.Cog):
                 description = util.get_str(lang, 'interaction_string_send_channel') if already_configurated == False else util.get_str(lang, 'interaction_string_send_channel_extra_to_disable'),
                 color = discord.Colour.blue()
             )
-            embed.set_footer(text=util.get_Str(lang, 'interaction_string_cancel_text'))
+            embed.set_footer(text=util.get_str(lang, 'interaction_string_cancel_text'))
 
             msg = await interaction.respond(
                 type = 7,
