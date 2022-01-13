@@ -20,6 +20,8 @@ class Tasks(commands.Cog):
         self.bot = bot
         self.ClientSession = aiohttp.ClientSession
 
+        self.execution_count = 0
+
         log.debug('Starting tasks...')
         try:
             self.updates_check.start()
@@ -32,6 +34,8 @@ class Tasks(commands.Cog):
 
     @tasks.loop(minutes=4)
     async def updates_check(self):
+
+        self.execution_count += 1
 
         while True:
             if util.ready == True: # start checking only if the bot is completely ready
@@ -118,7 +122,10 @@ class Tasks(commands.Cog):
                 else:
 
                     log.debug('No cosmetic changes detected.')
-                    break
+                    if self.execution_count == 1:
+                        continue # in order to load cosmetics to every language at startup
+                    else:
+                        break
 
         except Exception:
             log.error(f'Failed while checking upcoming cosmetics changes. Traceback:\n{traceback.format_exc()}')
@@ -342,13 +349,13 @@ class Tasks(commands.Cog):
 
             thereIsChanges = False
 
+            async with aiofiles.open('cache/aes/hex.json', 'r', encoding='utf-8') as f:
+                cached_aes = json.loads(await f.read())
+            new_aes = await util.fortniteapi[lang].get_aes()
+
             for lang in util.configuration['languages']:
 
                 to_send_list = []
-
-                async with aiofiles.open(f'cache/aes/hex.json', 'r', encoding='utf-8') as f:
-                    cached_aes = json.loads(await f.read())
-                new_aes = await util.fortniteapi[lang].get_aes()
 
                 if cached_aes['data']['mainKey'] != new_aes['data']['mainKey']:
 
@@ -361,13 +368,15 @@ class Tasks(commands.Cog):
                     embed_description += f'{util.get_str(lang, "update_message_string_aes_old")} ~~`{cached_aes["data"]["mainKey"]}`~~\n'
                     embed_description += f'{util.get_str(lang, "update_message_string_aes_new")} `{new_aes["data"]["mainKey"]}`'
 
+                    embed.description = embed_description
+
                     embed.color = 0x3498db
 
                     embed.set_footer(text=util.get_str(lang, 'command_string_api_footer_credits'))
 
                     to_send_list.append(embed)
 
-                if len(cached_aes['data']['dynamicKeys']) != len(new_aes['data']['dynamickeys']):
+                if cached_aes['data']['dynamicKeys'] != new_aes['data']['dynamicKeys']:
 
                     thereIsChanges = True
 
@@ -421,7 +430,7 @@ class Tasks(commands.Cog):
 
                     if lang == util.configuration['languages'][0]: # only update cache once
                         async with aiofiles.open(f'cache/aes/hex.json', 'w', encoding='utf-8') as f:
-                            await f.write(json.dumos(new_aes, f))
+                            await f.write(json.dumps(new_aes))
 
                     result = await self.updates_channel_send(embeds=to_send_list, type_='aes', lang=lang)
 
