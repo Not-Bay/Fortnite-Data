@@ -64,12 +64,15 @@ class Other(commands.Cog):
             description = util.get_str(lang, 'command_string_powered_by').format(
                 fortniteapi_link = 'https://fortnite-api.com/',
                 benbot_link = 'https://benbot.app/'
-            )
+            ),
+            color = discord.Colour.blue()
         )
         embed.add_field(name = util.get_str(lang, 'command_string_developer'), value = '`Bay#1111`')
         embed.add_field(name = util.get_str(lang, 'command_string_servers'), value = f'`{len(self.bot.guilds)}`')
         embed.add_field(name = util.get_str(lang, 'command_string_uptime'), value = f'`{bot_uptime}`')
-        embed.add_field(name = util.get_str(lang, 'command_string_translations'), value = f'')
+        embed.add_field(name = util.get_str(lang, 'command_string_translations'), value = translations_credits)
+
+        await ctx.send(embed = embed)
 
 
 def setup(bot):
