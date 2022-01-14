@@ -7,7 +7,7 @@ import logging
 
 import util
 
-log = logging.getLogger('FortniteData.cogs.settings')
+log = logging.getLogger('FortniteData.cogs.events')
 
 class Events(commands.Cog):
 
@@ -63,14 +63,20 @@ class Events(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_button_click(self, interaction):
+    async def on_button_click(self, interaction: Interaction):
 
         lang = util.get_guild_lang(interaction.guild)
 
         if interaction.custom_id == 'SERVER_PREFIX_CONFIGURE':
 
-            def check(message):
+            if interaction.author.guild_permissions.administrator == False:
+                return
+
+            def message_check(message):
                 return message.author == interaction.author and message.channel == interaction.channel
+
+            def interaction_check(i):
+                return interaction.author == i.author and interaction.message == i.message
 
             server = util.database_get_server(interaction.guild)
             
@@ -79,43 +85,48 @@ class Events(commands.Cog):
                 embed = discord.Embed(
                     description = util.get_str(lang, 'interaction_string_send_new_prefix'),
                     color = discord.Colour.blue()
-                ).set_footer(text=util.get_str(lang, 'interaction_string_cancel_text')),
-                components = []
+                ),
+                components = [
+                    Button(
+                        style = ButtonStyle.gray,
+                        label = util.get_str(lang, 'interaction_button_cancel'),
+                        custom_id = 'CANCEL'
+                    )
+                ]
             )
 
             try:
 
-                user_msg = await self.bot.wait_for('message', check=check, timeout=120)
+                pending_tasks = [
+                    await self.bot.wait_for('message', check=message_check, timeout=120),
+                    await self.bot.wait_for('button_click', check=interaction_check, timeout=120)
+                ]
 
-                if user_msg.content.lower() == 'cancel':
+                done_tasks, pending_tasks = await asyncio.wait(pending_tasks, return_when = asyncio.FIRST_COMPLETED)
 
-                    await interaction.message.edit(
+                for task in pending_tasks:
+                    task.cancel()
+
+                if isinstance(done_tasks[0], Interaction):
+
+                    await done_tasks[0].respond(
+                        type = 7,
                         embed = discord.Embed(
                             description = util.get_str(lang, 'interaction_string_canceled_by_user'),
-                            color = discord.Colour.green()
-                        )
-                    )
-                    return
-
-                if len(user_msg.content) > 4:
-
-                    await interaction.message.edit(
-                        embed = discord.Embed(
-                            description = util.get_str(lang, 'interaction_string_error_new_prefix_too_long'),
                             color = discord.Colour.red()
-                        )
+                        ),
+                        components = []
                     )
-                    return
 
                 else:
 
-                    new_prefix = user_msg.content
+                    user_msg = done_tasks[0]
 
-                    if new_prefix == server['prefix']:
+                    if len(user_msg.content) > 4:
 
                         await interaction.message.edit(
                             embed = discord.Embed(
-                                description = util.get_str(lang, 'interaction_string_error_new_prefix_duplicate'),
+                                description = util.get_str(lang, 'interaction_string_error_new_prefix_too_long'),
                                 color = discord.Colour.red()
                             )
                         )
@@ -123,15 +134,29 @@ class Events(commands.Cog):
 
                     else:
 
-                        change = util.database_update_server(interaction.guild, {'$set': {'prefix': new_prefix}})
+                        new_prefix = user_msg.content
 
-                        await interaction.message.edit(
-                            embed = discord.Embed(
-                                description = util.get_str(lang, 'interaction_string_changed_prefix'),
-                                color = discord.Colour.green()
+                        if new_prefix == server['prefix']:
+
+                            await interaction.message.edit(
+                                embed = discord.Embed(
+                                    description = util.get_str(lang, 'interaction_string_error_new_prefix_duplicate'),
+                                    color = discord.Colour.red()
+                                )
                             )
-                        )
-                        return
+                            return
+
+                        else:
+
+                            change = util.database_update_server(interaction.guild, {'$set': {'prefix': new_prefix}})
+
+                            await interaction.message.edit(
+                                embed = discord.Embed(
+                                    description = util.get_str(lang, 'interaction_string_changed_prefix').format(prefix = new_prefix),
+                                    color = discord.Colour.green()
+                                )
+                            )
+                            return
 
             except asyncio.TimeoutError:
 
@@ -144,6 +169,9 @@ class Events(commands.Cog):
                 return
 
         elif interaction.custom_id == 'SERVER_LANG_CONFIGURE':
+
+            if interaction.author.guild_permissions.administrator == False:
+                return
 
             def check(i):
                 return interaction.author == i.author and interaction.message == i.message
@@ -217,86 +245,256 @@ class Events(commands.Cog):
 
         elif interaction.custom_id == 'SERVER_UPDATES_CHANNEL_CONFIGURE':
 
+            if interaction.author.guild_permissions.administrator == False:
+                return
+
+            server = util.database_get_server(interaction.guild)
+            already_configurated = server['updates_channel']['enabled']
+
+            if already_configurated == True:
+
+                components = [
+                    Button(
+                        style = ButtonStyle.red,
+                        label = util.get_str(lang, 'interaction_button_configure_channel'),
+                        custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_CHANNEL'
+                    ),
+                    Button(
+                        style = ButtonStyle.gray,
+                        label = util.get_str(lang, 'interaction_button_configure_options'),
+                        custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_OPTIONS'
+                    )
+                ]
+
+            else:
+
+                components = [
+                    Button(
+                        style = ButtonStyle.green,
+                        label = util.get_str(lang, 'interaction_button_configure_channel'),
+                        custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_CHANNEL'
+                    ),
+                    Button(
+                        style = ButtonStyle.gray,
+                        label = util.get_str(lang, 'interaction_button_configure_options'),
+                        disabled = True
+                    )
+                ]
+
+            embed = discord.Embed(
+                title = util.get_str(lang, 'interaction_string_updates_config'),
+                color = discord.Colour.blue()
+            )
+            embed.add_field(
+                name = util.get_str(lang, 'interaction_string_updates_channel'),
+                value = f'<#{server["updates_channel"]["channel"]}>' if already_configurated else util.get_str(lang, 'command_string_not_configurated'),
+                inline = False
+            )
+
+            options_string = ''
+            for i in ['cosmetics', 'playlists', 'news', 'aes']:
+                options_string += f'`{i}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][i] == True else util.get_str(lang, "command_string_not_configured")}\n'
+
+            embed.add_field(
+                name = util.get_str(lang, 'interaction_string_updates_options'),
+                value = options_string,
+                inline = False
+            )
+
+            await interaction.respond(
+                type = 7,
+                embed = embed,
+                components = components
+            )
+
+
+        elif interaction.custom_id == 'SERVER_UPDATES_CHANNEL_CONFIGURE_OPTIONS':
+
+            if interaction.author.guild_permissions.administrator == False:
+                return
+
             server = util.database_get_server(interaction.guild)
 
+            enabled = self.bot.get_emoji(931338312159989781)
+            disabled = self.bot.get_emoji(931338312604602450)
+
+            options_string = ''
+            for op in ['cosmetics', 'playlists', 'news', 'aes']:
+                options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "interaction_string_updates_enabled") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "interaction_string_updates_disabled")}\n'
+
+            embed = discord.Embed(
+                title = util.get_str(lang, 'interaction_string_updates_config'),
+                description = f'{util.get_str(lang, "interaction_string_select_to_disable_or_enable")}\n{options_string}',
+                color = discord.Colour.blue()
+            )
+
+            components = [
+                Select(
+                    options = [
+                        SelectOption(emoji = enabled if server['updates_channel']['config'][i] == True else disabled, label = util.get_str(lang, f'interaction_string_updates_option_{i}'), description = util.get_str(lang, f'interaction_string_updates_option_{i}_description'), value = i ) for i in ['cosmetics', 'playlists', 'news', 'aes']
+                    ],
+                    custom_id = 'SERVER_UPDATES_SELECT_OPTION'
+                )
+            ]
+
+            await interaction.respond(
+                type = 7,
+                embed = embed,
+                components = components
+            )
+
+            def check(i):
+                return interaction.author == i.author and interaction.message == i.message
+
+            while True:
+
+                try:
+
+                    i = await self.bot.wait_for('select_option', check=check, timeout=90)
+
+                    if server['updates_channel']['config'][i.values[0]] == True:
+
+                        change = util.database_update_server(
+                            guild = interaction.guild,
+                            changes = {'$set': {f'updates_channel.config.{i.values[0]}': False}}
+                        )
+
+                    else:
+
+                        change = util.database_update_server(
+                            guild = interaction.guild,
+                            changes = {'$set': {f'updates_channel.config.{i.values[0]}': True}}
+                        )
+
+                    server = util.database_get_server(interaction.guild)
+
+                    options_string = ''
+                    for op in ['cosmetics', 'playlists', 'news', 'aes']:
+                        options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "interaction_string_updates_enabled") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "interaction_string_updates_disabled")}\n'
+
+                    embed = discord.Embed(
+                        title = util.get_str(lang, 'interaction_string_updates_config'),
+                        description = f'{util.get_str(lang, "interaction_string_select_to_disable_or_enable")}\n{options_string}',
+                        color = discord.Colour.blue()
+                    )
+
+                    components = [
+                        Select(
+                            options = [
+                                SelectOption(emoji = enabled if server['updates_channel']['config'][i] == True else disabled, label = util.get_str(lang, f'interaction_string_updates_option_{i}'), description = util.get_str(lang, f'interaction_string_updates_option_{i}_description'), value = i ) for i in ['cosmetics', 'playlists', 'news', 'aes']
+                            ],
+                            custom_id = 'SERVER_UPDATES_SELECT_OPTION'
+                        )
+                    ]
+
+                    await i.respond(
+                        type = 7,
+                        embed = embed,
+                        components = components
+                    )
+
+                except asyncio.TimeoutError:
+
+                    components[0].disabled = True
+
+                    await interaction.message.edit(
+                        embed = embed,
+                        components = components
+                    )
+                    break
+
+        elif interaction.custom_id == 'SERVER_UPDATES_CHANNEL_CONFIGURE_CHANNEL':
+
+            if interaction.author.guild_permissions.administrator == False:
+                return
+
+            server = util.database_get_server(interaction.guild)
             already_configurated = server['updates_channel']['enabled']
 
             embed = discord.Embed(
-                description = util.get_str(lang, 'interaction_string_send_channel') if already_configurated == False else util.get_str(lang, 'interaction_string_send_channel_extra_to_disable'),
+                description = util.get_str(lang, 'interaction_string_send_channel'),
                 color = discord.Colour.blue()
             )
-            embed.set_footer(text=util.get_str(lang, 'interaction_string_cancel_text'))
+
+            components = [
+                Button(
+                    style = ButtonStyle.gray,
+                    label = util.get_str(lang, 'interaction_button_cancel'),
+                    custom_id = 'CANCEL'
+                )
+            ]
+
+            if already_configurated:
+                components.append(
+                    Button(
+                        style = ButtonStyle.red,
+                        label = util.get_str(lang, 'interaction_button_disable'),
+                        custom_id = 'CANCEL'
+                    )
+                )
 
             msg = await interaction.respond(
                 type = 7,
                 embed = embed,
-                components = []
+                components = [
+                    [
+                        Button(
+                            style = ButtonStyle.gray,
+                            label = util.get_str(lang, 'interaction_button_cancel'),
+                            custom_id = 'CANCEL'
+                        ),
+                        Button(
+                            style = ButtonStyle.red,
+                            label = util.get_str(lang, 'interaction_button_disable'),
+                            custom_id = 'SERVER_UPDATES_DISABLE'
+                        )
+                    ]
+                ]
             )
 
-            def check(message):
+            def message_check(message):
                 return message.author == interaction.author and message.channel == interaction.channel
+
+            def interaction_check(i):
+                return interaction.author == i.author and interaction.message == i.message
 
             try:
 
-                usrmsg = await self.bot.wait_for('message', check=check, timeout=120)
+                pending_tasks = [
+                    await self.bot.wait_for('message', check=message_check, timeout=120),
+                    await self.bot.wait_for('button_click', check=interaction_check, timeout=120)
+                ]
 
-                if usrmsg.content.lower() == 'cancel':
+                done_tasks, pending_tasks = await asyncio.wait(pending_tasks, return_when = asyncio.FIRST_COMPLETED)
 
-                    await interaction.message.edit(embed=discord.Embed(
-                        description = util.get_str(lang, 'interaction_string_canceled_by_user'),
-                        color = discord.Colour.red()
-                    ))
-                    return
+                for task in pending_tasks:
+                    task.cancel()
 
-                elif usrmsg.content.lower() == 'disable':
+                if isinstance(done_tasks[0], Interaction):
 
-                    if already_configurated == False:
-
-                        await interaction.message.edit(embed=discord.Embed(
-                            description = util.get_str(lang, 'interaction_string_error_channel_not_configurated'),
+                    await done_tasks[0].respond(
+                        type = 7,
+                        embed = discord.Embed(
+                            description = util.get_str(lang, 'interaction_string_canceled_by_user'),
                             color = discord.Colour.red()
-                        ))
-                        return
-
-                    else:
-
-                        try:
-                            webhook = await self.bot.fetch_webhook(server['updates_channel']['webhook_id'])
-                            await webhook.delete()
-                        except discord.NotFound:
-                            log.debug('Ignoring webhook delete. It does not exists anymore')
-
-                        except discord.Forbidden:
-
-                            await interaction.message.edit(embed=discord.Embed(
-                                description = util.get_str(lang, 'interaction_string_error_webhook_delete'),
-                                color = discord.Colour.red()
-                            ))
-                            return
-
-                        except Exception:
-
-                            log.error(f'An error ocurred removing webhook in updates channel disabling. Traceback: {traceback.format_exc()}')
-
-
-                        change = util.database_update_server(interaction.guild, {'$set': {'updates_channel.enabled': False, 'updates_channel.webhook': None, 'updates_channel.channel': None, 'updates_channel.webhook_id': None}})
-
-                        await interaction.message.edit(embed=discord.Embed(
-                            description = util.get_str(lang, 'interaction_string_channel_disabled'),
-                            color = discord.Colour.blue()
-                        ))
-                        return
+                        ),
+                        components = []
+                    )
 
                 else:
 
+                    usrmsg = done_tasks[0]
                     channel_id = usrmsg.content.lower().strip('<#> ')
 
                     try:
-                        channel = await self.bot.fetch_channel(int(channel_id))
+                        channel_int = int(channel_id)
+                        channel = await self.bot.fetch_channel(channel_int)
                     except:
+
                         await interaction.message.edit(embed=discord.Embed(
                             description = util.get_str(lang, 'interaction_string_send_channel_only'),
-                            color = discord.Colour.red()
+                            color = discord.Colour.red(),
+                            components = []
                         ))
                         return
 
@@ -304,7 +502,8 @@ class Events(commands.Cog):
 
                         await interaction.message.edit(embed=discord.Embed(
                             description = util.get_str(lang, 'interaction_string_error_invalid_channel_or_not_accesible'),
-                            color = discord.Colour.red()
+                            color = discord.Colour.red(),
+                            components = []
                         ))
                         return
                     
@@ -318,7 +517,8 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_error_webhook_create'),
-                                color = discord.Colour.red()
+                                color = discord.Colour.red(),
+                                components = []
                             ))
                             return
                             
@@ -328,7 +528,8 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_channel_configured').format(channel = f'<#{channel.id}>'),
-                                color = discord.Colour.blue()
+                                color = discord.Colour.blue(),
+                                components = []
                             ))
                             return
                         
@@ -336,7 +537,8 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_error_unknown'),
-                                color = discord.Colour.red()
+                                color = discord.Colour.red(),
+                                components = []
                             ))
                             return
 
@@ -344,9 +546,55 @@ class Events(commands.Cog):
 
                 await interaction.message.edit(embed=discord.Embed(
                     description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
+                    color = discord.Colour.red(),
+                    components = []
+                ))
+                return
+        
+        elif interaction.custom_id == 'SERVER_UPDATES_DISABLE':
+
+            if interaction.author.guild_permissions.administrator == False:
+                return
+
+            server = util.database_get_server(interaction.guild)
+
+            try:
+                webhook = await self.bot.fetch_webhook(server['updates_channel']['webhook_id'])
+                await webhook.delete()
+            except discord.NotFound:
+                log.debug('Ignoring webhook delete. It does not exists anymore')
+
+            except discord.Forbidden:
+
+                await interaction.message.edit(embed=discord.Embed(
+                    description = util.get_str(lang, 'interaction_string_error_webhook_delete'),
                     color = discord.Colour.red()
                 ))
                 return
+
+            except Exception:
+
+                log.error(f'An error ocurred removing webhook in updates channel disabling. Traceback: {traceback.format_exc()}')
+
+
+            change = util.database_update_server(interaction.guild, {'$set': {'updates_channel.enabled': False, 'updates_channel.webhook': None, 'updates_channel.channel': None, 'updates_channel.webhook_id': None}})
+
+            await interaction.message.edit(embed=discord.Embed(
+                description = util.get_str(lang, 'interaction_string_channel_disabled'),
+                color = discord.Colour.blue()
+            ))
+            return
+
+        elif interaction.custom_id == 'CANCEL':
+
+            await interaction.respond(
+                type = 7,
+                embed = discord.Embed(
+                    description = util.get_str(lang, 'interaction_string_canceled_by_user'),
+                    color = discord.Colour.red()
+                ),
+                components = []
+            )
 
 
 def setup(bot):
