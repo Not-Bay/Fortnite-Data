@@ -1,4 +1,5 @@
 import traceback
+import aiofiles
 import asyncio
 import discord
 import logging
@@ -287,6 +288,8 @@ class FortniteAPI:
         self.gliders = []
         self.banners = []
 
+        self.playlists = []
+
 
     async def _load_cosmetics(self):
 
@@ -303,8 +306,8 @@ class FortniteAPI:
 
             if data == None:
                 log.warning('Something was wrong with cosmetics API. Using cached cosmetics')
-                data = json.load(open(f'cache/cosmetics/all_{self.language}.json', 'r', encoding='utf-8'))
-
+                async with aiofiles.open(f'cache/cosmetics/all_{self.language}.json', 'r', encoding='utf-8') as f:
+                    data = json.loads(await f.read())
 
         for cosmetic in data['data']:
 
@@ -357,8 +360,8 @@ class FortniteAPI:
                     continue
       
 
-        with open(f'cache/cosmetics/all_{self.language}.json', 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
+        async with aiofiles.open(f'cache/cosmetics/all_{self.language}.json', 'w', encoding='utf-8') as f:
+            await f.write(json.dumps(data))
 
         self._loaded_all = True
 
@@ -366,6 +369,34 @@ class FortniteAPI:
 
         return self.all_cosmetics
 
+    async def _load_playlists(self):
+
+        log.debug(f'[{self.language}] Updating playlists cache...')
+
+        data = await self.get_playlists(language=self.language)
+
+        if data == False:
+            log.warning('Something was wrong with playlists API. Using cached playlists')
+            
+            async with aiofiles.open(f'cache/playlists/{self.language}.json', 'r', encoding='utf-8') as f:
+                data = json.loads(await f.read())
+
+        addedCount = 0
+
+        for playlist in data['data']:
+
+            if playlist not in self.playlists:
+
+                self.playlists.append(playlist)
+                addedCount += 1
+    
+        if addedCount != 0:
+            async with aiofiles.open(f'cache/playlists/{self.language}.json', 'w', encoding='utf-8') as f:
+                await f.write(json.dumps(data))
+
+        log.debug(f'[{self.language}] Updated playlists cache. Loaded {addedCount} playlists.')
+
+        return self.playlists
         
     async def get_cosmetic(self, query: str, **kwargs):
 

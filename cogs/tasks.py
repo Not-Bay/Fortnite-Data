@@ -279,11 +279,12 @@ class Tasks(commands.Cog):
 
                 async with aiofiles.open(f'cache/playlists/{lang}.json', 'r', encoding='utf-8') as f:
                     cached_playlists = json.loads(await f.read())
-                new_playlists = await util.fortniteapi[lang].get_playlists(language = lang)
+
+                new_playlists = await util.fortniteapi[lang]._load_playlists()
 
                 added_playlists = []
 
-                if len(cached_playlists['data']) != len(new_playlists['data']):
+                if len(cached_playlists['data']) != len(new_playlists):
 
                     to_send_list = []
 
@@ -327,10 +328,6 @@ class Tasks(commands.Cog):
                                 embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(added_playlists)), icon_url = footer_icon)
                             
                             to_send_list.append(embed)
-
-
-                    async with aiofiles.open(f'cache/playlists/{lang}.json', 'w', encoding='utf-8') as f:
-                        await f.write(json.dumps(new_playlists))
 
                     result = await self.updates_channel_send(embeds=to_send_list, type_='playlists', lang=lang)
 
