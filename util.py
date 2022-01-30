@@ -88,7 +88,7 @@ def get_str(lang: str, string: str):
     
     except KeyError:
 
-        return languages['es'].get_item(item = string)
+        return f'missing {string} in {lang}*'
 
 
 def get_guild_lang(guild: discord.Guild):
@@ -107,7 +107,7 @@ def get_guild_lang(guild: discord.Guild):
 async def wait_cache_load():
 
     while True:
-        if fortniteapi._loaded_all == False:
+        if fortniteapi._loaded_cosmetics == False:
             await asyncio.sleep(0.5)
         else:
             return True
@@ -223,10 +223,7 @@ class Language:
         if self._loaded == False:
             return False
 
-        try:
-            return self.data[item]
-        except:
-            return f'missing {item} in {self.language}*'
+        return self.data[item]
 
     async def load_language_data(self):
 
@@ -273,7 +270,8 @@ class FortniteAPI:
             'Authorization': configuration.get('fortnite-api-key')
         }
 
-        self._loaded_all = False
+        self._loaded_cosmetics = False
+        self._loaded_playlists = False
         
         self.all_cosmetics = []
 
@@ -363,7 +361,7 @@ class FortniteAPI:
         async with aiofiles.open(f'cache/cosmetics/all_{self.language}.json', 'w', encoding='utf-8') as f:
             await f.write(json.dumps(data))
 
-        self._loaded_all = True
+        self._loaded_cosmetics = True
 
         log.debug(f'[{self.language}] Updated cosmetic cache. Loaded {len(self.all_cosmetics)} cosmetics.')
 
@@ -393,6 +391,8 @@ class FortniteAPI:
         if addedCount != 0:
             async with aiofiles.open(f'cache/playlists/{self.language}.json', 'w', encoding='utf-8') as f:
                 await f.write(json.dumps(data))
+        
+        self._load_playlists = True
 
         log.debug(f'[{self.language}] Updated playlists cache. Loaded {addedCount} playlists.')
 
@@ -404,7 +404,7 @@ class FortniteAPI:
         match_method = kwargs.get('match_method', 'starts')
 
         if len(self.all_cosmetics) == 0:
-            await self._load_cosmetics()
+            return False
 
         list_to_search = None
 
@@ -443,6 +443,39 @@ class FortniteAPI:
         is_id = query.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_', 'bannertoken_'))
 
         for item in list_to_search:
+
+            if is_id:
+                if match_method == 'starts':
+                    if item['id'].lower().startswith(query.lower()):
+                        results.append(item)
+
+                elif match_method == 'contains':
+                    if query.lower() in item['id'].lower():
+                        results.append(item)
+
+            else:
+                if match_method == 'starts':
+                    if item['name'].lower().startswith(query.lower()):
+                        results.append(item)
+                
+                elif match_method == 'contains':
+                    if query.lower() in item['name'].lower():
+                        results.append(item)
+
+        return results
+
+    async def get_playlist(self, query: str, **kwargs):
+
+        match_method = kwargs.get('match_method', 'starts')
+
+        if len(self.playlists) == 0:
+            return False
+
+        results = []
+
+        is_id = query.lower().startswith('playlist_')
+
+        for item in self.playlists:
 
             if is_id:
                 if match_method == 'starts':
