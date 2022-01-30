@@ -114,7 +114,7 @@ class General(commands.Cog):
 
         else:
 
-            if util.fortniteapi[lang]._loaded_all == False:
+            if util.fortniteapi[lang]._loaded_cosmetics == False:
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_cosmetics_data_loading'),
@@ -298,6 +298,172 @@ class General(commands.Cog):
                             components = []
                         )
                         return
+
+    @commands.command(usage='playlist <name or ID>')
+    @commands.cooldown(5, 8, commands.BucketType.user)
+    async def playlist(self, ctx, *, name_or_id = None):
+        """Search for playlist by their name or ID."""
+
+        lang = util.get_guild_lang(ctx.guild)
+
+        if util.fortniteapi[lang]._loaded_playlists == 0:
+
+            await ctx.send(embed=discord.Embed(
+                description = util.get_str(lang, 'command_string_playlists_data_loading'),
+                color = discord.Colour.orange()
+            ))
+            return
+
+        else:
+
+            if name_or_id == None:
+
+                await ctx.send(embed=discord.Embed(
+                    description = util.get_str(lang, 'command_string_playlist_missing_parameters').format(prefix = ctx.prefix),
+                    color = discord.Colour.blue()
+                ))
+                return
+
+            else:
+
+                special_args = [ # just for match method
+                    '--contains',
+                    '--starts'
+                ]
+
+                match_method = 'starts'
+                splitted_name_or_id = name_or_id.split()
+
+                log.debug(f'Checking for special args in "{name_or_id}"')
+
+                if len(splitted_name_or_id) != 1:
+
+                    for i in splitted_name_or_id:
+
+                        if i.lower() in special_args:
+
+                            match_method = str(i.replace('--', ''))
+
+                            name_or_id = name_or_id.replace(f' {i}', '')
+
+                            log.debug(f'Detected special arg: "{i}"')
+
+                            break
+
+                        else:
+
+                            continue
+
+                results = await util.fortniteapi[lang].get_playlist(query = name_or_id, match_method = match_method)
+
+                if len(results) == 0:
+
+                    await ctx.send(embed=discord.Embed(
+                        description = util.get_str(lang, 'command_string_no_playlist_found'),
+                        color = discord.Colour.red()
+                    ))
+                    return
+
+                else:
+
+                    current_page = 0
+
+                    pages = []
+                    count = 0
+
+                    for playlist in results:
+                        count += 1
+
+                        if playlist['description'] != None:
+                            playlist_description = playlist['description']
+                        else:
+                            playlist_description = util.get_str(lang, 'command_string_none')
+
+                        if playlist['subName'] != None:
+                            playlist_title = f'{playlist["name"]} {playlist["subName"]}'
+                        else:
+                            playlist_title = playlist['name']
+
+                        if playlist['accumulateToProfileStats'] == True:
+                            playlist_affectStats = util.get_str(lang, 'command_string_yes')
+                        elif playlist['accumulateToProfileStats'] == False:
+                            playlist_affectStats = util.get_str(lang, 'command_string_no')
+                        else:
+                            playlist_affectStats = util.get_str(lang, 'command_string_unknown')
+
+                        i = discord.Embed(
+                            title = playlist_title,
+                            description = playlist_description
+                        )
+
+                        i.add_field(name=util.get_str(lang, 'command_string_max_teams'), value=f'`{playlist["maxTeams"]}`', inline=False)
+                        i.add_field(name=util.get_str(lang, 'command_string_max_team_size'), value=f'`{playlist["maxTeamSize"]}`', inline=False)
+                        i.add_field(name=util.get_str(lang, 'command_string_affects_player_stats'), value=f'`{playlist_affectStats}`', inline=False)
+
+                        if playlist['images']['showcase']:
+                            i.set_image(url=playlist['images']['showcase'])
+
+                        i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(results)))
+
+                        pages.append(i)
+
+
+                    components = []
+
+                    if len(results) > 1:
+                        components = [[
+                            Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
+                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
+                            Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
+                        ]]
+
+                    msg = await ctx.send(
+                        embed = pages[current_page],
+                        components = components
+                    )
+
+                    def check(interaction):
+                        return interaction.author == ctx.author and interaction.message == msg
+
+                    while True:
+
+                        try:
+
+                            interaction = await self.bot.wait_for('button_click', check=check, timeout=300)
+
+                            if interaction.custom_id == 'PAGE_NEXT':
+                                current_page += 1
+
+                            elif interaction.custom_id == 'PAGE_BACK':
+                                current_page -= 1
+
+                            elif interaction.custom_id == 'PAGE_TO_FIRST':
+                                current_page = 0
+
+                            elif interaction.custom_id == 'PAGE_TO_FINAL':
+                                current_page = len(pages) - 1
+
+                            await interaction.respond(
+                                type = 7,
+                                embed = pages[current_page],
+                                components = [[
+                                    Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
+                                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
+                                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
+                                    Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
+                                ]]
+                            )
+                            continue
+
+                        except asyncio.TimeoutError:
+
+                            await msg.edit(
+                                embed = pages[current_page],
+                                components = []
+                            )
+                            return
+
 
     @commands.command(usage='shop [language]', aliases=['itemshop'])
     @commands.cooldown(3, 9, commands.BucketType.user)
