@@ -359,7 +359,7 @@ class General(commands.Cog):
                 if len(results) == 0:
 
                     await ctx.send(embed=discord.Embed(
-                        description = util.get_str(lang, 'command_string_no_playlist_found'),
+                        description = util.get_str(lang, 'command_string_no_playlists_found'),
                         color = discord.Colour.red()
                     ))
                     return
@@ -396,9 +396,9 @@ class General(commands.Cog):
                             description = playlist_description
                         )
 
-                        i.add_field(name=util.get_str(lang, 'command_string_max_teams'), value=f'`{playlist["maxTeams"]}`', inline=False)
-                        i.add_field(name=util.get_str(lang, 'command_string_max_team_size'), value=f'`{playlist["maxTeamSize"]}`', inline=False)
-                        i.add_field(name=util.get_str(lang, 'command_string_affects_player_stats'), value=f'`{playlist_affectStats}`', inline=False)
+                        i.add_field(name=util.get_str(lang, 'command_string_max_teams'), value=f'`{playlist["maxTeams"]}`', inline=True)
+                        i.add_field(name=util.get_str(lang, 'command_string_max_team_size'), value=f'`{playlist["maxTeamSize"]}`', inline=True)
+                        i.add_field(name=util.get_str(lang, 'command_string_affects_player_stats'), value=f'`{playlist_affectStats}`', inline=True)
 
                         if playlist['images']['showcase']:
                             i.set_image(url=playlist['images']['showcase'])
