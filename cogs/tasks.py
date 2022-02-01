@@ -130,6 +130,78 @@ class Tasks(commands.Cog):
         except Exception:
             log.error(f'Failed while checking upcoming cosmetics changes. Traceback:\n{traceback.format_exc()}')
 
+        try: # playlists
+
+            log.debug('Checking playlists updates...')
+
+            for lang in util.configuration['languages']:
+
+                async with aiofiles.open(f'cache/playlists/{lang}.json', 'r', encoding='utf-8') as f:
+                    cached_playlists = json.loads(await f.read())
+
+                new_playlists = await util.fortniteapi[lang]._load_playlists()
+
+                added_playlists = []
+
+                if len(cached_playlists['data']) != len(new_playlists):
+
+                    to_send_list = []
+
+                    for playlist in new_playlists['data']:
+                        if playlist not in cached_playlists['data']:
+
+                            added_playlists.append(playlist)
+
+                    if len(added_playlists) != 0:
+
+                        count = 0
+
+                        for playlist in added_playlists:
+
+                            embed = DiscordEmbed()
+                            if count == 0:
+                                embed.set_author(name=util.get_str(lang, 'update_message_string_new_playlists_detected'))
+
+                            embed.title = playlist['name']
+
+                            if playlist['description'] != None:
+                                embed.description = playlist['description']
+                            
+                            else:
+                                embed.description = util.get_str(lang, 'update_message_string_playlist_no_description')
+
+                            embed.color = 0x3498db
+
+                            if playlist['images']['showcase'] != None:
+                                embed.set_image(url = playlist['images']['showcase'])
+
+                            footer_icon = None
+                            if playlist['images']['missionIcon'] != None:
+                                footer_icon = playlist['images']['missionIcon']
+
+                            count += 1
+
+                            if count == len(added_playlists):
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(added_playlists)), icon_url = footer_icon)
+                            else:
+                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(added_playlists)), icon_url = footer_icon)
+                            
+                            to_send_list.append(embed)
+
+                    result = await self.updates_channel_send(embeds=to_send_list, type_='playlists', lang=lang)
+
+                    log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+
+                else:
+                    if self.execution_count == 1:
+                        continue # playlists need some love at startup too
+                    else:
+                        break
+
+
+        except:
+            log.error(f'Failed while checking playlists changes. Traceback:\n{traceback.format_exc()}')
+
         try: # ingame news
 
             log.debug('Checking ingame news updates...')
@@ -270,75 +342,6 @@ class Tasks(commands.Cog):
 
         except:
             log.error(f'Failed while checking ingame news changes. Traceback:\n{traceback.format_exc()}')
-
-        try: # playlists
-
-            log.debug('Checking playlists updates...')
-
-            for lang in util.configuration['languages']:
-
-                async with aiofiles.open(f'cache/playlists/{lang}.json', 'r', encoding='utf-8') as f:
-                    cached_playlists = json.loads(await f.read())
-
-                new_playlists = await util.fortniteapi[lang]._load_playlists()
-
-                added_playlists = []
-
-                if len(cached_playlists['data']) != len(new_playlists):
-
-                    to_send_list = []
-
-                    for playlist in new_playlists['data']:
-                        if playlist not in cached_playlists['data']:
-
-                            added_playlists.append(playlist)
-
-                    if len(added_playlists) != 0:
-
-                        count = 0
-
-                        for playlist in added_playlists:
-
-                            embed = DiscordEmbed()
-                            if count == 0:
-                                embed.set_author(name=util.get_str(lang, 'update_message_string_new_playlists_detected'))
-
-                            embed.title = playlist['name']
-
-                            if playlist['description'] != None:
-                                embed.description = playlist['description']
-                            
-                            else:
-                                embed.description = util.get_str(lang, 'update_message_string_playlist_no_description')
-
-                            embed.color = 0x3498db
-
-                            if playlist['images']['showcase'] != None:
-                                embed.set_image(url = playlist['images']['showcase'])
-
-                            footer_icon = None
-                            if playlist['images']['missionIcon'] != None:
-                                footer_icon = playlist['images']['missionIcon']
-
-                            count += 1
-
-                            if count == len(added_playlists):
-                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int_with_credits').format(count = count, total = len(added_playlists)), icon_url = footer_icon)
-                            else:
-                                embed.set_footer(text = util.get_str(lang, 'command_string_int_of_int').format(count = count, total = len(added_playlists)), icon_url = footer_icon)
-                            
-                            to_send_list.append(embed)
-
-                    result = await self.updates_channel_send(embeds=to_send_list, type_='playlists', lang=lang)
-
-                    log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
-
-                else:
-                    break
-
-
-        except:
-            log.error(f'Failed while checking playlists changes. Traceback:\n{traceback.format_exc()}')
 
         try: # aes (using hex format)
 
