@@ -158,8 +158,6 @@ class General(commands.Cog):
 
                         log.debug(f'Detected special arg: "{i}"')
 
-                        break
-
                     else:
 
                         continue
