@@ -392,7 +392,7 @@ class FortniteAPI:
             async with aiofiles.open(f'cache/playlists/{self.language}.json', 'w', encoding='utf-8') as f:
                 await f.write(json.dumps(data))
         
-        self._load_playlists = True
+        self._loaded_playlists = True
 
         log.debug(f'[{self.language}] Updated playlists cache. Loaded {addedCount} playlists.')
 
@@ -468,6 +468,8 @@ class FortniteAPI:
 
         match_method = kwargs.get('match_method', 'starts')
 
+        log.debug(f'Searching playlists with match method "{match_method}". Query: "{query}"')
+
         if len(self.playlists) == 0:
             return False
 
@@ -475,25 +477,34 @@ class FortniteAPI:
 
         is_id = query.lower().startswith('playlist_')
 
-        for item in self.playlists:
+        for playlist in self.playlists:
 
             if is_id:
                 if match_method == 'starts':
-                    if item['id'].lower().startswith(query.lower()):
-                        results.append(item)
+                    if playlist['id'].lower().startswith(query.lower()):
+                        results.append(playlist)
 
                 elif match_method == 'contains':
-                    if query.lower() in item['id'].lower():
-                        results.append(item)
+                    if query.lower() in playlist['id'].lower():
+                        results.append(playlist)
 
             else:
+
+                if playlist['name'] == None: # some playlists don't have name
+                    nameOrId = playlist['id'].replace('playlist_', '')
+                else:
+                    if playlist['subName'] == None:
+                        nameOrId = f'{playlist["name"]}'
+                    else:
+                        nameOrId = f'{playlist["name"]} {playlist["subName"]}'
+
                 if match_method == 'starts':
-                    if item['name'].lower().startswith(query.lower()):
-                        results.append(item)
+                    if nameOrId.lower().startswith(query.lower()):
+                        results.append(playlist)
                 
                 elif match_method == 'contains':
-                    if query.lower() in item['name'].lower():
-                        results.append(item)
+                    if query.lower() in nameOrId.lower():
+                        results.append(playlist)
 
         return results
 
