@@ -118,6 +118,12 @@
     "command_string_translations_en_credit": "Inglés - `{user}`",
     "command_string_translations_es_credit": "Español - `{user}`",
     "command_string_translations_ja_credit": "Japonés - `{user}`",
+    "command_string_an_error_ocurred": "Ha ocurrido un error",
+    "command_string_an_unknown_error_ocurred": "Ha ocurrido un error desconocido ejecutando el comando. Traceback:```py\n{traceback}```",
+    "command_string_error_was_reported_correctly": "El reporte del error ha sido enviado al desarrollador. Gracias!",
+    "command_string_error_unavailable": "El error ya no está en caché y por lo tanto no podrá ser reportado.",
+    "command_string_error_can_not_report": "Ha habido un problema reportando el error.",
+    "command_button_report_error_to_developer": "Reportar al desarrollador",
     "command_button_support_server": "Servidor de soporte",
     "command_button_battle_royale": "Battle Royale",
     "command_button_creative": "Modo Creativo",
@@ -170,5 +176,6 @@
     "update_message_string_aes_dynamickeys_changes_detected": "Nuevas claves para paks dinámicos detectadas",
     "update_message_string_aes_dynamickey_filename": "Nombre del pak",
     "update_message_string_aes_dynamickey_guid": "Guid",
-    "update_message_string_aes_dynamickey_key": "Clave"
+    "update_message_string_aes_dynamickey_key": "Clave",
+    "shop_message_string_new_shop_rotation": "Nueva tienda de objetos"
 }

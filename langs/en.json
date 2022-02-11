@@ -116,6 +116,12 @@
     "command_string_translations_en_credit": "English - `{user}`",
     "command_string_translations_es_credit": "Spansih - `{user}`",
     "command_string_translations_ja_credit": "Japanese - `{user}`",
+    "command_string_an_error_ocurred": "An error ocurred",
+    "command_string_an_unknown_error_ocurred": "An unknown error ocurred executing the command. Traceback:\n```py\n{traceback}```",
+    "command_string_error_was_reported_correctly": "The bug report has been sent to the developer. Thank you!",
+    "command_string_error_unavailable": "This error is not in cache anymore and could not be reported.",
+    "command_string_error_can_not_report": "There was a problem reporting the error.",
+    "command_button_report_error_to_developer": "Report to developer",
     "command_button_support_server": "Support server",
     "command_button_battle_royale": "Battle Royale",
     "command_button_creative": "Creative",
@@ -168,5 +174,6 @@
     "update_message_string_aes_dynamickeys_changes_detected": "Dynamic keys changes detected",
     "update_message_string_aes_dynamickey_filename": "Pak name",
     "update_message_string_aes_dynamickey_guid": "Guid",
-    "update_message_string_aes_dynamickey_key": "Key"
+    "update_message_string_aes_dynamickey_key": "Key",
+    "shop_message_string_new_shop_rotation": "New shop rotation"
 }
