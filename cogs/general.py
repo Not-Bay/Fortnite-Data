@@ -470,62 +470,14 @@ class General(commands.Cog):
 
         lang = util.get_guild_lang(ctx.guild)
 
-        async with aiohttp.ClientSession() as session:
+        url = util.get_custom_shop_url(util.database_get_server(ctx.guild))
 
-            URL = f'https://fortool.fr/cm/api/v1/shop?lang={language}'
+        embed = discord.Embed(
+            title = util.get_str(lang, 'command_string_current_item_shop')
+        )
+        embed.set_image(url = url)
 
-            response = await session.get(URL)
-            data = await response.json()
-
-            if response.status != 200:
-
-                if data['result'] == False:
-
-                    await ctx.send(embed=discord.Embed(
-                        description = util.get_str(lang, 'command_string_not_supported_language'),
-                        color = discord.Colour.blue()
-                    ))
-                    return
-                
-                else:
-
-                    await ctx.send(embed=discord.Embed(
-                        description = util.get_str(lang, 'command_string_item_shop_fetch_error').format(status = response.status),
-                        color = discord.Colour.blue()
-                    ))
-                    return
-            
-            else:
-
-                try:
-
-                    data = await response.json()
-
-                    embed = discord.Embed(
-                        title = util.get_str(lang, 'command_string_current_item_shop'),
-                        color = discord.Colour.blue()
-                    )
-                    embed.set_image(url=f'{data["images"]["carousel"]}?cache={int(time.time())}')
-
-                    await ctx.send(embed=embed)
-
-                except KeyError:
-
-                    await ctx.send(embed=discord.Embed(
-                        description = util.get_str(lang, 'command_string_api_not_supported_language'),
-                        color = discord.Colour.blue()
-                    ))
-                    return
-
-                except Exception:
-
-                    log.error(f'An error ocurred sendind shop image. Traceback: {traceback.format_exc()}')
-
-                    await ctx.send(embed=discord.Embed(
-                        description = util.get_str(lang, 'command_string_error_sending_item_shop'),
-                        color = discord.Colour.red()
-                    ))
-                    return
+        await ctx.send(embed = embed)
 
     @commands.command(usage='news [language]')
     @commands.cooldown(3, 12, commands.BucketType.user)
@@ -1171,10 +1123,10 @@ class General(commands.Cog):
                         except:
 
                             embed = discord.Embed(
-                            description = util.get_str(lang, 'command_string_export_error_sending_file').format(traceback = traceback.format_exc()),
-                            color = discord.Colour.red()
-                        )
-                        await ctx.send(embed = embed)
+                                description = util.get_str(lang, 'command_string_export_error_sending_file').format(traceback = traceback.format_exc()),
+                                color = discord.Colour.red()
+                            )
+                            await ctx.send(embed = embed)
 
                     else:
 
