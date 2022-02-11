@@ -68,6 +68,10 @@ def run():
         except:
             log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
 
+    if sys.platform == 'linux':
+        import uvloop
+        uvloop.install()
+
     loop = asyncio.get_event_loop()
 
     try:
