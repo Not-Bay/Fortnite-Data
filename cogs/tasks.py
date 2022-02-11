@@ -7,6 +7,7 @@ import logging
 import asyncio
 import json
 import time
+import sys
 
 import discord_webhook
 
@@ -22,6 +23,10 @@ class Tasks(commands.Cog):
 
         self.updates_execution_count = 0
         self.shopcheck_execution_count = 0
+
+        if '--disable-updates-tasks' in sys.argv:
+            log.debug('Skipping tasks start. --disable-updates-tasks is in command line arguments.')
+            return
 
         log.debug('Starting tasks...')
         try:
