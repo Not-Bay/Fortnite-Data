@@ -131,8 +131,8 @@ class Events(commands.Cog):
             try:
 
                 pending_tasks = [
-                    await self.bot.wait_for('message', check=message_check, timeout=120),
-                    await self.bot.wait_for('button_click', check=interaction_check, timeout=120)
+                    self.bot.wait_for('message', check=message_check, timeout=120),
+                    self.bot.wait_for('button_click', check=interaction_check, timeout=120)
                 ]
 
                 done_tasks, pending_tasks = await asyncio.wait(pending_tasks, return_when = asyncio.FIRST_COMPLETED)
@@ -140,9 +140,11 @@ class Events(commands.Cog):
                 for task in pending_tasks:
                     task.cancel()
 
-                if isinstance(done_tasks[0], Interaction):
+                finished_task = list(done_tasks)[0].result()
 
-                    await done_tasks[0].respond(
+                if isinstance(finished_task, Interaction):
+
+                    await finished_task.respond(
                         type = 7,
                         embed = discord.Embed(
                             description = util.get_str(lang, 'interaction_string_canceled_by_user'),
@@ -153,7 +155,7 @@ class Events(commands.Cog):
 
                 else:
 
-                    user_msg = done_tasks[0]
+                    user_msg = finished_task
 
                     if len(user_msg.content) > 4:
 
@@ -284,6 +286,19 @@ class Events(commands.Cog):
             server = util.database_get_server(interaction.guild)
             already_configurated = server['shop_channel']['enabled']
 
+            components = [
+                Button(
+                    style = ButtonStyle.red,
+                    label = util.get_str(lang, 'interaction_button_configure_channel'),
+                    custom_id = 'SERVER_SHOP_CHANNEL_CONFIGURE_CHANNEL'
+                ),
+                Button(
+                    style = ButtonStyle.gray,
+                    label = util.get_str(lang, 'interaction_button_configure_options'),
+                    custom_id = 'SERVER_SHOP_CHANNEL_CONFIGURE_OPTIONS'
+                )
+            ]
+
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_shop_config'),
                 color = discord.Colour.blue()
@@ -294,16 +309,20 @@ class Events(commands.Cog):
                 inline = False
             )
 
+            options_string = ''
+            for i in ['header', 'subheader', 'footer']:
+                options_string += f'`{i}` - {util.get_str(lang, "command_string_not_configurated") if server["shop_channel"]["config"][i] == None else server["shop_channel"]["config"][i]}\n'
+
+            embed.add_field(
+                name = util.get_str(lang, 'interaction_string_updates_options'),
+                value = options_string,
+                inline = False
+            )
+
             await interaction.respond(
                 type = 7,
                 embed = embed,
-                components = [
-                    Button(
-                        style = ButtonStyle.red,
-                        label = util.get_str(lang, 'interaction_button_configure_channel'),
-                        custom_id = 'SERVER_SHOP_CHANNEL_CONFIGURE_CHANNEL'
-                    )
-                ]
+                components = components
             )
 
         elif interaction.custom_id == 'SERVER_UPDATES_CHANNEL_CONFIGURE':
@@ -314,35 +333,18 @@ class Events(commands.Cog):
             server = util.database_get_server(interaction.guild)
             already_configurated = server['updates_channel']['enabled']
 
-            if already_configurated == True:
-
-                components = [
-                    Button(
-                        style = ButtonStyle.red,
-                        label = util.get_str(lang, 'interaction_button_configure_channel'),
-                        custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_CHANNEL'
-                    ),
-                    Button(
-                        style = ButtonStyle.gray,
-                        label = util.get_str(lang, 'interaction_button_configure_options'),
-                        custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_OPTIONS'
-                    )
-                ]
-
-            else:
-
-                components = [
-                    Button(
-                        style = ButtonStyle.green,
-                        label = util.get_str(lang, 'interaction_button_configure_channel'),
-                        custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_CHANNEL'
-                    ),
-                    Button(
-                        style = ButtonStyle.gray,
-                        label = util.get_str(lang, 'interaction_button_configure_options'),
-                        disabled = True
-                    )
-                ]
+            components = [
+                Button(
+                    style = ButtonStyle.red,
+                    label = util.get_str(lang, 'interaction_button_configure_channel'),
+                    custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_CHANNEL'
+                ),
+                Button(
+                    style = ButtonStyle.gray,
+                    label = util.get_str(lang, 'interaction_button_configure_options'),
+                    custom_id = 'SERVER_UPDATES_CHANNEL_CONFIGURE_OPTIONS'
+                )
+            ]
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_updates_config'),
@@ -356,7 +358,7 @@ class Events(commands.Cog):
 
             options_string = ''
             for i in ['cosmetics', 'playlists', 'news', 'aes']:
-                options_string += f'`{i}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][i] == True else util.get_str(lang, "command_string_not_configured")}\n'
+                options_string += f'`{i}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][i] == True else util.get_str(lang, "command_string_disabled")}\n'
 
             embed.add_field(
                 name = util.get_str(lang, 'interaction_string_updates_options'),
@@ -383,7 +385,7 @@ class Events(commands.Cog):
 
             options_string = ''
             for op in ['cosmetics', 'playlists', 'news', 'aes']:
-                options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "interaction_string_updates_enabled") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "interaction_string_updates_disabled")}\n'
+                options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "command_string_disabled") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "command_string_disabled")}\n'
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_updates_config'),
@@ -433,7 +435,7 @@ class Events(commands.Cog):
 
                     options_string = ''
                     for op in ['cosmetics', 'playlists', 'news', 'aes']:
-                        options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "interaction_string_updates_enabled") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "interaction_string_updates_disabled")}\n'
+                        options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "command_string_disabled")}\n'
 
                     embed = discord.Embed(
                         title = util.get_str(lang, 'interaction_string_updates_config'),
@@ -599,7 +601,178 @@ class Events(commands.Cog):
                 ))
                 return
 
+        elif interaction.custom_id == 'SERVER_SHOP_CHANNEL_CONFIGURE_OPTIONS':
 
+            if interaction.author.guild_permissions.administrator == False:
+                return
+
+            server = util.database_get_server(interaction.guild)
+            
+            enabled = self.bot.get_emoji(931338312159989781)
+            disabled = self.bot.get_emoji(931338312604602450)
+
+            options_string = ''
+            for op in ['header', 'subheader', 'footer']:
+                options_string += f'`{util.get_str(lang, f"interaction_string_shop_option_{op}")}` - {util.get_str(lang, "command_string_disabled") if server["shop_channel"]["config"][op] == None else server["shop_channel"]["config"][op]}\n'
+
+            embed = discord.Embed(
+                title = util.get_str(lang, 'interaction_string_shop_config'),
+                description = f'{util.get_str(lang, "interaction_string_select_to_configure")}\n{options_string}',
+                color = discord.Colour.blue()
+            )
+
+            components = [
+                Select(
+                    options = [
+                        SelectOption(emoji = enabled if server['shop_channel']['config'][i] != None else disabled, label = util.get_str(lang, f'interaction_string_shop_option_{i}'), description = util.get_str(lang, f'interaction_string_shop_option_{i}_description'), value = i) for i in ['header', 'subheader', 'footer']
+                    ],
+                    custom_id = 'SERVER_SHOP_SELECT_OPTION'
+                )
+            ]
+
+            await interaction.respond(
+                type = 7,
+                embed = embed,
+                components = components
+            )
+
+            def check(i):
+                return interaction.author == i.author and interaction.message == i.message
+            
+            def message_check(message):
+                return message.author == interaction.author and message.channel == interaction.channel
+
+            while True:
+
+                try:
+
+                    i = await self.bot.wait_for('select_option', check=check, timeout=90)
+
+                    optionComponents = [
+                        Button(
+                            style = ButtonStyle.blue,
+                            label = util.get_str(lang, 'command_button_back'),
+                            custom_id = 'GO_BACK'
+                        ),
+                        Button(
+                            style = ButtonStyle.gray,
+                            label = util.get_str(lang, 'interaction_button_disable'),
+                            custom_id = 'OPTION_CLEAR'
+                        )
+                    ]
+
+                    optionEmbed = discord.Embed(
+                        title = util.get_str(lang, f'interaction_string_shop_option_{i.values[0]}'),
+                        description = f'{util.get_str(lang, f"interaction_string_current_value").format(value=server["shop_channel"]["config"][i.values[0]])}\n{util.get_str(lang, "interaction_string_send_the_new_value")}'
+                    )
+
+                    await i.respond(
+                        type = 7,
+                        embed = optionEmbed,
+                        components = optionComponents
+                    )
+
+                    try:
+                        pending_tasks = [
+                            self.bot.wait_for('message', check=message_check),
+                            self.bot.wait_for('button_click', check=check)
+                        ]
+
+                        done_tasks, pending_tasks = await asyncio.wait(pending_tasks, return_when = asyncio.FIRST_COMPLETED, timeout=120)
+
+                        for task in pending_tasks:
+                            task.cancel()
+
+                        finished_task = list(done_tasks)[0].result()
+
+                        if isinstance(finished_task, Interaction):
+
+                            if finished_task.custom_id == 'GO_BACK':
+
+                                await finished_task.respond(
+                                    type = 7,
+                                    embed = embed,
+                                    components = components
+                                )
+                                continue
+
+                            elif finished_task.custom_id == 'OPTION_CLEAR':
+
+                                change = util.database_update_server(
+                                    guild = interaction.guild,
+                                    changes = {'$set': {f'shop_channel.config.{i.values[0]}': None}}
+                                )
+
+                                server = util.database_get_server(interaction.guild)
+
+                                options_string = ''
+                                for op in ['header', 'subheader', 'footer']:
+                                    options_string += f'`{util.get_str(lang, f"interaction_string_shop_option_{op}")}` - {util.get_str(lang, "command_string_disabled") if server["shop_channel"]["config"][op] == None else server["shop_channel"]["config"][op]}\n'
+                                
+                                embed.description = f'{util.get_str(lang, "interaction_string_select_to_configure")}\n{options_string}'
+
+                                await interaction.message.edit(
+                                    embed = embed,
+                                    components = [
+                                        Select(
+                                            options = [
+                                                SelectOption(emoji = enabled if server['shop_channel']['config'][i] != None else disabled, label = util.get_str(lang, f'interaction_string_shop_option_{i}'), description = util.get_str(lang, f'interaction_string_shop_option_{i}_description'), value = i) for i in ['header', 'subheader', 'footer']
+                                            ],
+                                            custom_id = 'SERVER_SHOP_SELECT_OPTION'
+                                        )
+                                    ]
+                                )
+                                continue
+                        
+                        else:
+
+                            new_value = finished_task.content
+
+                            change = util.database_update_server(
+                                guild = interaction.guild,
+                                changes = {'$set': {f'shop_channel.config.{i.values[0]}': new_value}}
+                            )
+
+                            server = util.database_get_server(interaction.guild)
+
+                            options_string = ''
+                            for op in ['header', 'subheader', 'footer']:
+                                options_string += f'`{util.get_str(lang, f"interaction_string_shop_option_{op}")}` - {util.get_str(lang, "command_string_disabled") if server["shop_channel"]["config"][op] == None else server["shop_channel"]["config"][op]}\n'
+                            
+                            embed.description = f'{util.get_str(lang, "interaction_string_select_to_configure")}\n{options_string}'
+
+                            await interaction.message.edit( # go back to select
+                                embed = embed,
+                                components = [
+                                    Select(
+                                        options = [
+                                            SelectOption(emoji = enabled if server['shop_channel']['config'][i] != None else disabled, label = util.get_str(lang, f'interaction_string_shop_option_{i}'), description = util.get_str(lang, f'interaction_string_shop_option_{i}_description'), value = i) for i in ['header', 'subheader', 'footer']
+                                        ],
+                                        custom_id = 'SERVER_SHOP_SELECT_OPTION'
+                                    )
+                                ]
+                            )
+                            continue
+
+
+                    except asyncio.TimeoutError: # another timeout handler for the new value prompt only
+
+                        await interaction.message.edit(
+                            embed = embed,
+                            components = components
+                        )
+                        break
+
+
+                except asyncio.TimeoutError:
+
+                    components[0].disabled = True
+
+                    await interaction.message.edit(
+                        embed = embed,
+                        components = components
+                    )
+                    break
 
         elif interaction.custom_id == 'SERVER_UPDATES_CHANNEL_CONFIGURE_CHANNEL':
 
@@ -878,7 +1051,6 @@ class Events(commands.Cog):
                     type = 4,
                     content = util.get_str(lang, 'command_string_error_unavailable'),
                     ephemeral = True
-
                 )
 
 
