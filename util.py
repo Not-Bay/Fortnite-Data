@@ -582,7 +582,7 @@ class FortniteAPI:
 def get_custom_shop_url(server: dict):
 
     shopconfig = server['shop_channel']['config']
-    shopconfig['cache'] = int(time.time) # just to prevent discord from caching old shop images
+    shopconfig['cache'] = int(time.time()) # just to prevent discord from caching old shop images
 
     BaseURL = 'https://api.nitestats.com/v1/shop/image'
 
