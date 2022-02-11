@@ -20,7 +20,7 @@ class Tasks(commands.Cog):
         self.bot = bot
         self.ClientSession = aiohttp.ClientSession
 
-        self.execution_count = 0
+        self.updates_execution_count = 0
 
         log.debug('Starting tasks...')
         try:
@@ -35,7 +35,7 @@ class Tasks(commands.Cog):
     @tasks.loop(minutes=4)
     async def updates_check(self):
 
-        self.execution_count += 1
+        self.updates_execution_count += 1
 
         while True:
             if util.ready == True: # start checking only if the bot is completely ready
@@ -122,7 +122,7 @@ class Tasks(commands.Cog):
                 else:
 
                     log.debug('No cosmetic changes detected.')
-                    if self.execution_count == 1:
+                    if self.updates_execution_count == 1:
                         continue # in order to load cosmetics to every language at startup
                     else:
                         break
