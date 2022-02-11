@@ -1,3 +1,4 @@
+from urllib.parse import urlencode
 import traceback
 import aiofiles
 import asyncio
@@ -25,6 +26,7 @@ ready = False
 languages = {}
 fortniteapi = {}
 server_cache = {}
+error_cache = {}
 
 on_ready_count = 0
 start_time = time.time()
@@ -138,6 +140,7 @@ def database_store_server(guild: discord.Guild):
 
         data = {
             "server_id": guild.id,
+            "added": int(time.time()),
             "prefix": "f!",
             "language": "en",
             "search_language": "en",
@@ -145,7 +148,12 @@ def database_store_server(guild: discord.Guild):
                 "enabled": False,
                 "channel": None,
                 "webhook": None,
-                "webhook_id": None
+                "webhook_id": None,
+                "config": {
+                    "header": "",
+                    "subheader": "",
+                    "footer": ""
+                }
             },
             "updates_channel": {
                 "enabled": False,
@@ -570,6 +578,17 @@ class FortniteAPI:
                 return False
             else:
                 return await response.json()
+
+def get_custom_shop_url(server: dict):
+
+    shopconfig = server['shop_channel']['config']
+    shopconfig['cache'] = int(time.time) # just to prevent discord from caching old shop images
+
+    BaseURL = 'https://api.nitestats.com/v1/shop/image'
+
+    query_string = urlencode(shopconfig)
+
+    return BaseURL + '?' + query_string
 
 
 def get_color_by_rarity(value):
