@@ -68,7 +68,7 @@ def run():
         except:
             log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
 
-    if sys.platform == 'linux':
+    if sys.platform != 'win32':
         import uvloop
         uvloop.install()
 
