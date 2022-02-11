@@ -76,6 +76,9 @@ def run():
 
     try:
         loop.run_until_complete(bot.start(util.configuration.get('bot_token')))
+    except KeyboardInterrupt:
+        log.info('KeyboardInterrupt, exiting...')
+        loop.run_until_complete(bot.close())
     except Exception:
         log.critical(f'An error ocurred starting discord bot. Traceback:\n{traceback.format_exc()}')
         loop.run_until_complete(bot.close())
