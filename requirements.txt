@@ -5,3 +5,4 @@ aiohttp==3.7.4
 aiofiles==0.8.0
 pymongo==4.0.1
 coloredlogs==15.0.1
+uvloop==0.16.0
