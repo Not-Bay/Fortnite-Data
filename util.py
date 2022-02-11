@@ -150,9 +150,9 @@ def database_store_server(guild: discord.Guild):
                 "webhook": None,
                 "webhook_id": None,
                 "config": {
-                    "header": "",
-                    "subheader": "",
-                    "footer": ""
+                    "header": None,
+                    "subheader": None,
+                    "footer": None
                 }
             },
             "updates_channel": {
