@@ -525,7 +525,7 @@ class Tasks(commands.Cog):
             webhook = DiscordWebhook(
                 url = server['shop_channel']['webhook'],
                 rate_limit_retry=False, # its impossible to get ratelimit using the webhook once per day. Right?
-                avatar_url='https://cdn.discordapp.com/icons/757406708300644483/96089c25e20aaa4058c84dbfbeaa226a.png'
+                avatar_url='https://cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.png'
             )
 
             webhook.add_embed(embed)
@@ -563,7 +563,7 @@ class Tasks(commands.Cog):
         webhook = DiscordWebhook(
             url=urls,
             rate_limit_retry=True,
-            avatar_url='https://cdn.discordapp.com/icons/757406708300644483/96089c25e20aaa4058c84dbfbeaa226a.png'
+            avatar_url='https://cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.png'
         )
 
         for i in queues:
