@@ -54,7 +54,7 @@ class Other(commands.Cog):
             )
 
     @commands.command(usage='invite')
-    @commands.cooldown(2, 5)
+    @commands.cooldown(2, 4)
     async def invite(self, ctx):
         """
         Let you invite the bot to your server
@@ -69,7 +69,7 @@ class Other(commands.Cog):
         ))
 
     @commands.command(usage='ping')
-    @commands.cooldown(2, 5)
+    @commands.cooldown(2, 1)
     async def ping(self, ctx):
         """
         Checks the bot latency
