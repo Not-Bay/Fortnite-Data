@@ -21,16 +21,76 @@ class Tasks(commands.Cog):
         self.ClientSession = aiohttp.ClientSession
 
         self.updates_execution_count = 0
+        self.shopcheck_execution_count = 0
 
         log.debug('Starting tasks...')
         try:
+            self.shop_check.start()
             self.updates_check.start()
         except:
             log.critical(f'An error ocurred starting one or more tasks. Traceback:\n{traceback.format_exc()}')
 
     ###
-    ## Updates Channel Stuff
+    ## Updates/Shop Channel Stuff
     ###
+    
+    @tasks.loop(minutes=3)
+    async def shop_check(self):
+
+        self.shopcheck_execution_count += 1
+
+        while True:
+            if util.ready == True: # only if bot ready
+                break
+            else:
+                await asyncio.sleep(1)
+
+        log.debug('Executing "tasks.shop_check" task')
+
+        try: # compare shop hash
+
+            log.debug('Comparing shop hash...')
+
+            async with aiofiles.open('cache/shop/shophash.json', 'r', encoding='utf-8') as f:
+                cached_shop_hash = json.loads(await f.read())
+            
+            async with self.ClientSession() as session:
+                request = await session.get('https://api.nitestats.com/v1/shop/shophash')
+                if request.status != 200:
+                    log.error(f'An error ocurred in shop_check task. The shophash online returned status {request.status}')
+                else:
+                    current_shop_hash = await request.text()
+
+            if current_shop_hash == cached_shop_hash['shophash']: # no changes
+                log.debug('Shop hash compared, no changes found.')
+                return
+            
+            else:
+                log.info('New shop detected.')
+
+                async with aiofiles.open('cache/shop/shophash.json', 'w', encoding='utf-8') as f:
+                    await f.write(json.dumps({"shophash": current_shop_hash}))
+
+                log.debug('Waiting for nitestats for the shop image...')
+                while True:
+
+                    async with self.ClientSession() as session:
+                        request = await session.get('https://api.nitestats.com/v1/shop/image')
+
+                        if request.status == 200:
+
+                            if request.headers['Content-Type'] == 'image/png':
+                                break # image should be ready
+
+                    await asyncio.sleep(5) # image isn't ready, next check will be in 5 seconds
+
+                servers = list(util.database.find({'shop_channel.enabled': True}))
+                await self.shop_channel_send(servers) # this should send the shop to every webhook. SO PLEASE WORK THANK U
+
+
+        except Exception:
+            log.error(f'Failed while checking shop changes. Traceback:\n{traceback.format_exc()}')
+
 
     @tasks.loop(minutes=4)
     async def updates_check(self):
@@ -193,7 +253,7 @@ class Tasks(commands.Cog):
                     log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
 
                 else:
-                    if self.execution_count == 1:
+                    if self.updates_execution_count == 1:
                         continue # playlists need some love at startup too
                     else:
                         break
@@ -440,6 +500,38 @@ class Tasks(commands.Cog):
 
         except:
             log.error(f'Failed while checking aes changes. Traceback:\n{traceback.format_exc()}')
+
+
+    async def shop_channel_send(self, servers):
+
+        status_codes = []
+
+        for server in servers:
+
+            log.debug(f'Preparing shop image for server {server["server_id"]}...')
+
+            lang = server['language']
+
+            embed = DiscordEmbed()
+            embed.set_author(name=util.get_str(lang, 'shop_message_string_new_shop_rotation'))
+            embed.set_image(url=util.get_custom_shop_url(server))
+            embed.color = 0x750de6
+
+            webhook = DiscordWebhook(
+                url = server['shop_channel']['webhook'],
+                rate_limit_retry=False, # its impossible to get ratelimit using the webhook once per day. Right?
+                avatar_url='https://cdn.discordapp.com/icons/757406708300644483/96089c25e20aaa4058c84dbfbeaa226a.png'
+            )
+
+            webhook.add_embed(embed)
+
+            result = webhook.execute(remove_embeds=True)
+
+            log.debug(f'Shop image sent. Status {result}')
+
+            status_codes.append(result)
+
+        log.debug(f'Shop was sent to every server. Status codes: {status_codes}')
 
 
     async def updates_channel_send(self, embeds, type_, lang):
