@@ -68,13 +68,13 @@ def run():
         except:
             log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
 
-    if sys.platform != 'win32':
+    """if sys.platform != 'win32':
         log.debug('Running on non-win32 system. Installing uvloop')
         try:
             import uvloop
             uvloop.install()
         except ModuleNotFoundError:
-            log.error('Could not install uvloop. The module is not installed.')
+            log.error('Could not install uvloop. The module is not installed.')"""
 
     loop = asyncio.get_event_loop()
 
