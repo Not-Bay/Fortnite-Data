@@ -558,7 +558,7 @@ class General(commands.Cog):
                 components = [
                     [
                         Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                        Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
+                       #Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
                         Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
                     ],
                     [
@@ -598,7 +598,7 @@ class General(commands.Cog):
                     components = [
                         [
                             Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                            Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
+                            #Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
                             Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
                         ],
                         [
