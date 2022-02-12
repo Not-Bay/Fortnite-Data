@@ -225,8 +225,8 @@ class General(commands.Cog):
                     if cosmetic['searchTags'] != None:
 
                         search_tags_str = ''
-                        for i in cosmetic['searchTags']:
-                            search_tags_str + f'`{i}`' + '\n'
+                        for tag in cosmetic['searchTags']:
+                            search_tags_str + f'`{tag}`' + '\n'
 
                         i.add_field(name=util.get_str(lang, 'command_string_search_tags'), value=search_tags_str, inline=False)
 
