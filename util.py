@@ -1,4 +1,5 @@
 from urllib.parse import urlencode
+from discord.ext import commands
 import traceback
 import aiofiles
 import asyncio
@@ -93,16 +94,24 @@ def get_str(lang: str, string: str):
         return f'missing {string} in {lang}*'
 
 
-def get_guild_lang(guild: discord.Guild):
+def get_guild_lang(ctx: commands.Context):
 
-    if guild == None:
+    if ctx.guild == None:
         return 'en'
+    
+    if ctx.guild.id == 718709023427526697:
+        if ctx.channel.category_id == 719713694874992681:
+            return 'ja'
+        elif ctx.channel.category_id == 718711009971535943:
+            return 'en'
+        elif ctx.channel.category_id == 719714076087025706:
+            return 'es'
 
     try:
-        return server_cache[str(guild.id)]['language']
+        return server_cache[str(ctx.guild.id)]['language']
     except KeyError:
         try:
-            return database_get_server(guild)['language']
+            return database_get_server(ctx.guild)['language']
         except KeyError:
             return 'en'
 
@@ -629,6 +638,15 @@ def get_color_by_rarity(value):
 ###
 ## Other
 ###
+
+class Colors:
+
+    BLURPLE = 0x2200CC
+    BLUE = 0x0068DE
+    GREEN = 0x00CC2C
+    YELLOW = 0xDECF00
+    ORANGE = 0xDE6F00
+    RED = 0xDE1E00
 
 def get_commands(bot):
 

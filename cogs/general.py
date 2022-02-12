@@ -26,7 +26,7 @@ class General(commands.Cog):
         Shows the commands of the bot. Shows info about a command if you enter it as argument
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if command_ == None:
 
@@ -45,7 +45,7 @@ class General(commands.Cog):
             embed = discord.Embed(
                 title = util.get_str(lang, 'command_string_help'),
                 description = util.get_str(lang, 'command_string_to_see_more_info_about_a_command').format(prefix = ctx.prefix),
-                color = 0x349eeb
+                color = util.Colors.BLURPLE
             )
             embed.add_field(name=util.get_str(lang, 'command_string_commands'), value=general_cmds_str, inline=False)
 
@@ -67,7 +67,7 @@ class General(commands.Cog):
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_command_not_found'),
-                    color = 0xff2929
+                    color = util.Colors.RED
                 ))
                 return
 
@@ -85,7 +85,7 @@ class General(commands.Cog):
                 embed = discord.Embed(
                     title = util.get_str(lang, 'command_string_help'),
                     description = util.get_str(lang, 'command_string_command').format(prefix = ctx.prefix, command = cmd.name),
-                    color = 0x349eeb
+                    color = util.Colors.BLURPLE
                 )
                 embed.add_field(name=util.get_str(lang, 'command_string_description'), value=f'`{cmd.help}`', inline=False)
                 embed.add_field(name=util.get_str(lang, 'command_string_usage'), value=f'`{prefix}{cmd.usage}`', inline=False)
@@ -101,14 +101,13 @@ class General(commands.Cog):
     async def item(self, ctx, *, name_or_id = None):
         """Search for cosmetics by their name or ID. Special arguments available."""
 
-        server = util.database_get_server(ctx.guild)
-        lang = server['language']
+        lang = util.get_guild_lang(ctx)
 
         if name_or_id == None:
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_item_missing_parameters').format(prefix = ctx.prefix),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ))
             return
 
@@ -118,7 +117,7 @@ class General(commands.Cog):
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_cosmetics_data_loading'),
-                    color = discord.Colour.orange()
+                    color = util.Colors.ORANGE
                 ))
                 return
 
@@ -188,7 +187,7 @@ class General(commands.Cog):
             if results == False:
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_cosmetics_data_loading'),
-                    color = discord.Colour.orange()
+                    color = util.Colors.ORANGE
                 ))
                 return
                 
@@ -197,7 +196,7 @@ class General(commands.Cog):
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_no_cosmetics_found'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 ))
                 return
 
@@ -225,8 +224,8 @@ class General(commands.Cog):
                     if cosmetic['searchTags'] != None:
 
                         search_tags_str = ''
-                        for i in cosmetic['searchTags']:
-                            search_tags_str + f'`{i}`' + '\n'
+                        for tag in cosmetic['searchTags']:
+                            search_tags_str + f'`{tag}`' + '\n'
 
                         i.add_field(name=util.get_str(lang, 'command_string_search_tags'), value=search_tags_str, inline=False)
 
@@ -302,13 +301,13 @@ class General(commands.Cog):
     async def playlist(self, ctx, *, name_or_id = None):
         """Search for playlist by their name or ID."""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if util.fortniteapi[lang]._loaded_playlists == 0:
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_playlists_data_loading'),
-                color = discord.Colour.orange()
+                color = util.Colors.ORANGE
             ))
             return
 
@@ -318,7 +317,7 @@ class General(commands.Cog):
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_playlist_missing_parameters').format(prefix = ctx.prefix),
-                    color = discord.Colour.blue()
+                    color = util.Colors.BLUE
                 ))
                 return
 
@@ -358,7 +357,7 @@ class General(commands.Cog):
 
                     await ctx.send(embed=discord.Embed(
                         description = util.get_str(lang, 'command_string_no_playlists_found'),
-                        color = discord.Colour.red()
+                        color = util.Colors.RED
                     ))
                     return
 
@@ -468,12 +467,13 @@ class General(commands.Cog):
     async def shop(self, ctx, language = 'en'):
         """Shows the latest fortnite item shop image."""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         url = util.get_custom_shop_url(util.database_get_server(ctx.guild))
 
         embed = discord.Embed(
-            title = util.get_str(lang, 'command_string_current_item_shop')
+            title = util.get_str(lang, 'command_string_current_item_shop'),
+            color = util.Colors.BLURPLE
         )
         embed.set_image(url = url)
 
@@ -484,7 +484,7 @@ class General(commands.Cog):
     async def news(self, ctx, language = None):
         """Shows an interactive message with all the game news (Battle Royale, Creative and Save The World)"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
         data_lang = language if language != None else lang
 
         data = await util.fortniteapi[lang].get_news(language = data_lang)
@@ -493,7 +493,7 @@ class General(commands.Cog):
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_error_fetching_news'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ))
             return
         
@@ -511,7 +511,7 @@ class General(commands.Cog):
                     embed = discord.Embed(
                         title = motd['tabTitle'],
                         description = f'**{motd["title"]}**\n{motd["body"]}',
-                        color = discord.Colour.blue()
+                        color = util.Colors.BLUE
                     )
                     embed.set_footer(text=f'Page {count} of {len(data["data"]["br"]["motds"])}')
                     embed.set_image(url=motd['image'])
@@ -526,7 +526,7 @@ class General(commands.Cog):
                     embed = discord.Embed(
                         title = motd['tabTitle'],
                         description = f'**{motd["title"]}**\n{motd["body"]}',
-                        color = discord.Colour.blue()
+                        color = util.Colors.BLUE
                     )
                     embed.set_image(url=motd['image'])
                     embed.set_footer(text=f'Page {count} of {len(data["data"]["creative"]["motds"])}')
@@ -541,7 +541,7 @@ class General(commands.Cog):
                     embed = discord.Embed(
                         title = message['adspace'],
                         description = f'**{message["title"]}**\n{message["body"]}',
-                        color = discord.Colour.blue()
+                        color = util.Colors.BLUE
                     )
                     embed.set_image(url=message['image'])
                     embed.set_footer(text=f'Page {count} of {len(data["data"]["stw"]["messages"])}')
@@ -558,7 +558,7 @@ class General(commands.Cog):
                 components = [
                     [
                         Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                        Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
+                       #Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
                         Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
                     ],
                     [
@@ -598,7 +598,7 @@ class General(commands.Cog):
                     components = [
                         [
                             Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                            Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
+                            #Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
                             Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
                         ],
                         [
@@ -627,13 +627,13 @@ class General(commands.Cog):
     async def aes(self, ctx, keyformat = 'hex'):
         """Shows the current AES keys to decrypt game files"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if keyformat.lower() not in ['base64', 'hex']:
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_key_format_example').format(prefix = ctx.prefix),
-                color = discord.Colour.red()
+                color = util.Colors.RED
             ))
             return
 
@@ -645,14 +645,14 @@ class General(commands.Cog):
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_unavailable_aes'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 ))
                 return
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
                 description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
 
             pages = []
@@ -669,7 +669,7 @@ class General(commands.Cog):
                     embed = discord.Embed(
                         title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
                         description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
-                        color = discord.Colour.blue()
+                        color = util.Colors.BLUE
                     )
                     count = 0
 
@@ -732,12 +732,12 @@ class General(commands.Cog):
     async def stats(self, ctx, *, account_name = None):
         """Search for player stats. Search can be made for Epic, PSN and XBOX accounts"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if account_name == None:
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_stats_missing_parameters').format(prefix = ctx.prefix),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ))
             return
 
@@ -750,7 +750,7 @@ class General(commands.Cog):
         msg = await ctx.send(
             embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_select_account_type'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ),
             components=components
         )
@@ -776,7 +776,7 @@ class General(commands.Cog):
 
                 embed = discord.Embed(
                     description = util.get_str(lang, 'command_string_no_stats_or_not_exists'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 )
                 await interaction.respond(
                     type = 7,
@@ -789,7 +789,7 @@ class General(commands.Cog):
 
                 embed = discord.Embed(
                     description = util.get_str(lang, 'command_string_stats_are_private'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 )
                 await interaction.respond(
                     type = 7,
@@ -802,7 +802,7 @@ class General(commands.Cog):
 
                 embed = discord.Embed(
                     title = util.get_str(lang, 'command_string_stats_of_name').format(name = data['data']['account']['name']),
-                    color = discord.Colour.blue()
+                    color = util.Colors.BLUE
                 )
                 embed.set_image(url=f'{data["data"]["image"]}?cache={time.time()}')
                 embed.set_footer(text=util.get_str(lang, 'command_string_stats_footer').format(level = data['data']['battlePass']['level'], accountId = data['data']['account']['id']))
@@ -818,7 +818,7 @@ class General(commands.Cog):
 
             await msg.edit(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_search_canceled_by_timeout'),
-                color = discord.Colour.red()
+                color = util.Colors.RED
             ), components=[])
 
 
@@ -827,13 +827,13 @@ class General(commands.Cog):
     async def code(self, ctx, *, creator_code = None):
         """Shows info about a creator code"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if creator_code == None:
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_code_missing_parameters').format(prefix = ctx.prefix),
-                color = discord.Colour.red()
+                color = util.Colors.RED
             ))
             return
 
@@ -845,7 +845,7 @@ class General(commands.Cog):
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_no_code_found'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 ))
                 return
 
@@ -853,7 +853,7 @@ class General(commands.Cog):
 
                 embed = discord.Embed(
                     title = util.get_str(lang, 'command_string_creator_code_search'),
-                    color = discord.Colour.blue()
+                    color = util.Colors.BLUE
                 )
 
                 embed.add_field(name=util.get_str(lang, 'command_string_code'), value=f'`{data["data"]["code"]}`')
@@ -870,7 +870,7 @@ class General(commands.Cog):
     async def upcoming(self, ctx):
         """Shows an interactive message with all the new/upcoming cosmetics"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         data = await util.fortniteapi[lang].get_new_items()
 
@@ -878,7 +878,7 @@ class General(commands.Cog):
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_upcoming_cosmetics_fetch_error'),
-                color = discord.Colour.red()
+                color = util.Colors.RED
             ))
             return
 
@@ -975,12 +975,12 @@ class General(commands.Cog):
         Searches for .uasset files using the BenBot API
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if query == None:
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_search_missing_parameters').format(prefix = ctx.prefix),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ))
             return
 
@@ -995,7 +995,7 @@ class General(commands.Cog):
                     if len(await response.text()) == 2: # empty list
                         await ctx.send(embed=discord.Embed(
                             description = util.get_str(lang, 'command_string_search_nothing_found'),
-                            color = discord.Colour.red()
+                            color = util.Colors.RED
                         ))
                         return
 
@@ -1028,7 +1028,7 @@ class General(commands.Cog):
                             embed = discord.Embed(
                                 title = util.get_str(lang, 'command_string_file_search'),
                                 description = embed_description,
-                                color = discord.Colour.blue()
+                                color = util.Colors.BLUE
                             )
                             await ctx.send(embed = embed)
                             return
@@ -1037,7 +1037,7 @@ class General(commands.Cog):
 
                     embed = discord.Embed(
                         description = util.get_str(lang, 'command_string_api_error_on_file_search').format(status = response.status),
-                        color = discord.Colour.red()
+                        color = util.Colors.RED
                     )
                     await ctx.send(embed = embed)
 
@@ -1050,13 +1050,13 @@ class General(commands.Cog):
         Exports .uasset files using the BenBot API
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if filename == None:
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_export_missing_parameters').format(prefix = ctx.prefix),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ))
             return
         
@@ -1066,7 +1066,7 @@ class General(commands.Cog):
 
                 await ctx.send(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_export_error_no_uasset_filename'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 ))
                 return
 
@@ -1080,7 +1080,7 @@ class General(commands.Cog):
 
                         await ctx.send(embed=discord.Embed(
                             description = util.get_str(lang, 'command_string_export_error_no_file_found'),
-                            color = discord.Colour.red()
+                            color = util.Colors.RED
                         ))
                         return
 
@@ -1124,7 +1124,7 @@ class General(commands.Cog):
 
                             embed = discord.Embed(
                                 description = util.get_str(lang, 'command_string_export_error_sending_file').format(traceback = traceback.format_exc()),
-                                color = discord.Colour.red()
+                                color = util.Colors.RED
                             )
                             await ctx.send(embed = embed)
 
@@ -1132,7 +1132,7 @@ class General(commands.Cog):
 
                         embed = discord.Embed(
                             description = util.get_str(lang, 'command_string_api_error_on_file_export').format(status = response.status),
-                            color = discord.Colour.red()
+                            color = util.Colors.RED
                         )
                         await ctx.send(embed = embed)
    
