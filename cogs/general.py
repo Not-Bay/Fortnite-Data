@@ -26,7 +26,7 @@ class General(commands.Cog):
         Shows the commands of the bot. Shows info about a command if you enter it as argument
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if command_ == None:
 
@@ -101,8 +101,7 @@ class General(commands.Cog):
     async def item(self, ctx, *, name_or_id = None):
         """Search for cosmetics by their name or ID. Special arguments available."""
 
-        server = util.database_get_server(ctx.guild)
-        lang = server['language']
+        lang = util.get_guild_lang(ctx)
 
         if name_or_id == None:
 
@@ -302,7 +301,7 @@ class General(commands.Cog):
     async def playlist(self, ctx, *, name_or_id = None):
         """Search for playlist by their name or ID."""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if util.fortniteapi[lang]._loaded_playlists == 0:
 
@@ -468,7 +467,7 @@ class General(commands.Cog):
     async def shop(self, ctx, language = 'en'):
         """Shows the latest fortnite item shop image."""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         url = util.get_custom_shop_url(util.database_get_server(ctx.guild))
 
@@ -484,7 +483,7 @@ class General(commands.Cog):
     async def news(self, ctx, language = None):
         """Shows an interactive message with all the game news (Battle Royale, Creative and Save The World)"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
         data_lang = language if language != None else lang
 
         data = await util.fortniteapi[lang].get_news(language = data_lang)
@@ -627,7 +626,7 @@ class General(commands.Cog):
     async def aes(self, ctx, keyformat = 'hex'):
         """Shows the current AES keys to decrypt game files"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if keyformat.lower() not in ['base64', 'hex']:
 
@@ -732,7 +731,7 @@ class General(commands.Cog):
     async def stats(self, ctx, *, account_name = None):
         """Search for player stats. Search can be made for Epic, PSN and XBOX accounts"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if account_name == None:
             await ctx.send(embed=discord.Embed(
@@ -827,7 +826,7 @@ class General(commands.Cog):
     async def code(self, ctx, *, creator_code = None):
         """Shows info about a creator code"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if creator_code == None:
 
@@ -870,7 +869,7 @@ class General(commands.Cog):
     async def upcoming(self, ctx):
         """Shows an interactive message with all the new/upcoming cosmetics"""
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         data = await util.fortniteapi[lang].get_new_items()
 
@@ -975,7 +974,7 @@ class General(commands.Cog):
         Searches for .uasset files using the BenBot API
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if query == None:
             await ctx.send(embed=discord.Embed(
@@ -1050,7 +1049,7 @@ class General(commands.Cog):
         Exports .uasset files using the BenBot API
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if filename == None:
 

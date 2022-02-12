@@ -1,4 +1,5 @@
 from urllib.parse import urlencode
+from discord.ext import commands
 import traceback
 import aiofiles
 import asyncio
@@ -93,16 +94,16 @@ def get_str(lang: str, string: str):
         return f'missing {string} in {lang}*'
 
 
-def get_guild_lang(guild: discord.Guild):
+def get_guild_lang(ctx: commands.Context):
 
-    if guild == None:
+    if ctx.guild == None:
         return 'en'
 
     try:
-        return server_cache[str(guild.id)]['language']
+        return server_cache[str(ctx.guild.id)]['language']
     except KeyError:
         try:
-            return database_get_server(guild)['language']
+            return database_get_server(ctx.guild)['language']
         except KeyError:
             return 'en'
 

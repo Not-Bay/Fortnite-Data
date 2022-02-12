@@ -15,7 +15,7 @@ class Other(commands.Cog):
     @commands.command(usage='settings', aliases=['config'])
     async def settings(self, ctx):
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if ctx.author.guild_permissions.administrator == False:
 
@@ -60,7 +60,7 @@ class Other(commands.Cog):
         Let you invite the bot to your server
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         await ctx.send(embed = discord.Embed(
             title = util.get_str(lang, 'command_string_bot_invitation'),
@@ -75,7 +75,7 @@ class Other(commands.Cog):
         Checks the bot latency
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         ms = (ctx.message.created_at - ctx.message.created_at).total_seconds() * 1000
 
@@ -91,7 +91,7 @@ class Other(commands.Cog):
         Shows general info of the bot
         """
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         current_time = time.time()
         difference = int(round(current_time - util.start_time))

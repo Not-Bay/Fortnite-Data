@@ -19,7 +19,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
 
-        lang = util.get_guild_lang(ctx.guild)
+        lang = util.get_guild_lang(ctx)
 
         if isinstance(error, commands.CommandNotFound):
             return
