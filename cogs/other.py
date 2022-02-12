@@ -21,7 +21,7 @@ class Other(commands.Cog):
 
             await ctx.send(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_only_admin_command'),
-                color = discord.Colour.red()
+                color = util.Colors.RED
             ))
 
         else:
@@ -30,7 +30,7 @@ class Other(commands.Cog):
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'command_string_server_configuration'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
             embed.add_field(name=util.get_str(lang, 'command_string_prefix'), value=f'`{data["prefix"]}`', inline=False)
             embed.add_field(name=util.get_str(lang, 'command_string_language'), value=f'`{data["language"]}`', inline=False)
@@ -65,7 +65,7 @@ class Other(commands.Cog):
         await ctx.send(embed = discord.Embed(
             title = util.get_str(lang, 'command_string_bot_invitation'),
             description = util.get_str(lang, 'command_string_click_here_to_invite').format(link = util.configuration['invite']),
-            color = discord.Colour.blue()
+            color = util.Colors.BLUE
         ))
 
     @commands.command(usage='ping')
@@ -81,7 +81,7 @@ class Other(commands.Cog):
 
         await ctx.send(embed=discord.Embed(
             description = util.get_str(lang, 'command_string_pong_ms').format(miliseconds = ms),
-            color = discord.Colour.blue()
+            color = util.Colors.BLUE
         ))
 
     @commands.command(usage='info')
@@ -108,7 +108,7 @@ class Other(commands.Cog):
                 fortniteapi_link = 'https://fortnite-api.com/',
                 benbot_link = 'https://benbot.app/'
             ),
-            color = discord.Colour.blue()
+            color = util.Colors.BLUE
         )
         embed.add_field(name = util.get_str(lang, 'command_string_developer'), value = '`Bay#1111`')
         embed.add_field(name = util.get_str(lang, 'command_string_servers'), value = f'`{len(self.bot.guilds)}`')

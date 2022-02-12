@@ -30,7 +30,7 @@ class Events(commands.Cog):
 
             embed = discord.Embed(
                 description = util.get_str(lang, 'command_string_on_cooldown'),
-                color = discord.Colour.orange()
+                color = util.Colors.ORANGE
             )
             embed.set_footer(text=util.get_str(lang, 'command_string_on_cooldown_retry_after').format(seconds = end_seconds))
             
@@ -44,7 +44,7 @@ class Events(commands.Cog):
             embed = discord.Embed(
                 title = util.get_str(lang, 'command_string_disabled_command'),
                 description = util.get_str(lang, 'command_string_disabled_command_description'),
-                color = discord.Colour.red()
+                color = util.Colors.RED
             )
             embed.set_footer(text=util.get_str(lang, 'command_string_disabled_command_footer'))
 
@@ -68,7 +68,7 @@ class Events(commands.Cog):
             embed = discord.Embed(
                 title = util.get_str(lang, 'command_string_an_error_ocurred'),
                 description = util.get_str(lang, 'command_string_an_unknown_error_ocurred').format(traceback = traceback_str),
-                color = discord.Colour.red()
+                color = util.Colors.RED
             )
             components = [
                 Button(
@@ -117,7 +117,7 @@ class Events(commands.Cog):
                 type = 7,
                 embed = discord.Embed(
                     description = util.get_str(lang, 'interaction_string_send_new_prefix'),
-                    color = discord.Colour.blue()
+                    color = util.Colors.BLUE
                 ),
                 components = [
                     Button(
@@ -148,7 +148,7 @@ class Events(commands.Cog):
                         type = 7,
                         embed = discord.Embed(
                             description = util.get_str(lang, 'interaction_string_canceled_by_user'),
-                            color = discord.Colour.red()
+                            color = util.Colors.RED
                         ),
                         components = []
                     )
@@ -162,7 +162,7 @@ class Events(commands.Cog):
                         await interaction.message.edit(
                             embed = discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_error_new_prefix_too_long'),
-                                color = discord.Colour.red()
+                                color = util.Colors.RED
                             )
                         )
                         return
@@ -176,7 +176,7 @@ class Events(commands.Cog):
                             await interaction.message.edit(
                                 embed = discord.Embed(
                                     description = util.get_str(lang, 'interaction_string_error_new_prefix_duplicate'),
-                                    color = discord.Colour.red()
+                                    color = util.Colors.RED
                                 )
                             )
                             return
@@ -188,7 +188,7 @@ class Events(commands.Cog):
                             await interaction.message.edit(
                                 embed = discord.Embed(
                                     description = util.get_str(lang, 'interaction_string_changed_prefix').format(prefix = new_prefix),
-                                    color = discord.Colour.green()
+                                    color = util.Colors.GREEN
                                 )
                             )
                             return
@@ -198,7 +198,7 @@ class Events(commands.Cog):
                 await interaction.message.edit(
                     embed = discord.Embed(
                         description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
-                        color = discord.Colour.red()
+                        color = util.Colors.RED
                     )
                 )
                 return
@@ -223,7 +223,7 @@ class Events(commands.Cog):
                 type = 7,
                 embed = discord.Embed(
                     description = util.get_str(lang, 'interaction_string_select_language'),
-                    color = discord.Colour.blue()
+                    color = util.Colors.BLUE
                 ),
                 components = components
             )
@@ -240,7 +240,7 @@ class Events(commands.Cog):
                         type = 7,
                         embed = discord.Embed(
                             description = util.get_str(lang, 'interaction_string_language_changed_to').format(lang = 'English'),
-                            color = discord.Colour.blue()
+                            color = util.Colors.BLUE
                         ),
                         components = []
                     )
@@ -253,7 +253,7 @@ class Events(commands.Cog):
                         type = 7,
                         embed = discord.Embed(
                             description = util.get_str(lang, 'interaction_string_language_changed_to').format(lang = 'Español'),
-                            color = discord.Colour.blue()
+                            color = util.Colors.BLUE
                         ),
                         components = []
                     )
@@ -266,7 +266,7 @@ class Events(commands.Cog):
                         type = 7,
                         embed = discord.Embed(
                             description = util.get_str(lang, 'interaction_string_language_changed_to').format(lang = '日本語'),
-                            color = discord.Colour.blue()
+                            color = util.Colors.BLUE
                         ),
                         components = []
                     )
@@ -275,7 +275,7 @@ class Events(commands.Cog):
 
                 await msg.edit(embed=discord.Embed(
                     description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
-                    color = discord.Colour.blue()
+                    color = util.Colors.BLUE
                 ))
 
         elif interaction.custom_id == 'SERVER_SHOP_CHANNEL_CONFIGURE':
@@ -301,7 +301,7 @@ class Events(commands.Cog):
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_shop_config'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
             embed.add_field(
                 name = util.get_str(lang, 'interaction_string_channel'),
@@ -348,7 +348,7 @@ class Events(commands.Cog):
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_updates_config'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
             embed.add_field(
                 name = util.get_str(lang, 'interaction_string_channel'),
@@ -390,7 +390,7 @@ class Events(commands.Cog):
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_updates_config'),
                 description = f'{util.get_str(lang, "interaction_string_select_to_disable_or_enable")}\n{options_string}',
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
 
             components = [
@@ -440,7 +440,7 @@ class Events(commands.Cog):
                     embed = discord.Embed(
                         title = util.get_str(lang, 'interaction_string_updates_config'),
                         description = f'{util.get_str(lang, "interaction_string_select_to_disable_or_enable")}\n{options_string}',
-                        color = discord.Colour.blue()
+                        color = util.Colors.BLUE
                     )
 
                     components = [
@@ -478,7 +478,7 @@ class Events(commands.Cog):
 
             embed = discord.Embed(
                 description = util.get_str(lang, 'interaction_string_send_channel'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
 
             components = [
@@ -542,7 +542,7 @@ class Events(commands.Cog):
 
                         await interaction.message.edit(embed=discord.Embed(
                             description = util.get_str(lang, 'interaction_string_send_channel_only'),
-                            color = discord.Colour.red(),
+                            color = util.Colors.RED,
                             components = []
                         ))
                         return
@@ -551,7 +551,7 @@ class Events(commands.Cog):
 
                         await interaction.message.edit(embed=discord.Embed(
                             description = util.get_str(lang, 'interaction_string_error_invalid_channel_or_not_accesible'),
-                            color = discord.Colour.red(),
+                            color = util.Colors.RED,
                             components = []
                         ))
                         return
@@ -566,7 +566,7 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_error_webhook_create'),
-                                color = discord.Colour.red(),
+                                color = util.Colors.RED,
                                 components = []
                             ))
                             return
@@ -577,7 +577,7 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_channel_configured').format(channel = f'<#{channel.id}>'),
-                                color = discord.Colour.blue(),
+                                color = util.Colors.BLUE,
                                 components = []
                             ))
                             return
@@ -586,7 +586,7 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_error_unknown'),
-                                color = discord.Colour.red(),
+                                color = util.Colors.RED,
                                 components = []
                             ))
                             return
@@ -596,7 +596,7 @@ class Events(commands.Cog):
 
                 await interaction.message.edit(embed=discord.Embed(
                     description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
-                    color = discord.Colour.red(),
+                    color = util.Colors.RED,
                     components = []
                 ))
                 return
@@ -618,7 +618,7 @@ class Events(commands.Cog):
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_shop_config'),
                 description = f'{util.get_str(lang, "interaction_string_select_to_configure")}\n{options_string}',
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
 
             components = [
@@ -784,7 +784,7 @@ class Events(commands.Cog):
 
             embed = discord.Embed(
                 description = util.get_str(lang, 'interaction_string_send_channel'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             )
 
             components = [
@@ -848,7 +848,7 @@ class Events(commands.Cog):
 
                         await interaction.message.edit(embed=discord.Embed(
                             description = util.get_str(lang, 'interaction_string_send_channel_only'),
-                            color = discord.Colour.red(),
+                            color = util.Colors.RED,
                             components = []
                         ))
                         return
@@ -857,7 +857,7 @@ class Events(commands.Cog):
 
                         await interaction.message.edit(embed=discord.Embed(
                             description = util.get_str(lang, 'interaction_string_error_invalid_channel_or_not_accesible'),
-                            color = discord.Colour.red(),
+                            color = util.Colors.RED,
                             components = []
                         ))
                         return
@@ -872,7 +872,7 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_error_webhook_create'),
-                                color = discord.Colour.red(),
+                                color = util.Colors.RED,
                                 components = []
                             ))
                             return
@@ -883,7 +883,7 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_channel_configured').format(channel = f'<#{channel.id}>'),
-                                color = discord.Colour.blue(),
+                                color = util.Colors.BLUE,
                                 components = []
                             ))
                             return
@@ -892,7 +892,7 @@ class Events(commands.Cog):
 
                             await interaction.message.edit(embed=discord.Embed(
                                 description = util.get_str(lang, 'interaction_string_error_unknown'),
-                                color = discord.Colour.red(),
+                                color = util.Colors.RED,
                                 components = []
                             ))
                             return
@@ -901,7 +901,7 @@ class Events(commands.Cog):
 
                 await interaction.message.edit(embed=discord.Embed(
                     description = util.get_str(lang, 'interaction_string_canceled_by_timeout'),
-                    color = discord.Colour.red(),
+                    color = util.Colors.RED,
                     components = []
                 ))
                 return
@@ -923,7 +923,7 @@ class Events(commands.Cog):
 
                 await interaction.message.edit(embed=discord.Embed(
                     description = util.get_str(lang, 'interaction_string_error_webhook_delete'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 ))
                 return
 
@@ -936,7 +936,7 @@ class Events(commands.Cog):
 
             await interaction.message.edit(embed=discord.Embed(
                 description = util.get_str(lang, 'interaction_string_channel_disabled'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ))
             return
 
@@ -957,7 +957,7 @@ class Events(commands.Cog):
 
                 await interaction.message.edit(embed=discord.Embed(
                     description = util.get_str(lang, 'interaction_string_error_webhook_delete'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 ))
                 return
 
@@ -970,7 +970,7 @@ class Events(commands.Cog):
 
             await interaction.message.edit(embed=discord.Embed(
                 description = util.get_str(lang, 'interaction_string_channel_disabled'),
-                color = discord.Colour.blue()
+                color = util.Colors.BLUE
             ))
             return
 
@@ -980,7 +980,7 @@ class Events(commands.Cog):
                 type = 7,
                 embed = discord.Embed(
                     description = util.get_str(lang, 'interaction_string_canceled_by_user'),
-                    color = discord.Colour.red()
+                    color = util.Colors.RED
                 ),
                 components = []
             )
@@ -1000,7 +1000,7 @@ class Events(commands.Cog):
 
                 embed = discord.Embed(
                     title = 'Error reported',
-                    color = discord.Colour.red(),
+                    color = util.Colors.RED,
                     timestamp = datetime.datetime.utcnow()
                 )
 
@@ -1032,7 +1032,8 @@ class Events(commands.Cog):
                         await interaction.respond(
                             type = 4,
                             embed = discord.Embed(
-                                description = util.get_str(lang, 'command_string_error_was_reported_correctly')
+                                description = util.get_str(lang, 'command_string_error_was_reported_correctly'),
+                                color = util.Colors.GREEN
                             ),
                             ephemeral = True
                         )

@@ -639,6 +639,15 @@ def get_color_by_rarity(value):
 ## Other
 ###
 
+class Colors:
+
+    BLURPLE = 0x2200CC
+    BLUE = 0x0068DE
+    GREEN = 0x00CC2C
+    YELLOW = 0xDECF00
+    ORANGE = 0xDE6F00
+    RED = 0xDE1E00
+
 def get_commands(bot):
 
     return list(bot.commands)
