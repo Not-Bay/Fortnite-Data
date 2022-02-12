@@ -40,6 +40,10 @@ async def on_ready():
 
     util.ready = True
 
+    if '--sync-guilds-on-ready':
+        for guild in bot.guilds:
+            util.database_store_server(guild)
+
     log.info(f'Fortnite Data is ready! • Took {int((time.time() - util.start_time))} seconds.')
 
 
