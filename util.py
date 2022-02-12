@@ -17,7 +17,7 @@ import sys
 
 debug = True if '--debug' in sys.argv else False
 
-version = '4.0.0'
+version = '4.0.1'
 
 log = None
 
