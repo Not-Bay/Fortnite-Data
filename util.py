@@ -98,6 +98,14 @@ def get_guild_lang(ctx: commands.Context):
 
     if ctx.guild == None:
         return 'en'
+    
+    if ctx.guild.id == 718709023427526697:
+        if ctx.channel.category_id == 719713694874992681:
+            return 'ja'
+        elif ctx.channel.category_id == 718711009971535943:
+            return 'en'
+        elif ctx.channel.category_id == 719714076087025706:
+            return 'es'
 
     try:
         return server_cache[str(ctx.guild.id)]['language']
