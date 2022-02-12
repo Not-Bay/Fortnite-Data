@@ -38,9 +38,6 @@ async def on_ready():
 
         util.fortniteapi[i] = util.FortniteAPI(i)
 
-    for guild in bot.guilds:
-        util.database_store_server(guild)
-
     util.ready = True
 
     log.info(f'Fortnite Data is ready! • Took {int((time.time() - util.start_time))} seconds.')
