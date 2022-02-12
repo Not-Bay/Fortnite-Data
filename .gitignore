@@ -125,3 +125,5 @@ dmypy.json
 .pyre/
 settings/bservers.json
 settings/servers.json
+.vscode/launch.json
+config.json
