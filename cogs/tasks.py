@@ -9,8 +9,6 @@ import json
 import time
 import sys
 
-import discord_webhook
-
 import util
 
 log = logging.getLogger('FortniteData.cogs.tasks')
