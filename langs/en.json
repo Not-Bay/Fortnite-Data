@@ -115,7 +115,7 @@
     "command_string_uptime": "Uptime",
     "command_string_translations": "Translations",
     "command_string_translations_en_credit": "English - `{user}`",
-    "command_string_translations_es_credit": "Spansih - `{user}`",
+    "command_string_translations_es_credit": "Spanish - `{user}`",
     "command_string_translations_ja_credit": "Japanese - `{user}`",
     "command_string_an_error_ocurred": "An error ocurred",
     "command_string_an_unknown_error_ocurred": "An unknown error ocurred executing the command. Traceback:\n```py\n{traceback}```",
