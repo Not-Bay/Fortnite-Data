@@ -19,6 +19,7 @@ class Tasks(commands.Cog):
         self.bot = bot
         self.ClientSession = aiohttp.ClientSession
 
+        self.topgg_stats_execution_count = 0
         self.updates_execution_count = 0
         self.shopcheck_execution_count = 0
 
@@ -32,6 +33,55 @@ class Tasks(commands.Cog):
             self.updates_check.start()
         except:
             log.critical(f'An error ocurred starting one or more tasks. Traceback:\n{traceback.format_exc()}')
+
+    ###
+    ## Top.gg bot stats
+    ###
+    @tasks.loop(minutes=5)
+    async def topgg_stats(self):
+
+        self.topgg_stats_execution_count += 1
+
+        while True:
+            if util.ready == True:
+                break
+            else:
+                await asyncio.sleep(1)
+
+        log.debug('Executing "tasks.topgg_stats" task')
+
+        if util.configuration['top.gg-token'] == '':
+            log.debug('Disabling "tasks.topgg_stats" task because of missing top.gg-token in configuration')
+            self.topgg_stats.stop()
+            return
+
+        try:
+
+            URL = 'https://top.gg/api/bots/729409703360069722/stats'
+
+            headers = {
+                'Authorization': util.configuration['top.gg-token']
+            }
+            body = {
+                'server_count': str(len(self.bot.guilds)),
+                'shard_count': str(len(self.bot.shards))
+            }
+
+            async with self.ClientSession() as session:
+                
+                request = await session.post(
+                    url = URL,
+                    headers = headers,
+                    body = body
+                )
+
+                if request.status == 200:
+                    log.debug('Posted stats to top.gg')
+                else:
+                    log.error(f'An error ocurred posting stats to top.gg. Status: {request.status}. Content: {await request.text()}')
+        
+        except Exception:
+            log.error(f'An error ocurred while trying to post stats to top.gg. Traceback:\n{traceback.format_exc()}')
 
     ###
     ## Updates/Shop Channel Stuff
