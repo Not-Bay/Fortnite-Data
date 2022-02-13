@@ -2,6 +2,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 from discord.ext import commands, tasks
 import traceback
 import aiofiles
+import discord
 import aiohttp
 import logging
 import asyncio
@@ -23,6 +24,8 @@ class Tasks(commands.Cog):
         self.updates_execution_count = 0
         self.shopcheck_execution_count = 0
 
+        self.current_status_option = 0
+
         if '--disable-updates-tasks' in sys.argv:
             log.debug('Skipping tasks start. --disable-updates-tasks is in command line arguments.')
             return
@@ -31,8 +34,61 @@ class Tasks(commands.Cog):
         try:
             self.shop_check.start()
             self.updates_check.start()
+            self.topgg_stats.start()
+            self.bot_presence.start()
         except:
             log.critical(f'An error ocurred starting one or more tasks. Traceback:\n{traceback.format_exc()}')
+    
+    ###
+    ## Discord presence loop
+    ###
+    @tasks.loop(minutes=4)
+    async def bot_presence(self):
+
+        while True:
+            if util.ready == True:
+                break
+            else:
+                await asyncio.sleep(1)
+
+        log.debug('Executing "tasks.bot_presence" task')
+
+        if self.current_status_option == 2:
+            self.current_status_option = 0
+
+        options = [
+            'server_count',
+            'cosmetics_count'
+        ]
+
+        try:
+
+            if options[self.current_status_option] == 'server_count':
+
+                guildCount = len(self.bot.guilds)
+
+                await self.bot.change_presence(
+                    activity = discord.Activity(
+                        type = discord.ActivityType.listening,
+                        name = f'{guildCount} servers'
+                    )
+                )
+
+            elif options[self.current_status_option] == 'cosmetics_count':
+
+                cosmeticCount = len(util.fortniteapi['en'].all_cosmetics)
+
+                await self.bot.change_presence(
+                    activity = discord.Activity(
+                        type = discord.ActivityType.watching,
+                        name = f'{cosmeticCount} cosmetics ingame'
+                    )
+                )
+
+            self.current_status_option += 1
+            
+        except Exception as e:
+            log.error(f'An error ocurred while trying update bot status. Traceback:\n{traceback.format_exc()}')
 
     ###
     ## Top.gg bot stats
