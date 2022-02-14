@@ -17,7 +17,7 @@ coloredlogs.install(level=None if util.debug == False else 'DEBUG')
 try:
     import uvloop
 except:
-    log.warn('Using default asyncio event loop.')
+    log.warning('Using default asyncio event loop.')
 else:
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     log.debug('Using uvloop.')
