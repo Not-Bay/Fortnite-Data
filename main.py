@@ -13,6 +13,15 @@ import util
 log = logging.getLogger('FortniteData')
 coloredlogs.install(level=None if util.debug == False else 'DEBUG')
 
+# Set up uvloop if possible
+try:
+    import uvloop
+except:
+    log.warn('Using default asyncio event loop.')
+else:
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+    log.debug('Using uvloop.')
+
 bot = commands.AutoShardedBot(
     command_prefix=util.get_prefix,
     intents=discord.Intents.default()
@@ -40,7 +49,7 @@ async def on_ready():
 
     util.ready = True
 
-    if '--sync-guilds-on-ready':
+    if '--sync-guilds-on-ready' in sys.argv:
         for guild in bot.guilds:
             util.database_store_server(guild)
 
@@ -68,14 +77,6 @@ def run():
             log.debug(f'Loaded cog {cog}.')
         except:
             log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
-
-    """if sys.platform != 'win32':
-        log.debug('Running on non-win32 system. Installing uvloop')
-        try:
-            import uvloop
-            uvloop.install()
-        except ModuleNotFoundError:
-            log.error('Could not install uvloop. The module is not installed.')"""
 
     loop = asyncio.get_event_loop()
 

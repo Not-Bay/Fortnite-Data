@@ -135,7 +135,7 @@ class General(commands.Cog):
                 '--starts'
             ]
 
-            cosmetic_type = None
+            cosmetic_types = []
             match_method = None
             splitted_name_or_id = name_or_id.split()
 
@@ -151,7 +151,7 @@ class General(commands.Cog):
                             match_method = str(i.replace('--', ''))
 
                         else:
-                            cosmetic_type = str(i.replace('--', ''))
+                            cosmetic_types.append(str(i.replace('--', '')))
 
                         name_or_id = name_or_id.replace(f' {i}', '')
 
@@ -162,7 +162,7 @@ class General(commands.Cog):
                         continue
 
 
-            if cosmetic_type == None:
+            if cosmetic_types == []:
 
                 log.debug(f'Searching with args: "{name_or_id}"')
 
@@ -176,13 +176,13 @@ class General(commands.Cog):
             
             else:
 
-                log.debug(f'Searching {cosmetic_type} with args: "{name_or_id}"')
+                log.debug(f'Searching {cosmetic_types} with args: "{name_or_id}"')
 
                 if match_method == None:
-                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_type = cosmetic_type)
+                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_types = cosmetic_types)
                 
                 else:
-                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_type = cosmetic_type, match_method = match_method)
+                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_types = cosmetic_types, match_method = match_method)
 
             if results == False:
                 await ctx.send(embed=discord.Embed(

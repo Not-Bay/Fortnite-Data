@@ -17,7 +17,7 @@ import sys
 
 debug = True if '--debug' in sys.argv else False
 
-version = '4.0.1'
+version = '4.0.2'
 
 log = None
 
@@ -417,67 +417,70 @@ class FortniteAPI:
         
     async def get_cosmetic(self, query: str, **kwargs):
 
-        cosmetic_type = kwargs.get('cosmetic_type', None)
+        cosmetic_types = kwargs.get('cosmetic_types', None)
         match_method = kwargs.get('match_method', 'starts')
 
         if len(self.all_cosmetics) == 0:
             return False
 
-        list_to_search = None
+        lists_to_search = []
 
-        if cosmetic_type != None:
+        if cosmetic_types != None:
 
-            if cosmetic_type == 'outfit':
-                list_to_search = self.outfits
-            elif cosmetic_type == 'emote':
-                list_to_search = self.emotes
-            elif cosmetic_type == 'backpack':
-                list_to_search = self.backpacks
-            elif cosmetic_type == 'pickaxe':
-                list_to_search = self.pickaxes
-            elif cosmetic_type == 'wrap':
-                list_to_search = self.wraps
-            elif cosmetic_type == 'contrail':
-                list_to_search = self.contrails
-            elif cosmetic_type == 'loadingscreen':
-                list_to_search = self.loadingscreens
-            elif cosmetic_type == 'spray':
-                list_to_search = self.sprays
-            elif cosmetic_type == 'glider':
-                list_to_search = self.gliders
-            elif cosmetic_type == 'banner':
-                list_to_search = self.banners
-            else:
-                list_to_search = self.all_cosmetics
-                log.debug(f'[FortniteAPI] Unknown cosmetic type "{cosmetic_type}". Searching in "all_cosmetics" list')
+            for i in cosmetic_types:
+
+                if i == 'outfit':
+                    lists_to_search.append(self.outfits)
+                elif i == 'emote':
+                    lists_to_search.append(self.emotes)
+                elif i == 'backpack':
+                    lists_to_search.append(self.backpacks)
+                elif i == 'pickaxe':
+                    lists_to_search.append(self.pickaxes)
+                elif i == 'wrap':
+                    lists_to_search.append(self.wraps)
+                elif i == 'contrail':
+                    lists_to_search.append(self.contrails)
+                elif i == 'loadingscreen':
+                    lists_to_search.append(self.loadingscreens)
+                elif i == 'spray':
+                    lists_to_search.append(self.sprays)
+                elif i == 'glider':
+                    lists_to_search.append(self.gliders)
+                elif i == 'banner':
+                    lists_to_search.append(self.banners)
+                else:
+                    log.error(f'Unknown cosmetic type "{i}". Will be skipped')
 
         else:
 
-            list_to_search = self.all_cosmetics
+            lists_to_search = [self.all_cosmetics]
 
         results = []
 
         is_id = query.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_', 'bannertoken_'))
 
-        for item in list_to_search:
+        for cosmeticlist in lists_to_search:
 
-            if is_id:
-                if match_method == 'starts':
-                    if item['id'].lower().startswith(query.lower()):
-                        results.append(item)
+            for item in cosmeticlist:
 
-                elif match_method == 'contains':
-                    if query.lower() in item['id'].lower():
-                        results.append(item)
+                if is_id:
+                    if match_method == 'starts':
+                        if item['id'].lower().startswith(query.lower()):
+                            results.append(item)
 
-            else:
-                if match_method == 'starts':
-                    if item['name'].lower().startswith(query.lower()):
-                        results.append(item)
-                
-                elif match_method == 'contains':
-                    if query.lower() in item['name'].lower():
-                        results.append(item)
+                    elif match_method == 'contains':
+                        if query.lower() in item['id'].lower():
+                            results.append(item)
+
+                else:
+                    if match_method == 'starts':
+                        if item['name'].lower().startswith(query.lower()):
+                            results.append(item)
+                    
+                    elif match_method == 'contains':
+                        if query.lower() in item['name'].lower():
+                            results.append(item)
 
         return results
 

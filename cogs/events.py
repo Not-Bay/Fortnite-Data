@@ -392,7 +392,7 @@ class Events(commands.Cog):
 
             options_string = ''
             for op in ['cosmetics', 'playlists', 'news', 'aes']:
-                options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "command_string_disabled") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "command_string_disabled")}\n'
+                options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "command_string_disabled")}\n'
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'interaction_string_updates_config'),
