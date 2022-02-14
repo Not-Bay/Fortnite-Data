@@ -373,6 +373,11 @@ class FortniteAPI:
                 if cosmetic not in self.gliders:
                     self.gliders.append(cosmetic)
                     continue
+
+            if cosmetic['type']['value'] == 'banner':
+                if cosmetic not in self.banners:
+                    self.banners.append(cosmetic)
+                    continue
       
 
         async with aiofiles.open(f'cache/cosmetics/all_{self.language}.json', 'w', encoding='utf-8') as f:
