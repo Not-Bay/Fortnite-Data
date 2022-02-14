@@ -53,12 +53,13 @@ class Tasks(commands.Cog):
 
         log.debug('Executing "tasks.bot_presence" task')
 
-        if self.current_status_option == 2:
+        if self.current_status_option == 3:
             self.current_status_option = 0
 
         options = [
             'server_count',
-            'cosmetics_count'
+            'cosmetics_count',
+            'bot_version'
         ]
 
         try:
@@ -82,6 +83,16 @@ class Tasks(commands.Cog):
                     activity = discord.Activity(
                         type = discord.ActivityType.watching,
                         name = f'{cosmeticCount} cosmetics ingame'
+                    )
+                )
+            
+            elif options[self.current_status_option] == 'bot_version':
+
+                currentVersion = util.version
+
+                await self.bot.change_presence(
+                    activity = discord.Game(
+                        name = f'v{currentVersion}!'
                     )
                 )
 
