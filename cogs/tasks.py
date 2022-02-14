@@ -143,7 +143,7 @@ class Tasks(commands.Cog):
     ## Updates/Shop Channel Stuff
     ###
     
-    @tasks.loop(minutes=3)
+    @tasks.loop(minutes=1)
     async def shop_check(self):
 
         self.shopcheck_execution_count += 1
