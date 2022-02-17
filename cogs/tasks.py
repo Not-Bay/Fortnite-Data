@@ -329,7 +329,7 @@ class Tasks(commands.Cog):
 
                     to_send_list = []
 
-                    for playlist in new_playlists['data']:
+                    for playlist in new_playlists:
                         if playlist not in cached_playlists['data']:
 
                             added_playlists.append(playlist)
