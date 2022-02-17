@@ -170,6 +170,7 @@ def database_store_server(guild: discord.Guild):
                 "webhook": None,
                 "webhook_id": None,
                 "config": {
+                    "shopsections": True,
                     "cosmetics": True,
                     "playlists": True,
                     "news": True,
