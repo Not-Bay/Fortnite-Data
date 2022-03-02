@@ -364,7 +364,7 @@ class Events(commands.Cog):
             )
 
             options_string = ''
-            for i in ['cosmetics', 'playlists', 'news', 'aes']:
+            for i in ['shopsections', 'cosmetics', 'playlists', 'news', 'aes']:
                 options_string += f'`{i}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][i] == True else util.get_str(lang, "command_string_disabled")}\n'
 
             embed.add_field(
@@ -391,7 +391,7 @@ class Events(commands.Cog):
             disabled = self.bot.get_emoji(931338312604602450)
 
             options_string = ''
-            for op in ['cosmetics', 'playlists', 'news', 'aes']:
+            for op in ['shopsections', 'cosmetics', 'playlists', 'news', 'aes']:
                 options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "command_string_disabled")}\n'
 
             embed = discord.Embed(
@@ -403,7 +403,7 @@ class Events(commands.Cog):
             components = [
                 Select(
                     options = [
-                        SelectOption(emoji = enabled if server['updates_channel']['config'][i] == True else disabled, label = util.get_str(lang, f'interaction_string_updates_option_{i}'), description = util.get_str(lang, f'interaction_string_updates_option_{i}_description'), value = i ) for i in ['cosmetics', 'playlists', 'news', 'aes']
+                        SelectOption(emoji = enabled if server['updates_channel']['config'][i] == True else disabled, label = util.get_str(lang, f'interaction_string_updates_option_{i}'), description = util.get_str(lang, f'interaction_string_updates_option_{i}_description'), value = i ) for i in ['shopsections', 'cosmetics', 'playlists', 'news', 'aes']
                     ],
                     custom_id = 'SERVER_UPDATES_SELECT_OPTION'
                 )
@@ -441,7 +441,7 @@ class Events(commands.Cog):
                     server = util.database_get_server(interaction.guild)
 
                     options_string = ''
-                    for op in ['cosmetics', 'playlists', 'news', 'aes']:
+                    for op in ['shopsections', 'cosmetics', 'playlists', 'news', 'aes']:
                         options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{op}")}` - {util.get_str(lang, "command_string_configured") if server["updates_channel"]["config"][op] == True else util.get_str(lang, "command_string_disabled")}\n'
 
                     embed = discord.Embed(
@@ -453,7 +453,7 @@ class Events(commands.Cog):
                     components = [
                         Select(
                             options = [
-                                SelectOption(emoji = enabled if server['updates_channel']['config'][i] == True else disabled, label = util.get_str(lang, f'interaction_string_updates_option_{i}'), description = util.get_str(lang, f'interaction_string_updates_option_{i}_description'), value = i ) for i in ['cosmetics', 'playlists', 'news', 'aes']
+                                SelectOption(emoji = enabled if server['updates_channel']['config'][i] == True else disabled, label = util.get_str(lang, f'interaction_string_updates_option_{i}'), description = util.get_str(lang, f'interaction_string_updates_option_{i}_description'), value = i ) for i in ['shopsections', 'cosmetics', 'playlists', 'news', 'aes']
                             ],
                             custom_id = 'SERVER_UPDATES_SELECT_OPTION'
                         )

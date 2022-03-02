@@ -314,6 +314,8 @@ class Tasks(commands.Cog):
 
             log.debug('Checking playlists updates...')
 
+            start_timestamp = time.time()
+
             for lang in util.configuration['languages']:
 
                 async with aiofiles.open(f'cache/playlists/{lang}.json', 'r', encoding='utf-8') as f:
@@ -327,8 +329,11 @@ class Tasks(commands.Cog):
 
                     to_send_list = []
 
-                    for playlist in new_playlists['data']:
+                    for playlist in new_playlists:
                         if playlist not in cached_playlists['data']:
+
+                            if playlist['name'] == playlist['description']: # basically no usefull info
+                                continue # for example "CREATIVE MATCHMAKING"
 
                             added_playlists.append(playlist)
 
@@ -385,6 +390,8 @@ class Tasks(commands.Cog):
         try: # ingame news
 
             log.debug('Checking ingame news updates...')
+
+            start_timestamp = time.time()
 
             for lang in util.configuration['languages']:
 
@@ -527,6 +534,8 @@ class Tasks(commands.Cog):
 
             log.debug('Checking aes updates...')
 
+            start_timestamp = time.time()
+
             thereIsChanges = False
 
             async with aiofiles.open('cache/aes/hex.json', 'r', encoding='utf-8') as f:
@@ -620,6 +629,133 @@ class Tasks(commands.Cog):
 
         except:
             log.error(f'Failed while checking aes changes. Traceback:\n{traceback.format_exc()}')
+
+
+        try: # shop sections
+
+            log.debug('Checking shop section updates...')
+
+            start_timestamp = time.time()
+
+            async with self.ClientSession() as session:
+                request = await session.get('https://api.nitestats.com/v1/epic/modes-smart')
+                if request.status != 200:
+                    log.error(f'An error ocurred in updates_check task. Nitestats calendar endpoint returned status {request.status}')
+                    return # this is the last check in updates_check so we can return safely
+                else:
+                    current_calendar = await request.json()
+
+            active_sections = current_calendar['channels']['client-events']['states'][0]['state']['sectionStoreEnds']
+
+            async with aiofiles.open('cache/shopsections/current.json', 'r', encoding='utf-8') as f:
+                cached_sections = json.loads(await f.read())
+
+            cacheds = cached_sections.keys()
+            actives = active_sections.keys()
+
+            if actives == cacheds:
+                log.debug('No changes in shop sections.')
+                return
+            
+            else:
+
+                log.debug('Detected shop section changes')
+
+                async with aiofiles.open('cache/shopsections/current.json', 'w', encoding='utf-8') as f:
+                    await f.write(json.dumps(active_sections))
+
+                addedSections = []
+                removedSections = []
+                notChangedSections = []
+
+                for section in cacheds: # check for removed/unchanged sections
+
+                    if section not in actives:
+                        removedSections.append(section)
+                    else:
+                        notChangedSections.append(section)
+
+                for section in actives: # check for added sectionsOld
+
+                    if section not in cacheds:
+                        addedSections.append(section)
+
+                log.debug(f'Processed section changes:\nAdded: {addedSections}\nRemoved: {removedSections}\nNot changed: {notChangedSections}')
+
+                count = 0
+                maxCount = len(addedSections)
+                added_string = '```fix'
+                for i in addedSections:
+                    count += 1
+                    added_string += f'\n• {i}'
+                    if count == maxCount:
+                        added_string += '```'
+
+
+                count = 0
+                maxCount = len(removedSections)
+                removed_string = '```fix'
+                for i in removedSections:
+                    count += 1
+                    removed_string += f'\n• {i}'
+                    if count == maxCount:
+                        removed_string += '```'
+
+
+                count = 0
+                summary_string = '```diff\n'
+
+                for i in addedSections:
+                    summary_string += f'+ {i}\n'
+                
+                for i in removedSections:
+                    summary_string += f'- {i}\n'
+
+                for i in notChangedSections:
+                    summary_string += f'• {i}\n'
+
+                summary_string += '```'
+                
+                for lang in util.configuration['languages']:
+
+                    to_send_list = []
+
+                    embed = DiscordEmbed()
+
+                    embed.color = util.Colors.BLURPLE
+
+                    embed.set_author(
+                        name = util.get_str(lang, 'update_message_string_shopsections_changes_detected')
+                    )
+
+                    embed.add_embed_field(
+                        name = util.get_str(lang, 'update_message_string_shopsections_added'),
+                        value = added_string,
+                        inline = True
+                    )
+                    embed.add_embed_field(
+                        name = util.get_str(lang, 'update_message_string_shopsections_removed'),
+                        value = removed_string,
+                        inline = True
+                    )
+                    embed.add_embed_field(
+                        name = util.get_str(lang, 'update_message_string_shopsections_summary'),
+                        value = summary_string,
+                        inline = False
+                    )
+
+                    embed.set_footer(
+                        text = util.get_str(lang, 'update_message_string_shopsections_footer')
+                    )
+
+                    to_send_list.append(embed)
+
+                    result = await self.updates_channel_send(embeds=to_send_list, type_='shopsections', lang=lang)
+
+                    log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
+
+        except:
+            log.error(f'Failed while checking shop section changes. Traceback:\n{traceback.format_exc()}')
 
 
     async def shop_channel_send(self, servers):

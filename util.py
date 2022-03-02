@@ -17,7 +17,7 @@ import sys
 
 debug = True if '--debug' in sys.argv else False
 
-version = '4.0.2'
+version = '4.0.3'
 
 log = None
 
@@ -170,6 +170,7 @@ def database_store_server(guild: discord.Guild):
                 "webhook": None,
                 "webhook_id": None,
                 "config": {
+                    "shopsections": True,
                     "cosmetics": True,
                     "playlists": True,
                     "news": True,
@@ -372,6 +373,11 @@ class FortniteAPI:
             if cosmetic['type']['value'] == 'glider':
                 if cosmetic not in self.gliders:
                     self.gliders.append(cosmetic)
+                    continue
+
+            if cosmetic['type']['value'] == 'banner':
+                if cosmetic not in self.banners:
+                    self.banners.append(cosmetic)
                     continue
       
 
