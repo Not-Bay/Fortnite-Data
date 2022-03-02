@@ -22,7 +22,7 @@
     "command_string_to_see_more_info_about_a_command": "Use `{prefix}help <command>` to view information about a command",
     "command_string_commands": "Commands:",
     "command_string_command": "Command `{prefix}{command}`:",
-    "command_string_footer_credits": "Created by Bay#1111 • Version {version}",
+    "command_string_footer_credits": "Created by Bay#1218 • Version {version}",
     "command_string_command_not_found": "That command was not found",
     "command_string_no_alias_found": "There's no aliases for that command",
     "command_string_description": "Description:",
