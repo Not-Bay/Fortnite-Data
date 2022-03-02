@@ -332,6 +332,9 @@ class Tasks(commands.Cog):
                     for playlist in new_playlists:
                         if playlist not in cached_playlists['data']:
 
+                            if playlist['name'] == playlist['description']: # basically no usefull info
+                                continue # for example "CREATIVE MATCHMAKING"
+
                             added_playlists.append(playlist)
 
                     if len(added_playlists) != 0:
