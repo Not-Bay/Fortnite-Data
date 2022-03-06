@@ -638,7 +638,7 @@ class Tasks(commands.Cog):
             start_timestamp = time.time()
 
             async with self.ClientSession() as session:
-                request = await session.get('https://api.nitestats.com/v1/epic/modes-smart')
+                request = await session.get('https://api.nitestats.com/v1/epic/modes')
                 if request.status != 200:
                     log.error(f'An error ocurred in updates_check task. Nitestats calendar endpoint returned status {request.status}')
                     return # this is the last check in updates_check so we can return safely
