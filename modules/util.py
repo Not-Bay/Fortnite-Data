@@ -91,7 +91,7 @@ def get_str(lang: str, string: str):
     
     except KeyError:
 
-        return f'missing {string} in {lang}*'
+        return f'missing {string} in {lang}'
 
 
 def get_guild_lang(ctx: commands.Context):
