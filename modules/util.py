@@ -37,19 +37,6 @@ start_time = time.time()
 ## Critical
 ###
 
-def get_prefix(bot, message):
-    
-    if isinstance(message.channel, discord.DMChannel):
-        return 't!'
-
-    else:
-        
-        try:
-            return database_get_server(message.guild)['prefix']
-        except:
-            return 'f!'
-
-
 def get_config():
 
     log.debug('Loading config.json file...')
@@ -151,7 +138,7 @@ def database_store_server(guild: discord.Guild):
         data = {
             "server_id": guild.id,
             "added": int(time.time()),
-            "prefix": "f!",
+            "prefix": "/",
             "language": "en",
             "search_language": "en",
             "shop_channel": {

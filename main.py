@@ -22,7 +22,6 @@ else:
     log.debug('Using uvloop.')
 
 bot = commands.AutoShardedBot(
-    command_prefix=util.get_prefix,
     intents=discord.Intents.default()
 )
 bot.remove_command('help')
