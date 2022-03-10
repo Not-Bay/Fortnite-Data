@@ -1,25 +1,25 @@
+from discord.commands import slash_command
 from discord.ext import commands
-from discord_components import *
 import discord
 import datetime
 import time
 
-import util
+from modules import util, components
 
 class Other(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-    
-    @commands.cooldown(4, 10, commands.BucketType.user)
-    @commands.command(usage='settings', aliases=['config'])
+
+    @slash_command(name='settings', description=util.get_str('en', 'command_description_item'), guild_ids=util.debug_guilds)
+    @commands.cooldown(4, 10)
     async def settings(self, ctx):
 
         lang = util.get_guild_lang(ctx)
 
         if ctx.author.guild_permissions.administrator == False:
 
-            await ctx.send(embed=discord.Embed(
+            await ctx.respond(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_only_admin_command'),
                 color = util.Colors.RED
             ))
@@ -37,23 +37,12 @@ class Other(commands.Cog):
             embed.add_field(name=util.get_str(lang, 'command_string_shop_channel'), value=f'`{util.get_str(lang, "command_string_configured") if data["shop_channel"]["enabled"] == True else util.get_str(lang, "command_string_not_configurated")}`', inline=False)
             embed.add_field(name=util.get_str(lang, 'command_string_updates_channel'), value=f'`{util.get_str(lang, "command_string_configured") if data["updates_channel"]["enabled"] == True else util.get_str(lang, "command_string_not_configurated")}`', inline=False)
 
-            components = [
-                [
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_string_change_prefix'), custom_id='SERVER_PREFIX_CONFIGURE'),
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_string_change_language'), custom_id='SERVER_LANG_CONFIGURE')
-                ],
-                [
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_string_manage_updates_channel'), custom_id='SERVER_UPDATES_CHANNEL_CONFIGURE'),
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_string_manage_shop_channel'), custom_id='SERVER_SHOP_CHANNEL_CONFIGURE')
-                ]
-            ]
-
-            await ctx.send(
+            await ctx.respond(
                 embed = embed,
-                components = components
+                view = components.SettingsOptions(lang)
             )
 
-    @commands.command(usage='invite')
+    @slash_command(name='invite', description=util.get_str('en', 'command_description_invite'), guild_ids=util.debug_guilds)
     @commands.cooldown(2, 4)
     async def invite(self, ctx):
         """
@@ -62,13 +51,13 @@ class Other(commands.Cog):
 
         lang = util.get_guild_lang(ctx)
 
-        await ctx.send(embed = discord.Embed(
+        await ctx.respond(embed = discord.Embed(
             title = util.get_str(lang, 'command_string_bot_invitation'),
             description = util.get_str(lang, 'command_string_click_here_to_invite').format(link = util.configuration['invite']),
             color = util.Colors.BLUE
         ))
 
-    @commands.command(usage='ping')
+    @slash_command(name='ping', description=util.get_str('en', 'command_description_ping'), guild_ids=util.debug_guilds)
     @commands.cooldown(2, 1)
     async def ping(self, ctx):
         """
@@ -79,12 +68,12 @@ class Other(commands.Cog):
 
         ms = (ctx.message.created_at - ctx.message.created_at).total_seconds() * 1000
 
-        await ctx.send(embed=discord.Embed(
+        await ctx.respond(embed=discord.Embed(
             description = util.get_str(lang, 'command_string_pong_ms').format(miliseconds = ms),
             color = util.Colors.BLUE
         ))
 
-    @commands.command(usage='info')
+    @slash_command(name='info', description=util.get_str('en', 'command_description_info'), guild_ids=util.debug_guilds)
     @commands.cooldown(3, 5)
     async def info(self, ctx):
         """
@@ -115,7 +104,13 @@ class Other(commands.Cog):
         embed.add_field(name = util.get_str(lang, 'command_string_uptime'), value = f'`{bot_uptime}`')
         embed.add_field(name = util.get_str(lang, 'command_string_translations'), value = translations_credits)
 
-        await ctx.send(embed = embed)
+        await ctx.respond(
+            embed = embed,
+            view = components.LinkButton(
+                label = util.get_str(lang, 'command_button_support_server'),
+                url = 'https://discord.gg/UU9HjA5'
+            )
+        )
 
 
 def setup(bot):
