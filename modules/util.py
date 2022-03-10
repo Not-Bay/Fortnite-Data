@@ -24,6 +24,7 @@ log = None
 configuration = None
 database = None
 ready = False
+debug_guilds = None
 languages = {}
 fortniteapi = {}
 server_cache = {}
@@ -94,12 +95,12 @@ def get_str(lang: str, string: str):
         return f'missing {string} in {lang}'
 
 
-def get_guild_lang(ctx: commands.Context):
+def get_guild_lang(ctx: discord.ApplicationContext):
 
     if ctx.guild == None:
         return 'en'
     
-    if ctx.guild.id == 718709023427526697:
+    if ctx.guild_id == 718709023427526697:
         if ctx.channel.category_id == 719713694874992681:
             return 'ja'
         elif ctx.channel.category_id == 718711009971535943:

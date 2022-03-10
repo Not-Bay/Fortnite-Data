@@ -1,4 +1,3 @@
-from discord_components import DiscordComponents
 from discord.ext import commands
 import coloredlogs
 import traceback
@@ -8,14 +7,14 @@ import asyncio
 import time
 import sys
 
-import util
+from modules import util
 
 log = logging.getLogger('FortniteData')
 coloredlogs.install(level=None if util.debug == False else 'DEBUG')
 
 # Set up uvloop if possible
 try:
-    import uvloop
+    import uvloop # type: ignore
 except:
     log.warning('Using default asyncio event loop.')
 else:
@@ -34,8 +33,6 @@ async def on_connect():
 
 @bot.event
 async def on_ready():
-
-    DiscordComponents(bot)
 
     for i in util.configuration.get('languages'):
         lang = util.Language(i)
@@ -77,6 +74,9 @@ def run():
             log.debug(f'Loaded cog {cog}.')
         except:
             log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
+
+    if len(util.configuration.get('slash_debug_guilds')) != 0:
+        util.debug_guilds = util.configuration.get('slash_debug_guilds')
 
     loop = asyncio.get_event_loop()
 
