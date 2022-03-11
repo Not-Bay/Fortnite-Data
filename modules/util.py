@@ -84,7 +84,7 @@ def get_str(lang: str, string: str):
 
 def get_guild_lang(ctx: discord.ApplicationContext):
 
-    if ctx.guild == None:
+    if ctx.guild_id == None:
         return 'en'
     
     if ctx.guild_id == 718709023427526697:
@@ -96,10 +96,10 @@ def get_guild_lang(ctx: discord.ApplicationContext):
             return 'es'
 
     try:
-        return server_cache[str(ctx.guild.id)]['language']
+        return server_cache[str(ctx.guild_id)]['language']
     except KeyError:
         try:
-            return database_get_server(ctx.guild)['language']
+            return database_get_server(ctx)['language']
         except KeyError:
             return 'en'
 
@@ -117,26 +117,26 @@ async def wait_cache_load():
 ###
 
 # Servers
-def database_get_server(guild: discord.Guild):
+def database_get_server(ctx: discord.ApplicationContext):
 
     try:
-        return server_cache[str(guild.id)]
+        return server_cache[str(ctx.guild_id)]
     except KeyError:
-        data = database.guilds.find_one({'server_id': guild.id})
-        server_cache[str(guild.id)] = data
+        data = database.guilds.find_one({'server_id': ctx.guild_id})
+        server_cache[str(ctx.guild_id)] = data
 
         return data
 
-def database_store_server(guild: discord.Guild):
+def database_store_server(ctx: discord.ApplicationContext):
 
     log.debug('Inserting guild into database...')
 
-    check = database.guilds.find_one({'server_id': guild.id})
+    check = database.guilds.find_one({'server_id': ctx.guild_id})
 
     if check == None:
 
         data = {
-            "server_id": guild.id,
+            "server_id": ctx.guild_id,
             "added": int(time.time()),
             "prefix": "/",
             "language": "en",
@@ -172,7 +172,7 @@ def database_store_server(guild: discord.Guild):
             log.debug(f'Inserted guild into database. Id: {insert.inserted_id}')
             return insert
         else:
-            log.error(f'Failed database insertion of guild {guild.id}')
+            log.error(f'Failed database insertion of guild {ctx.guild_id}')
             return None
     
     else:
@@ -180,37 +180,37 @@ def database_store_server(guild: discord.Guild):
         log.debug('Guild is already in database. Returning existing')
         return check
 
-def database_remove_server(guild: discord.Guild):
+def database_remove_server(ctx: discord.ApplicationContext):
 
-    log.debug(f'Removing guild "{guild.id}" from database...')
+    log.debug(f'Removing guild "{ctx.guild_id}" from database...')
 
-    delete = database.guilds.delete_one({'server_id': guild.id})
+    delete = database.guilds.delete_one({'server_id': ctx.guild_id})
 
     if isinstance(delete, pymongo.results.DeleteResult):
 
-        log.debug(f'Guild "{guild.id}" removed successfully.')
-        server_cache.pop(str(guild.id))
+        log.debug(f'Guild "{ctx.guild_id}" removed successfully.')
+        server_cache.pop(str(ctx.guild_id))
         return delete
 
     else:
-        log.error(f'Failed database delete of guild {guild.id}')
+        log.error(f'Failed database delete of guild {ctx.guild_id}')
         return None
 
 
-def database_update_server(guild: discord.Guild, changes: dict):
+def database_update_server(ctx: discord.ApplicationContext, changes: dict):
 
-    log.debug(f'Updating guild "{guild.id}" data. Changes: "{changes}"')
+    log.debug(f'Updating guild "{ctx.guild_id}" data. Changes: "{changes}"')
 
-    update = database.guilds.update_one({'server_id': guild.id}, changes)
+    update = database.guilds.update_one({'server_id': ctx.guild_id}, changes)
 
     if isinstance(update, pymongo.results.UpdateResult):
 
-        log.debug(f'Updated guild "{guild.id}" data successfully.')
-        server_cache.pop(str(guild.id))
+        log.debug(f'Updated guild "{ctx.guild_id}" data successfully.')
+        server_cache.pop(str(ctx.guild_id))
         return update
 
     else:
-        log.error(f'Failed guild "{guild.id}" data update.')
+        log.error(f'Failed guild "{ctx.guild_id}" data update.')
         return None
 
 ###
