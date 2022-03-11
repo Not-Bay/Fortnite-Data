@@ -1,9 +1,12 @@
+from discord.commands import slash_command, Option, permissions
 from discord.ext import commands
 import discord
 import ast
 
-import util
+from modules import util
 import os
+
+debug_server = 757406708300644483
 
 def insert_returns(body):
 
@@ -24,27 +27,35 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def _command(self, ctx, commandName: str):
-        """Enable/disable a command"""
+    @slash_command(name = 'sync-commands', description = 'Syncs commands', guild_ids=[debug_server])
+    @permissions.is_owner(guild_id=debug_server)
+    async def _sync_commands(
+        self,
+        ctx: discord.ApplicationContext
+    ):
 
-        try:
-            cmd = self.bot.get_command(commandName)
+        await ctx.respond(
+            embed = discord.Embed(
+                description = 'Syncing commands...',
+                color = util.Colors.YELLOW
+            )
+        )
 
-            if cmd.enabled == True:
-                cmd.update(enabled = False)
-                await ctx.send(f'The command `{commandName}` was disabled.')
-            else:
-                cmd.update(enabled = True)
-                await ctx.send(f'The command `{commandName}` was enabled.')
-        except Exception as e:
-            await ctx.send(f'Could not enable/disable `{commandName}`: {e}')
+        await self.bot.sync_commands()
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def _restart(self, ctx):
-        """Stops the cogs/tasks running tasks and restarts the bot"""
+        await ctx.interaction.edit_original_message(
+            embed = discord.Embed(
+                description = 'Synced commands!',
+                color = util.Colors.GREEN
+            )
+        )
+
+    @slash_command(name = 'restart', description = 'Restarts the bot', guild_ids=[debug_server])
+    @permissions.is_owner(guild_id=debug_server)
+    async def _restart(
+        self,
+        ctx: discord.ApplicationContext
+    ):
 
         try:
             cog = self.bot.cogs['Tasks']
@@ -52,45 +63,75 @@ class Admin(commands.Cog):
             cog.shop_check.stop()
             cog.updates_check.stop()
 
-            await ctx.send('The bot should restart in a few seconds.')
+            await ctx.respond('The bot should restart in a few seconds.')
             os.system('systemctl restart FortniteData.service')
         except Exception as e:
-            await ctx.send(f'Could not restart: {e}')
+            await ctx.respond(f'Could not restart: {e}')
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def _reload(self, ctx, cog: str):
-        """Reloads a cog"""
+    @slash_command(name = 'reload', description = 'Reloads a cog', guild_ids=[debug_server])
+    @permissions.is_owner(guild_id=debug_server)
+    async def _reload(
+        self,
+        ctx: discord.ApplicationContext,
+        cog: Option(
+            str,
+            description = 'Cog to reload',
+            required = True
+        )
+    ):
+
         try:
             self.bot.reload_extension(f'cogs.{cog}')
-            await ctx.send(f'The cog `{cog}` was reloaded correctly.')
+            await ctx.respond(f'The cog `{cog}` was reloaded correctly.')
         except Exception as e:
-            await ctx.send(f'Could not reload the cog: {e}')
+            await ctx.respond(f'Could not reload the cog: {e}')
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def _load(self, ctx, cog: str):
-        """Load a cog"""
+    @slash_command(name = 'load', description = 'Load a cog', guild_ids=[debug_server])
+    @permissions.is_owner(guild_id=debug_server)
+    async def _load(
+        self,
+        ctx: discord.ApplicationContext,
+        cog: Option(
+            str,
+            description = 'Cog to load',
+            required = True
+        )
+    ):
+
         try:
             self.bot.load_extension(f'cogs.{cog}')
-            await ctx.send(f'The cog `{cog}` was loaded correctly.')
+            await ctx.respond(f'The cog `{cog}` was loaded correctly.')
         except Exception as e:
-            await ctx.send(f'Could not load the cog: {e}')
+            await ctx.respond(f'Could not load the cog: {e}')
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def _unload(self, ctx, cog: str):
-        """Unload a cog"""
+    @slash_command(name = 'unload', description = 'Unload a cog', guild_ids=[debug_server])
+    @permissions.is_owner(guild_id=debug_server)
+    async def _unload(
+        self,
+        ctx: discord.ApplicationContext,
+        cog: Option(
+            str,
+            description = 'Cog to unload',
+            required = True
+        )
+    ):
         try:
             self.bot.unload_extension(f'cogs.{cog}')
-            await ctx.send(f'The cog `{cog}` was unloaded correctly.')
+            await ctx.respond(f'The cog `{cog}` was unloaded correctly.')
         except Exception as e:
-            await ctx.send(f'Could not unload the cog: {e}')
+            await ctx.respond(f'Could not unload the cog: {e}')
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def eval(self, ctx, *, cmd):
-        """Evaluates code"""
+    @slash_command(name = 'eval', description = 'Evaluates code', guild_ids=[debug_server])
+    @permissions.is_owner(guild_id=debug_server)
+    async def eval(
+        self,
+        ctx: discord.ApplicationContext,
+        cmd: Option(
+            str,
+            description = 'Code to evaluate',
+            required = True
+        )
+    ):
         
         try:
             fn_name = "_eval_expr"
@@ -109,13 +150,13 @@ class Admin(commands.Cog):
             }
             exec(compile(parsed, filename="<ast>", mode="exec"), env)
         except Exception as error:
-            await ctx.send(f'```py\n{error}```')
+            await ctx.respond(f'```py\n{error}```', ephemeral=True)
 
         try:
             result = (await eval(f"{fn_name}()", env))
-            await ctx.send(f'```py\n{result}```')
+            await ctx.respond(f'```py\n{result}```', ephemeral=True)
         except Exception as error:
-            await ctx.send(f'```py\n{error}```')
+            await ctx.respond(f'```py\n{error}```', ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Admin(bot))
