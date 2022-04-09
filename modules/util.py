@@ -133,14 +133,19 @@ def database_get_server(ctx: discord.ApplicationContext):
 
 def database_store_server(ctx: discord.ApplicationContext):
 
+    if isinstance(ctx, discord.Guild):
+        guild_id = ctx.id
+    else:
+        guild_id = ctx.guild_id
+
     log.debug('Inserting guild into database...')
 
-    check = database.guilds.find_one({'server_id': ctx.guild_id})
+    check = database.guilds.find_one({'server_id': guild_id})
 
     if check == None:
 
         data = {
-            "server_id": ctx.guild_id,
+            "server_id": guild_id,
             "added": int(time.time()),
             "prefix": "/",
             "language": "en",
@@ -176,7 +181,7 @@ def database_store_server(ctx: discord.ApplicationContext):
             log.debug(f'Inserted guild into database. Id: {insert.inserted_id}')
             return insert
         else:
-            log.error(f'Failed database insertion of guild {ctx.guild_id}')
+            log.error(f'Failed database insertion of guild {guild_id}')
             return None
     
     else:
@@ -186,35 +191,45 @@ def database_store_server(ctx: discord.ApplicationContext):
 
 def database_remove_server(ctx: discord.ApplicationContext):
 
-    log.debug(f'Removing guild "{ctx.guild_id}" from database...')
+    if isinstance(ctx, discord.Guild):
+        guild_id = ctx.id
+    else:
+        guild_id = ctx.guild_id
 
-    delete = database.guilds.delete_one({'server_id': ctx.guild_id})
+    log.debug(f'Removing guild "{guild_id}" from database...')
+
+    delete = database.guilds.delete_one({'server_id': guild_id})
 
     if isinstance(delete, pymongo.results.DeleteResult):
 
-        log.debug(f'Guild "{ctx.guild_id}" removed successfully.')
-        server_cache.pop(str(ctx.guild_id))
+        log.debug(f'Guild "{guild_id}" removed successfully.')
+        server_cache.pop(str(guild_id))
         return delete
 
     else:
-        log.error(f'Failed database delete of guild {ctx.guild_id}')
+        log.error(f'Failed database delete of guild {guild_id}')
         return None
 
 
 def database_update_server(ctx: discord.ApplicationContext, changes: dict):
 
-    log.debug(f'Updating guild "{ctx.guild_id}" data. Changes: "{changes}"')
+    if isinstance(ctx, discord.Guild):
+        guild_id = ctx.id
+    else:
+        guild_id = ctx.guild_id
 
-    update = database.guilds.update_one({'server_id': ctx.guild_id}, changes)
+    log.debug(f'Updating guild "{guild_id}" data. Changes: "{changes}"')
+
+    update = database.guilds.update_one({'server_id': guild_id}, changes)
 
     if isinstance(update, pymongo.results.UpdateResult):
 
-        log.debug(f'Updated guild "{ctx.guild_id}" data successfully.')
-        server_cache.pop(str(ctx.guild_id))
+        log.debug(f'Updated guild "{guild_id}" data successfully.')
+        server_cache.pop(str(guild_id))
         return update
 
     else:
-        log.error(f'Failed guild "{ctx.guild_id}" data update.')
+        log.error(f'Failed guild "{guild_id}" data update.')
         return None
 
 ###
