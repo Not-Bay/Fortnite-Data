@@ -123,6 +123,10 @@ def database_get_server(ctx: discord.ApplicationContext):
         return server_cache[str(ctx.guild_id)]
     except KeyError:
         data = database.guilds.find_one({'server_id': ctx.guild_id})
+        if data == None:
+            database_store_server(ctx)
+            data = database.guilds.find_one({'server_id': ctx.guild_id})
+
         server_cache[str(ctx.guild_id)] = data
 
         return data
