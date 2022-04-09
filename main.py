@@ -40,6 +40,13 @@ async def on_connect():
 
         util.fortniteapi[i] = util.FortniteAPI(i)
 
+    for cog in util.configuration.get('cogs'):
+        try:
+            bot.load_extension(f'cogs.{cog}')
+            log.debug(f'Loaded cog {cog}.')
+        except:
+            log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
+
 @bot.event
 async def on_ready():
 
@@ -62,13 +69,6 @@ def run():
     util.database = util.get_mongoclient().fortnitedata
 
     log.debug('Starting discord bot...')
-
-    for cog in util.configuration.get('cogs'):
-        try:
-            bot.load_extension(f'cogs.{cog}')
-            log.debug(f'Loaded cog {cog}.')
-        except:
-            log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
 
     if len(util.configuration.get('slash_debug_guilds')) != 0:
         util.debug_guilds = util.configuration.get('slash_debug_guilds')
