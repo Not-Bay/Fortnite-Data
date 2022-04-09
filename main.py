@@ -30,9 +30,6 @@ bot.remove_command('help')
 async def on_connect():
     log.debug('Connected to Discord')
 
-@bot.event
-async def on_ready():
-
     for i in util.configuration.get('languages'):
         lang = util.Language(i)
         load = await lang.load_language_data()
@@ -42,6 +39,9 @@ async def on_ready():
             util.languages[i] = False
 
         util.fortniteapi[i] = util.FortniteAPI(i)
+
+@bot.event
+async def on_ready():
 
     util.ready = True
 
@@ -56,7 +56,7 @@ def run():
 
     log.info('Booting...')
 
-    util.log = logging.getLogger('FortniteData.util')
+    util.log = logging.getLogger('FortniteData.modules.util')
 
     util.configuration = util.get_config()
     util.database = util.get_mongoclient().fortnitedata
