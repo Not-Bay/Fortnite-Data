@@ -1,8 +1,7 @@
 from discord.commands import slash_command, Option, OptionChoice
-from discord.ext import commands
+from discord.ext import commands, pages
 import traceback
 import aiohttp
-import asyncio
 import discord
 import logging
 import time
@@ -10,7 +9,7 @@ import json
 import cgi
 import io
 
-from modules import util, components
+from modules import util, views
 
 log = logging.getLogger('FortniteData.cogs.general')
 
@@ -19,7 +18,15 @@ class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command(name='item', description=util.get_str('en', 'command_description_item'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='item',
+        description=util.get_str('en', 'command_description_item'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_item'),
+            'ja': util.get_str('ja', 'command_description_item')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(5, 8, commands.BucketType.user)
     async def item(
         self,
@@ -27,7 +34,6 @@ class General(commands.Cog):
         query: Option(
             str,
             description = 'Name or ID of the cosmetic',
-            autocomplete = components.item_query_autocomplete,
             required = True
         ),
         match_method: Option(
@@ -84,7 +90,7 @@ class General(commands.Cog):
 
             else:
 
-                pages = []
+                items = []
                 count = 0
 
                 for cosmetic in results:
@@ -117,21 +123,23 @@ class General(commands.Cog):
 
                     i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(results)))
 
-                    pages.append(i)
-
-                books = {
-                    'cosmetics': pages
-                }
-
-                await ctx.respond(
-                    embed = books[list(books.keys())[0]][0],
-                    view = components.Paginator(
-                        lang = lang,
-                        books = books
-                    )
+                    items.append(i)
+    
+                paginator = pages.Paginator(
+                    pages = items
                 )
+                await paginator.respond(interaction = ctx.interaction)
 
-    @slash_command(name='playlist', description=util.get_str('en', 'command_description_playlist'), guild_ids=util.debug_guilds)
+
+    @slash_command(
+        name='playlist',
+        description=util.get_str('en', 'command_description_playlist'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_playlist'),
+            'ja': util.get_str('ja', 'command_description_playlist')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(5, 8, commands.BucketType.user)
     async def playlist(
         self,
@@ -187,7 +195,7 @@ class General(commands.Cog):
 
                 else:
 
-                    pages = []
+                    items = []
                     count = 0
 
                     for playlist in results:
@@ -224,28 +232,31 @@ class General(commands.Cog):
 
                         i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(results)))
 
-                        pages.append(i)
+                        items.append(i)
 
-                    books = {
-                        'playlists': pages
-                    }
-
-                    await ctx.respond(
-                        embed = books[list(books.keys())[0]][0],
-                        view = components.Paginator(
-                            lang = lang,
-                            books = books
-                        )
+                    paginator = pages.Paginator(
+                        pages = items
                     )
+                    await paginator.respond(interaction = ctx.interaction)
 
 
-    @slash_command(name='shop', description=util.get_str('en', 'command_description_shop'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='shop',
+        description=util.get_str('en', 'command_description_shop'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_shop'),
+            'ja': util.get_str('ja', 'command_description_shop')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 9, commands.BucketType.user)
-    async def shop(self, ctx, language = 'en'):
+    async def shop(
+        self,
+        ctx
+    ):
 
         lang = util.get_guild_lang(ctx)
-
-        url = util.get_custom_shop_url(util.database_get_server(ctx.guild))
+        url = util.get_custom_shop_url(util.database_get_server(ctx))
 
         embed = discord.Embed(
             title = util.get_str(lang, 'command_string_current_item_shop'),
@@ -255,12 +266,29 @@ class General(commands.Cog):
 
         await ctx.respond(embed = embed)
 
-    @slash_command(name='news', description=util.get_str('en', 'command_description_news'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='news',
+        description=util.get_str('en', 'command_description_news'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_news'),
+            'ja': util.get_str('ja', 'command_description_news')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
-    async def news(self, ctx, language = None):
+    async def news(
+        self,
+        ctx,
+        language = Option(
+            str,
+            description = 'Language for the news',
+            required = False,
+            default = 'none'
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
-        data_lang = language if language != None else lang
+        data_lang = language if language != 'none' else lang
 
         data = await util.fortniteapi[lang].get_news(language = data_lang)
 
@@ -274,8 +302,7 @@ class General(commands.Cog):
         
         else:
 
-            br_motds = []
-            stw_motds = []
+            items = []
 
             count = 0
             if data['data']['br'] != None:
@@ -283,14 +310,14 @@ class General(commands.Cog):
                     count += 1
 
                     embed = discord.Embed(
-                        title = motd['tabTitle'],
+                        title = util.get_str(data_lang, 'command_button_battle_royale'),
                         description = f'**{motd["title"]}**\n{motd["body"]}',
                         color = util.Colors.BLUE
                     )
-                    embed.set_footer(text=f'Page {count} of {len(data["data"]["br"]["motds"])}')
                     embed.set_image(url=motd['image'])
+                    embed.set_footer(text=util.get_str(data_lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['br']['motds'])))
                     
-                    br_motds.append(embed)
+                    items.append(embed)
 
             count = 0
             if data['data']['stw'] != None:
@@ -298,105 +325,109 @@ class General(commands.Cog):
                     count += 1
 
                     embed = discord.Embed(
-                        title = message['adspace'],
+                        title = util.get_str(data_lang, 'command_button_save_the_world'),
                         description = f'**{message["title"]}**\n{message["body"]}',
                         color = util.Colors.BLUE
                     )
                     embed.set_image(url=message['image'])
-                    embed.set_footer(text=f'Page {count} of {len(data["data"]["stw"]["messages"])}')
+                    embed.set_footer(text=util.get_str(data_lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['stw']['messages'])))
                     
-                    stw_motds.append(embed)
+                    items.append(embed)
 
-            books = {
-                'battle_royale': br_motds,
-                'save_the_world': stw_motds
-            }
-
-            await ctx.respond(
-                embed = books[0][0],
-                view = components.Paginator(
-                    lang = lang,
-                    books = books
-                )
+            paginator = pages.Paginator(
+                pages = items
             )
+            await paginator.respond(interaction = ctx.interaction)
 
-    @slash_command(name='aes', description=util.get_str('en', 'command_description_aes'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='aes',
+        description=util.get_str('en', 'command_description_aes'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_aes'),
+            'ja': util.get_str('ja', 'command_description_aes')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
-    async def aes(self, ctx, keyformat = 'hex'):
+    async def aes(
+        self,
+        ctx,
+        keyformat: Option(
+            str,
+            description = 'Keys format',
+            required = False,
+            default = 'hex',
+            choices = [
+                OptionChoice(name='Hex', value='hex'),
+                OptionChoice(name='Base64', value='base64')
+            ]
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
 
-        if keyformat.lower() not in ['base64', 'hex']:
+        data = await util.fortniteapi[lang].get_aes(keyformat=keyformat)
+
+        if data == False:
 
             await ctx.respond(embed=discord.Embed(
-                description = util.get_str(lang, 'command_string_key_format_example').format(prefix = ctx.prefix),
+                description = util.get_str(lang, 'command_string_unavailable_aes'),
                 color = util.Colors.RED
             ))
             return
 
-        else:
+        embed = discord.Embed(
+            title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
+            description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
+            color = util.Colors.BLUE
+        )
 
-            data = await util.fortniteapi[lang].get_aes(keyformat=keyformat)
+        items = []
 
-            if data == False:
+        count = 0
+        for key in data['data']['dynamicKeys']:
+            count += 1
 
-                await ctx.respond(embed=discord.Embed(
-                    description = util.get_str(lang, 'command_string_unavailable_aes'),
-                    color = util.Colors.RED
-                ))
-                return
+            if count == 5:
+                embed.set_footer(text=f'Page {len(items) + 1}')
+                items.append(embed)
 
-            embed = discord.Embed(
-                title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
-                description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
-                color = util.Colors.BLUE
-            )
-
-            pages = []
-
-            count = 0
-            for key in data['data']['dynamicKeys']:
-                count += 1
-
-                if count == 5:
-                    embed.set_footer(text=f'Page {len(pages) + 1}')
-                    pages.append(embed)
-
-                    embed = discord.Embed(
-                        title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
-                        description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
-                        color = util.Colors.BLUE
-                    )
-                    count = 0
-
-                embed.add_field(name=key['pakFilename'], value=f'GUID: {key["pakGuid"]}\n{util.get_str(lang, "command_string_key")}: {key["key"]}', inline=False)
-
-            books = {
-                'aes': pages
-            }
-
-            await ctx.respond(
-                embed = books[list(books.keys())[0]][0],
-                view = components.Paginator(
-                    lang = lang,
-                    books = books
+                embed = discord.Embed(
+                    title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
+                    description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
+                    color = util.Colors.BLUE
                 )
-            )
+                count = 0
+
+            embed.add_field(name=key['pakFilename'], value=f'GUID: {key["pakGuid"]}\n{util.get_str(lang, "command_string_key")}: {key["key"]}', inline=False)
+
+        paginator = pages.Paginator(
+            pages = items
+        )
+        await paginator.respond(interaction = ctx.interaction)
     
-    @slash_command(name='stats', description=util.get_str('en', 'command_description_stats'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='stats',
+        description=util.get_str('en', 'command_description_stats'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_stats'),
+            'ja': util.get_str('ja', 'command_description_stats')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 15, commands.BucketType.user)
     async def stats(
         self,
         ctx: discord.ApplicationContext,
-        query: Option(
+        display_name: Option(
             str,
             description = 'Account display name',
-            required=True
+            required=True,
         ),
         account_type = Option(
             str,
             description = 'Type of account',
-            required = False,
+            required = True,
             choices = [
                 OptionChoice(name = 'Epic', value = 'epic'),
                 OptionChoice(name = 'PlayStation', value = 'psn'),
@@ -408,7 +439,7 @@ class General(commands.Cog):
         lang = util.get_guild_lang(ctx)
 
         data = await util.fortniteapi[lang].get_stats(
-            account_name = query,
+            account_name = display_name,
             account_type = account_type
         )
         
@@ -434,7 +465,7 @@ class General(commands.Cog):
             )
             return
 
-        elif data['status'] == 200:
+        else:
 
             embed = discord.Embed(
                 title = util.get_str(lang, 'command_string_stats_of_name').format(name = data['data']['account']['name']),
@@ -448,12 +479,20 @@ class General(commands.Cog):
             )
 
 
-    @slash_command(name='code', description=util.get_str('en', 'command_description_code'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='code',
+        description=util.get_str('en', 'command_description_code'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_news'),
+            'ja': util.get_str('ja', 'command_description_news')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 10, commands.BucketType.user)
     async def code(
         self,
         ctx: discord.ApplicationContext,
-        creator_code: Option(
+        code: Option(
             str,
             description = 'Creator code to check',
             required = True
@@ -462,7 +501,7 @@ class General(commands.Cog):
 
         lang = util.get_guild_lang(ctx)
 
-        data = await util.fortniteapi[lang].get_cc(code = creator_code)
+        data = await util.fortniteapi[lang].get_cc(code = code)
 
         if data == False:
 
@@ -488,9 +527,17 @@ class General(commands.Cog):
             await ctx.respond(
                 embed = embed
             )
-                
 
-    @slash_command(name='upcoming', description=util.get_str('en', 'command_description_upcoming'), guild_ids=util.debug_guilds)
+
+    @slash_command(
+        name='upcoming',
+        description=util.get_str('en', 'command_description_upcoming'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_upcoming'),
+            'ja': util.get_str('ja', 'command_description_upcoming')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def upcoming(
         self,
@@ -511,7 +558,7 @@ class General(commands.Cog):
 
         else:
 
-            pages = []
+            items = []
 
             count = 0
 
@@ -535,27 +582,28 @@ class General(commands.Cog):
 
                 i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(data['data']['items'])))
 
-                pages.append(i)
+                items.append(i)
 
-            books = {
-                'cosmetics': pages
-            }
-
-            await ctx.respond(
-                embed = books[list(books.keys())[0]][0],
-                view = components.Paginator(
-                    lang = lang,
-                    books = books
-                )
+            paginator = pages.Paginator(
+                pages = items
             )
+            await paginator.respond(interaction = ctx.interaction)
 
 
-    @slash_command(name='files-search', description=util.get_str('en', 'command_description_search'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='files-search',
+        description=util.get_str('en', 'command_description_search'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_search'),
+            'ja': util.get_str('ja', 'command_description_search')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def search(
         self,
         ctx: discord.ApplicationContext,
-        query = Option(
+        filename = Option(
             str,
             description = 'File name to search',
             required = True
@@ -566,7 +614,7 @@ class General(commands.Cog):
 
         async with aiohttp.ClientSession() as session:
 
-            response = await session.get(f'https://benbot.app/api/v1/files/search?path={query}')
+            response = await session.get(f'https://benbot.app/api/v1/files/search?path={filename}')
 
             if response.status == 200:
 
@@ -581,7 +629,7 @@ class General(commands.Cog):
 
                     results = await response.json()
 
-                    embed_description = f'{util.get_str(lang, "command_string_search_results").format(query = query)}\n'
+                    embed_description = f'{util.get_str(lang, "command_string_search_results").format(query = filename)}\n'
 
                     fileNeeded = False
                     
@@ -620,7 +668,15 @@ class General(commands.Cog):
                 await ctx.respond(embed = embed)
 
     
-    @slash_command(name='files-export', description=util.get_str('en', 'command_description_export'), guild_ids=util.debug_guilds)
+    @slash_command(
+        name='files-export',
+        description=util.get_str('en', 'command_description_export'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_export'),
+            'ja': util.get_str('ja', 'command_description_export')
+        },
+        guild_ids=util.debug_guilds
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def export(
         self,

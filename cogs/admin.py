@@ -6,8 +6,6 @@ import ast
 from modules import util
 import os
 
-debug_server = 757406708300644483
-
 def insert_returns(body):
 
     if isinstance(body[-1], ast.Expr):
@@ -27,8 +25,8 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command(name = 'sync-commands', description = 'Syncs commands', guild_ids=[debug_server])
-    @permissions.is_owner(guild_id=debug_server)
+    @slash_command(name = 'sync-commands', description = 'Syncs commands', guild_ids=util.debug_guilds)
+    @permissions.is_owner()
     async def _sync_commands(
         self,
         ctx: discord.ApplicationContext
@@ -41,7 +39,7 @@ class Admin(commands.Cog):
             )
         )
 
-        await self.bot.sync_commands()
+        await self.bot.sync_commands(force = True)
 
         await ctx.interaction.edit_original_message(
             embed = discord.Embed(
@@ -50,8 +48,8 @@ class Admin(commands.Cog):
             )
         )
 
-    @slash_command(name = 'restart', description = 'Restarts the bot', guild_ids=[debug_server])
-    @permissions.is_owner(guild_id=debug_server)
+    @slash_command(name = 'restart', description = 'Restarts the bot', guild_ids=util.debug_guilds)
+    @permissions.is_owner()
     async def _restart(
         self,
         ctx: discord.ApplicationContext
@@ -68,8 +66,8 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not restart: {e}')
 
-    @slash_command(name = 'reload', description = 'Reloads a cog', guild_ids=[debug_server])
-    @permissions.is_owner(guild_id=debug_server)
+    @slash_command(name = 'reload', description = 'Reloads a cog', guild_ids=util.debug_guilds)
+    @permissions.is_owner()
     async def _reload(
         self,
         ctx: discord.ApplicationContext,
@@ -86,8 +84,8 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not reload the cog: {e}')
 
-    @slash_command(name = 'load', description = 'Load a cog', guild_ids=[debug_server])
-    @permissions.is_owner(guild_id=debug_server)
+    @slash_command(name = 'load', description = 'Load a cog', guild_ids=util.debug_guilds)
+    @permissions.is_owner()
     async def _load(
         self,
         ctx: discord.ApplicationContext,
@@ -104,8 +102,8 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not load the cog: {e}')
 
-    @slash_command(name = 'unload', description = 'Unload a cog', guild_ids=[debug_server])
-    @permissions.is_owner(guild_id=debug_server)
+    @slash_command(name = 'unload', description = 'Unload a cog', guild_ids=util.debug_guilds)
+    @permissions.is_owner()
     async def _unload(
         self,
         ctx: discord.ApplicationContext,
@@ -121,8 +119,8 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not unload the cog: {e}')
 
-    @slash_command(name = 'eval', description = 'Evaluates code', guild_ids=[debug_server])
-    @permissions.is_owner(guild_id=debug_server)
+    @slash_command(name = 'eval', description = 'Evaluates code', guild_ids=util.debug_guilds)
+    @permissions.is_owner()
     async def eval(
         self,
         ctx: discord.ApplicationContext,
