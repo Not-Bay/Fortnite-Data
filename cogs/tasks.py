@@ -10,7 +10,7 @@ import json
 import time
 import sys
 
-import util
+from modules import util
 
 log = logging.getLogger('FortniteData.cogs.tasks')
 
@@ -690,6 +690,8 @@ class Tasks(commands.Cog):
                     added_string += f'\n• {i}'
                     if count == maxCount:
                         added_string += '```'
+                if maxCount == 0:
+                    added_string = '```\n```'
 
 
                 count = 0
@@ -700,6 +702,8 @@ class Tasks(commands.Cog):
                     removed_string += f'\n• {i}'
                     if count == maxCount:
                         removed_string += '```'
+                if maxCount == 0:
+                    removed_string = '```\n```'
 
 
                 count = 0
