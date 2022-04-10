@@ -1,12 +1,9 @@
 from discord.ext import commands
 import traceback
-import asyncio
 import discord
 import logging
-import datetime
-import io
 
-from modules import util, components
+from modules import util, views
 
 log = logging.getLogger('FortniteData.cogs.events')
 
@@ -53,8 +50,7 @@ class Events(commands.Cog):
 
             traceback_str = ''.join(traceback.format_exception(None, error, error.__traceback__))
 
-            util.error_cache[str(ctx.author.id)] = {} # save error to a temporary cache
-            util.error_cache[str(ctx.author.id)][str(ctx.message.id)] = traceback_str
+            util.error_cache[str(ctx.author.id)] = traceback_str # save error to a temporary cache
 
             description = util.get_str(lang, 'command_string_an_unknown_error_ocurred').format(traceback = traceback_str)
 
@@ -69,7 +65,11 @@ class Events(commands.Cog):
 
             await ctx.respond(
                 embed = embed,
-                view = components.ReportToDeveloper(lang)
+                view = views.ReportToDeveloper(
+                    lang = lang,
+                    ctx = ctx
+                ),
+                ephemeral = True
             )
 
 
