@@ -203,7 +203,7 @@ def database_remove_server(ctx: discord.ApplicationContext):
     if isinstance(delete, pymongo.results.DeleteResult):
 
         log.debug(f'Guild "{guild_id}" removed successfully.')
-        server_cache.pop(str(guild_id))
+        server_cache.pop(str(guild_id), None)
         return delete
 
     else:
@@ -225,7 +225,7 @@ def database_update_server(ctx: discord.ApplicationContext, changes: dict):
     if isinstance(update, pymongo.results.UpdateResult):
 
         log.debug(f'Updated guild "{guild_id}" data successfully.')
-        server_cache.pop(str(guild_id))
+        server_cache.pop(str(guild_id), None)
         return update
 
     else:
