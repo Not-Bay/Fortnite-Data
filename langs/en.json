@@ -17,7 +17,7 @@
     "command_description_settings_language": "Checks or changes bot language",
     "command_description_settings_search_language": "Checks or changes the bot search language",
     "command_description_settings_updates_channel": "Checks or configures the updates channel",
-    "command_description_settings_shop_channel": "Checks or configures the updates channel",
+    "command_description_settings_shop_channel": "Checks or configures the shop channel",
     "command_string_none": "N/A",
     "command_string_yes": "Yes",
     "command_string_no": "No",
