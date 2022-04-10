@@ -79,7 +79,7 @@ def get_str(lang: str, string: str):
     
     except KeyError:
 
-        return f'missing {string} in {lang}'
+        return languages['en'].get_item(item = string)
 
 
 def get_guild_lang(ctx: discord.ApplicationContext):
@@ -248,7 +248,7 @@ class Language:
         if self._loaded == False:
             return False
 
-        return self.data[item]
+        return self.data.get(item, item)
 
     async def load_language_data(self):
 
