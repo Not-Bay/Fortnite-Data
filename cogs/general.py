@@ -279,7 +279,7 @@ class General(commands.Cog):
     async def news(
         self,
         ctx,
-        language = Option(
+        language: Option(
             str,
             description = 'Language for the news',
             required = False,
@@ -422,12 +422,13 @@ class General(commands.Cog):
         display_name: Option(
             str,
             description = 'Account display name',
-            required=True,
+            required = True
         ),
-        account_type = Option(
+        account_type: Option(
             str,
             description = 'Type of account',
-            required = True,
+            required = False,
+            default = 'epic',
             choices = [
                 OptionChoice(name = 'Epic', value = 'epic'),
                 OptionChoice(name = 'PlayStation', value = 'psn'),
@@ -603,7 +604,7 @@ class General(commands.Cog):
     async def search(
         self,
         ctx: discord.ApplicationContext,
-        filename = Option(
+        query: Option(
             str,
             description = 'File name to search',
             required = True
@@ -614,7 +615,7 @@ class General(commands.Cog):
 
         async with aiohttp.ClientSession() as session:
 
-            response = await session.get(f'https://benbot.app/api/v1/files/search?path={filename}')
+            response = await session.get(f'https://benbot.app/api/v1/files/search?path={query}')
 
             if response.status == 200:
 
