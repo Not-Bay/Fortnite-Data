@@ -619,9 +619,11 @@ class General(commands.Cog):
 
                 else:
 
+                    await ctx.defer()
+
                     results = await response.json()
 
-                    embed_description = f'{util.get_str(lang, "command_string_search_results").format(query = filename)}\n'
+                    embed_description = f'{util.get_str(lang, "command_string_search_results").format(query = query)}\n'
 
                     fileNeeded = False
                     
