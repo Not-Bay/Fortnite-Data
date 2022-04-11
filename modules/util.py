@@ -16,7 +16,7 @@ import sys
 
 debug = True if '--debug' in sys.argv else False
 
-version = '4.0.3'
+version = '4.1'
 
 log = logging.getLogger('FortniteData.modules.util')
 
