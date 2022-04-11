@@ -258,9 +258,9 @@ class ShopChannelOptions(discord.ui.Modal):
             ctx = interaction,
             changes = {
                 '$set': {
-                    'shop_channel.config.header': self.children[0].value if self.children[0].value != '' else None,
-                    'shop_channel.config.subheader': self.children[1].value if self.children[1].value != '' else None,
-                    'shop_channel.config.footer': self.children[2].value if self.children[2].value != '' else None
+                    'shop_channel.config.header': self.children[0].value,
+                    'shop_channel.config.subheader': self.children[1].value,
+                    'shop_channel.config.footer': self.children[2].value
                 }
             }
         )
