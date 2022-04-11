@@ -13,6 +13,13 @@ class Events(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
+    async def on_ready(self):
+
+        log.info('Syncing commands...')
+        await self.bot.sync_commands(guild_ids=[962470334504779776])
+        log.info('Synced!')
+
+    @commands.Cog.listener()
     async def on_application_command_error(self, ctx: discord.ApplicationContext, error):
 
         lang = util.get_guild_lang(ctx)
@@ -63,12 +70,14 @@ class Events(commands.Cog):
                 color = util.Colors.RED
             )
 
+            view = discord.ui.View(
+                views.ReportToDeveloper(lang),
+                timeout = 300
+            )
+
             await ctx.respond(
                 embed = embed,
-                view = views.ReportToDeveloper(
-                    lang = lang,
-                    ctx = ctx
-                ),
+                view = view,
                 ephemeral = True
             )
 
