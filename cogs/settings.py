@@ -117,7 +117,7 @@ class Settings(commands.Cog):
 
         options_string = '\n'
         for option in ['header', 'subheader', 'footer']:
-            options_string += f'`{option}` - {util.get_str(lang, "command_string_not_configurated") if server["shop_channel"]["config"][option] == None else server["shop_channel"]["config"][option]}\n'
+            options_string += f'`{option}` - {util.get_str(lang, "command_string_not_configurated") if server["shop_channel"]["config"][option] == "" else server["shop_channel"]["config"][option]}\n'
 
         view = discord.ui.View(
             views.ShopChannelConfigure(lang),

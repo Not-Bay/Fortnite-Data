@@ -155,9 +155,9 @@ def database_store_server(ctx: discord.ApplicationContext):
                 "webhook": None,
                 "webhook_id": None,
                 "config": {
-                    "header": None,
-                    "subheader": None,
-                    "footer": None
+                    "header": '',
+                    "subheader": '',
+                    "footer": ''
                 }
             },
             "updates_channel": {
