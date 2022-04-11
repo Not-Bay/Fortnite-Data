@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
-from discord.ext import commands
 import traceback
 import aiofiles
+import logging
 import asyncio
 import discord
 import pymongo
@@ -18,12 +18,12 @@ debug = True if '--debug' in sys.argv else False
 
 version = '4.0.3'
 
-log = None
+log = logging.getLogger('FortniteData.modules.util')
 
 configuration = None
 database = None
 ready = False
-debug_guilds = None
+debug_guilds = [962470334504779776]
 languages = {}
 fortniteapi = {}
 server_cache = {}

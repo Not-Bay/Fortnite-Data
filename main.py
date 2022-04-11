@@ -21,10 +21,13 @@ else:
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     log.debug('Using uvloop.')
 
-bot = commands.AutoShardedBot(
-    intents=discord.Intents.default()
+util.configuration = util.get_config()
+
+bot = discord.Bot(
+    intents = discord.Intents.default(),
+    auto_sync_commands = False,
+    debug_guilds = util.configuration.get('slash_debug_guilds', None)
 )
-bot.remove_command('help')
 
 @bot.event
 async def on_connect():
@@ -63,15 +66,9 @@ def run():
 
     log.info('Booting...')
 
-    util.log = logging.getLogger('FortniteData.modules.util')
-
-    util.configuration = util.get_config()
     util.database = util.get_mongoclient().fortnitedata
 
     log.debug('Starting discord bot...')
-
-    if len(util.configuration.get('slash_debug_guilds')) != 0:
-        util.debug_guilds = util.configuration.get('slash_debug_guilds')
 
     loop = asyncio.get_event_loop()
 
