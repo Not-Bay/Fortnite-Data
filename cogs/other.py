@@ -32,27 +32,6 @@ class Other(commands.Cog):
         ))
 
     @slash_command(
-        name='ping',
-        description=util.get_str('en', 'command_description_ping'),
-        description_localizations={
-            'es-ES': util.get_str('es', 'command_description_ping'),
-            'ja': util.get_str('ja', 'command_description_ping')
-        },
-        guild_ids=util.debug_guilds
-    )
-    @commands.cooldown(2, 1)
-    async def ping(self, ctx: discord.ApplicationContext):
-
-        lang = util.get_guild_lang(ctx)
-
-        ms = (ctx.message.created_at - ctx.message.created_at).total_seconds() * 1000
-
-        await ctx.respond(embed=discord.Embed(
-            description = util.get_str(lang, 'command_string_pong_ms').format(miliseconds = ms),
-            color = util.Colors.BLUE
-        ))
-
-    @slash_command(
         name='info',
         description=util.get_str('en', 'command_description_info'),
         description_localizations={
