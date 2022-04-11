@@ -110,7 +110,7 @@ class General(commands.Cog):
 
                         search_tags_str = ''
                         for tag in cosmetic['searchTags']:
-                            search_tags_str + f'`{tag}`' + '\n'
+                            search_tags_str += f'`{tag}`\n'
 
                         i.add_field(name=util.get_str(lang, 'command_string_search_tags'), value=search_tags_str, inline=False)
 
