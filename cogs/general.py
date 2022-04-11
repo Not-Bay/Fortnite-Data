@@ -483,8 +483,8 @@ class General(commands.Cog):
         name='code',
         description=util.get_str('en', 'command_description_code'),
         description_localizations={
-            'es-ES': util.get_str('es', 'command_description_news'),
-            'ja': util.get_str('ja', 'command_description_news')
+            'es-ES': util.get_str('es', 'command_description_code'),
+            'ja': util.get_str('ja', 'command_description_code')
         },
         guild_ids=util.debug_guilds
     )
