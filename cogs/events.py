@@ -16,7 +16,7 @@ class Events(commands.Cog):
     async def on_ready(self):
 
         log.info('Syncing commands...')
-        await self.bot.sync_commands(util.configuration.get('slash_debug_guilds', None))
+        await self.bot.sync_commands()
         log.info('Synced!')
 
     @commands.Cog.listener()

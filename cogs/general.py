@@ -24,8 +24,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_item'),
             'ja': util.get_str('ja', 'command_description_item')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(5, 8, commands.BucketType.user)
     async def item(
@@ -137,8 +136,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_playlist'),
             'ja': util.get_str('ja', 'command_description_playlist')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(5, 8, commands.BucketType.user)
     async def playlist(
@@ -246,8 +244,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_shop'),
             'ja': util.get_str('ja', 'command_description_shop')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 9, commands.BucketType.user)
     async def shop(
@@ -272,8 +269,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_news'),
             'ja': util.get_str('ja', 'command_description_news')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def news(
@@ -345,8 +341,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_aes'),
             'ja': util.get_str('ja', 'command_description_aes')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def aes(
@@ -412,8 +407,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_stats'),
             'ja': util.get_str('ja', 'command_description_stats')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 15, commands.BucketType.user)
     async def stats(
@@ -486,8 +480,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_code'),
             'ja': util.get_str('ja', 'command_description_code')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 10, commands.BucketType.user)
     async def code(
@@ -536,8 +529,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_upcoming'),
             'ja': util.get_str('ja', 'command_description_upcoming')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def upcoming(
@@ -597,8 +589,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_search'),
             'ja': util.get_str('ja', 'command_description_search')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def search(
@@ -675,8 +666,7 @@ class General(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_export'),
             'ja': util.get_str('ja', 'command_description_export')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def export(

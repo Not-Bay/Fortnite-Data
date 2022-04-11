@@ -17,8 +17,7 @@ class Other(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_invite'),
             'ja': util.get_str('ja', 'command_description_invite')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(2, 4)
     async def invite(self, ctx: discord.ApplicationContext):
@@ -37,8 +36,7 @@ class Other(commands.Cog):
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_info'),
             'ja': util.get_str('ja', 'command_description_info')
-        },
-        guild_ids=util.debug_guilds
+        }
     )
     @commands.cooldown(3, 5)
     async def info(self, ctx: discord.ApplicationContext):

@@ -11,8 +11,7 @@ class Settings(commands.Cog):
 
     settings = SlashCommandGroup(
         'settings',
-        util.get_str('en', 'command_description_settings'),
-        guild_ids = util.debug_guilds
+        util.get_str('en', 'command_description_settings')
     )
 
     @settings.command(
