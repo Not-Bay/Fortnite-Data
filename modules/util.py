@@ -4,7 +4,6 @@ import traceback
 import aiofiles
 import asyncio
 import discord
-import logging
 import pymongo
 import aiohttp
 import time
@@ -196,6 +195,8 @@ def database_remove_server(ctx: discord.ApplicationContext):
     else:
         guild_id = ctx.guild_id
 
+    server_cache.pop(str(guild_id), None)
+
     log.debug(f'Removing guild "{guild_id}" from database...')
 
     delete = database.guilds.delete_one({'server_id': guild_id})
@@ -203,7 +204,6 @@ def database_remove_server(ctx: discord.ApplicationContext):
     if isinstance(delete, pymongo.results.DeleteResult):
 
         log.debug(f'Guild "{guild_id}" removed successfully.')
-        server_cache.pop(str(guild_id), None)
         return delete
 
     else:
@@ -218,6 +218,8 @@ def database_update_server(ctx: discord.ApplicationContext, changes: dict):
     else:
         guild_id = ctx.guild_id
 
+    server_cache.pop(str(guild_id), None)
+
     log.debug(f'Updating guild "{guild_id}" data. Changes: "{changes}"')
 
     update = database.guilds.update_one({'server_id': guild_id}, changes)
@@ -225,7 +227,6 @@ def database_update_server(ctx: discord.ApplicationContext, changes: dict):
     if isinstance(update, pymongo.results.UpdateResult):
 
         log.debug(f'Updated guild "{guild_id}" data successfully.')
-        server_cache.pop(str(guild_id), None)
         return update
 
     else:
