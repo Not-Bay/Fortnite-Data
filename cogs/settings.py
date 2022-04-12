@@ -118,11 +118,14 @@ class Settings(commands.Cog):
         for option in ['header', 'subheader', 'footer']:
             options_string += f'`{option}` - {util.get_str(lang, "command_string_not_configurated") if server["shop_channel"]["config"][option] == "" else server["shop_channel"]["config"][option]}\n'
 
-        view = discord.ui.View(
-            views.ShopChannelConfigure(lang),
-            views.ShopChannelManage(lang),
-            timeout = 120
-        )
+        if ctx.author.guild_permissions.administrator == True:
+            view = discord.ui.View(
+                views.ShopChannelConfigure(lang),
+                views.ShopChannelManage(lang),
+                timeout = 120
+            )
+        else:
+            view = None
 
         await ctx.respond(
             embed = discord.Embed(
@@ -163,11 +166,14 @@ class Settings(commands.Cog):
         for option in ['shopsections', 'cosmetics', 'playlists', 'news', 'aes']:
             options_string += f'`{util.get_str(lang, f"interaction_string_updates_option_{option}")}` - {util.get_str(lang, "command_string_disabled") if server["updates_channel"]["config"][option] == False else util.get_str(lang, "command_string_configured")}\n'
 
-        view = discord.ui.View(
-            views.UpdatesChannelConfigure(lang),
-            views.UpdatesChannelManage(lang),
-            timeout = 120
-        )
+        if ctx.author.guild_permissions.administrator == True:
+            view = discord.ui.View(
+                views.UpdatesChannelConfigure(lang),
+                views.UpdatesChannelManage(lang),
+                timeout = 120
+            )
+        else:
+            view = None
 
         await ctx.respond(
             embed = discord.Embed(
