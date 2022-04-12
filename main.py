@@ -1,4 +1,3 @@
-from discord_components import DiscordComponents
 from discord.ext import commands
 import coloredlogs
 import traceback
@@ -8,34 +7,31 @@ import asyncio
 import time
 import sys
 
-import util
+from modules import util
 
 log = logging.getLogger('FortniteData')
 coloredlogs.install(level=None if util.debug == False else 'DEBUG')
 
 # Set up uvloop if possible
 try:
-    import uvloop
+    import uvloop # type: ignore
 except:
     log.warning('Using default asyncio event loop.')
 else:
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     log.debug('Using uvloop.')
 
-bot = commands.AutoShardedBot(
-    command_prefix=util.get_prefix,
-    intents=discord.Intents.default()
+util.configuration = util.get_config()
+
+bot = discord.Bot(
+    intents = discord.Intents.default(),
+    auto_sync_commands = False,
+    debug_guilds = util.configuration.get('slash_debug_guilds', None)
 )
-bot.remove_command('help')
 
 @bot.event
 async def on_connect():
     log.debug('Connected to Discord')
-
-@bot.event
-async def on_ready():
-
-    DiscordComponents(bot)
 
     for i in util.configuration.get('languages'):
         lang = util.Language(i)
@@ -47,11 +43,17 @@ async def on_ready():
 
         util.fortniteapi[i] = util.FortniteAPI(i)
 
-    util.ready = True
+    for cog in util.configuration.get('cogs'):
+        try:
+            bot.load_extension(f'cogs.{cog}')
+            log.debug(f'Loaded cog {cog}.')
+        except:
+            log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
 
-    if '--sync-guilds-on-ready' in sys.argv:
-        for guild in bot.guilds:
-            util.database_store_server(guild)
+@bot.event
+async def on_ready():
+
+    util.ready = True
 
     log.info(f'Fortnite Data is ready! • Took {int((time.time() - util.start_time))} seconds.')
 
@@ -64,19 +66,9 @@ def run():
 
     log.info('Booting...')
 
-    util.log = logging.getLogger('FortniteData.util')
-
-    util.configuration = util.get_config()
     util.database = util.get_mongoclient().fortnitedata
 
     log.debug('Starting discord bot...')
-
-    for cog in util.configuration.get('cogs'):
-        try:
-            bot.load_extension(f'cogs.{cog}')
-            log.debug(f'Loaded cog {cog}.')
-        except:
-            log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
 
     loop = asyncio.get_event_loop()
 

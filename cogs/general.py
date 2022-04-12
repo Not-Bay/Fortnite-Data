@@ -1,8 +1,7 @@
-from discord.ext import commands
-from discord_components import *
+from discord.commands import slash_command, Option, OptionChoice
+from discord.ext import commands, pages
 import traceback
 import aiohttp
-import asyncio
 import discord
 import logging
 import time
@@ -10,7 +9,7 @@ import json
 import cgi
 import io
 
-import util
+from modules import util, views
 
 log = logging.getLogger('FortniteData.cogs.general')
 
@@ -19,93 +18,40 @@ class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(usage='help [command]')
-    @commands.cooldown(4, 10, commands.BucketType.user)
-    async def help(self, ctx, command_=None):
-        """
-        Shows the commands of the bot. Shows info about a command if you enter it as argument
-        """
-
-        lang = util.get_guild_lang(ctx)
-
-        if command_ == None:
-
-            prefix = util.get_prefix(self.bot, ctx.message)
-
-            commands_list = ['help', 'item', 'news', 'shop', 'stats', 'aes', 'upcoming', 'code', 'search', 'export', 'invite', 'ping', 'info', 'settings']
-
-            general_cmds_str = ''
-            for command in commands_list:
-                try:
-                    cmd = self.bot.get_command(command)
-                    general_cmds_str += f'`{prefix}{cmd.usage}`' + '\n'
-                except:
-                    continue
-
-            embed = discord.Embed(
-                title = util.get_str(lang, 'command_string_help'),
-                description = util.get_str(lang, 'command_string_to_see_more_info_about_a_command').format(prefix = ctx.prefix),
-                color = util.Colors.BLURPLE
-            )
-            embed.add_field(name=util.get_str(lang, 'command_string_commands'), value=general_cmds_str, inline=False)
-
-            embed.set_footer(text=util.get_str(lang, 'command_string_footer_credits').format(version = util.version))
-            embed.set_thumbnail(url='https://images-ext-2.discordapp.net/external/BZlqfymUFg4jvrOetFhqr6u6YbaptHhYkPCR7yZUb10/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.webp')
-
-            components = [
-                Button(style=ButtonStyle.URL, label=util.get_str(lang, 'command_button_support_server'), url='https://discord.gg/UU9HjA5')
-            ]
-
-            await ctx.send(embed=embed, components=components)
-            return
-        
-        else:
-
-            cmd = self.bot.get_command(command_)
-
-            if cmd == None:
-
-                await ctx.send(embed=discord.Embed(
-                    description = util.get_str(lang, 'command_string_command_not_found'),
-                    color = util.Colors.RED
-                ))
-                return
-
-            else:
-
-                prefix = util.get_prefix(self.bot, ctx.message)
-
-                aliases_str = ''
-                for alias in cmd.aliases:
-                    aliases_str += f'`{alias}` '
-
-                if aliases_str == '':
-                    aliases_str = util.get_str(lang, 'command_string_no_alias_found')
-
-                embed = discord.Embed(
-                    title = util.get_str(lang, 'command_string_help'),
-                    description = util.get_str(lang, 'command_string_command').format(prefix = ctx.prefix, command = cmd.name),
-                    color = util.Colors.BLURPLE
-                )
-                embed.add_field(name=util.get_str(lang, 'command_string_description'), value=f'`{cmd.help}`', inline=False)
-                embed.add_field(name=util.get_str(lang, 'command_string_usage'), value=f'`{prefix}{cmd.usage}`', inline=False)
-                embed.add_field(name=util.get_str(lang, 'command_string_aliases'), value=aliases_str, inline=False)
-
-                embed.set_thumbnail(url='https://images-ext-2.discordapp.net/external/BZlqfymUFg4jvrOetFhqr6u6YbaptHhYkPCR7yZUb10/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/729409703360069722/f1fcb3da5b075da0c6e5283bcb8b3fba.webp')
-
-                await ctx.send(embed=embed)
-
-    
-    @commands.command(usage='item <name or ID>', aliases=['cosmetic'])
+    @slash_command(
+        name='item',
+        description=util.get_str('en', 'command_description_item'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_item'),
+            'ja': util.get_str('ja', 'command_description_item')
+        }
+    )
     @commands.cooldown(5, 8, commands.BucketType.user)
-    async def item(self, ctx, *, name_or_id = None):
-        """Search for cosmetics by their name or ID. Special arguments available."""
+    async def item(
+        self,
+        ctx: discord.ApplicationContext,
+        query: Option(
+            str,
+            description = 'Name or ID of the cosmetic',
+            required = True
+        ),
+        match_method: Option(
+            str,
+            description = 'Match method to use',
+            required = False,
+            default = 'contains',
+            choices = [
+                OptionChoice(name='Starts', value='starts'),
+                OptionChoice(name='Contains', value='contains')
+            ]
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
 
-        if name_or_id == None:
+        if query == None:
 
-            await ctx.send(embed=discord.Embed(
+            await ctx.respond(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_item_missing_parameters').format(prefix = ctx.prefix),
                 color = util.Colors.BLUE
             ))
@@ -115,77 +61,18 @@ class General(commands.Cog):
 
             if util.fortniteapi[lang]._loaded_cosmetics == False:
 
-                await ctx.send(embed=discord.Embed(
+                await ctx.respond(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_cosmetics_data_loading'),
                     color = util.Colors.ORANGE
                 ))
                 return
 
-            special_args = [  # this acts like a filter. For example if you type "f!item ren --outfit"
-                '--outfit',   # will return only outfits with "re"
-                '--emote',
-                '--backpack',
-                '--pickaxe',
-                '--wrap',
-                '--loadingscreen',
-                '--spray',
-                '--glider',
-                '--banner',
-                '--contains',
-                '--starts'
-            ]
+            log.debug(f'Searching cosmetics with args: "{query}"')
 
-            cosmetic_types = []
-            match_method = None
-            splitted_name_or_id = name_or_id.split()
-
-            log.debug(f'Checking for special args in "{name_or_id}"')
-
-            if len(splitted_name_or_id) != 1:
-
-                for i in splitted_name_or_id:
-
-                    if i.lower() in special_args:
-
-                        if i.lower() in ['--contains', '--starts']:
-                            match_method = str(i.replace('--', ''))
-
-                        else:
-                            cosmetic_types.append(str(i.replace('--', '')))
-
-                        name_or_id = name_or_id.replace(f' {i}', '')
-
-                        log.debug(f'Detected special arg: "{i}"')
-
-                    else:
-
-                        continue
-
-
-            if cosmetic_types == []:
-
-                log.debug(f'Searching with args: "{name_or_id}"')
-
-                if match_method == None:
-                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id)
-                
-                else:
-
-                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, match_method = match_method)
-
-            
-            else:
-
-                log.debug(f'Searching {cosmetic_types} with args: "{name_or_id}"')
-
-                if match_method == None:
-                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_types = cosmetic_types)
-                
-                else:
-                    results = await util.fortniteapi[lang].get_cosmetic(query = name_or_id, cosmetic_types = cosmetic_types, match_method = match_method)
+            results = await util.fortniteapi[lang].get_cosmetic(query = query, match_method = match_method)
 
             if results == False:
-                await ctx.send(embed=discord.Embed(
+                await ctx.respond(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_cosmetics_data_loading'),
                     color = util.Colors.ORANGE
                 ))
@@ -194,7 +81,7 @@ class General(commands.Cog):
 
             if len(results) == 0:
 
-                await ctx.send(embed=discord.Embed(
+                await ctx.respond(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_no_cosmetics_found'),
                     color = util.Colors.RED
                 ))
@@ -202,9 +89,7 @@ class General(commands.Cog):
 
             else:
 
-                current_page = 0
-
-                pages = []
+                items = []
                 count = 0
 
                 for cosmetic in results:
@@ -225,7 +110,7 @@ class General(commands.Cog):
 
                         search_tags_str = ''
                         for tag in cosmetic['searchTags']:
-                            search_tags_str + f'`{tag}`' + '\n'
+                            search_tags_str += f'`{tag}`\n'
 
                         i.add_field(name=util.get_str(lang, 'command_string_search_tags'), value=search_tags_str, inline=False)
 
@@ -237,75 +122,48 @@ class General(commands.Cog):
 
                     i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(results)))
 
-                    pages.append(i)
-
-
-                components = []
-
-                if len(results) > 1:
-                    components = [[
-                        Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
-                        Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
-                    ]]
-
-                msg = await ctx.send(
-                    embed = pages[current_page],
-                    components = components
+                    items.append(i)
+    
+                paginator = pages.Paginator(
+                    pages = items
                 )
+                await paginator.respond(interaction = ctx.interaction)
 
-                def check(interaction):
-                    return interaction.author == ctx.author and interaction.message == msg
 
-                while True:
-
-                    try:
-
-                        interaction = await self.bot.wait_for('button_click', check=check, timeout=300)
-
-                        if interaction.custom_id == 'PAGE_NEXT':
-                            current_page += 1
-
-                        elif interaction.custom_id == 'PAGE_BACK':
-                            current_page -= 1
-
-                        elif interaction.custom_id == 'PAGE_TO_FIRST':
-                            current_page = 0
-
-                        elif interaction.custom_id == 'PAGE_TO_FINAL':
-                            current_page = len(pages) - 1
-
-                        await interaction.respond(
-                            type = 7,
-                            embed = pages[current_page],
-                            components = [[
-                                Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
-                                Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
-                            ]]
-                        )
-                        continue
-
-                    except asyncio.TimeoutError:
-
-                        await msg.edit(
-                            embed = pages[current_page],
-                            components = []
-                        )
-                        return
-
-    @commands.command(usage='playlist <name or ID>')
+    @slash_command(
+        name='playlist',
+        description=util.get_str('en', 'command_description_playlist'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_playlist'),
+            'ja': util.get_str('ja', 'command_description_playlist')
+        }
+    )
     @commands.cooldown(5, 8, commands.BucketType.user)
-    async def playlist(self, ctx, *, name_or_id = None):
-        """Search for playlist by their name or ID."""
+    async def playlist(
+        self,
+        ctx: discord.ApplicationContext,
+        query: Option(
+            str,
+            description = 'Name or ID of the playlist',
+            required = True
+        ),
+        match_method: Option(
+            str,
+            description = 'Match method to use',
+            required = False,
+            default = 'contains',
+            choices = [
+                OptionChoice(name='Starts', value='starts'),
+                OptionChoice(name='Contains', value='contains')
+            ]
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
 
         if util.fortniteapi[lang]._loaded_playlists == 0:
 
-            await ctx.send(embed=discord.Embed(
+            await ctx.respond(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_playlists_data_loading'),
                 color = util.Colors.ORANGE
             ))
@@ -313,9 +171,9 @@ class General(commands.Cog):
 
         else:
 
-            if name_or_id == None:
+            if query == None:
 
-                await ctx.send(embed=discord.Embed(
+                await ctx.respond(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_playlist_missing_parameters').format(prefix = ctx.prefix),
                     color = util.Colors.BLUE
                 ))
@@ -323,39 +181,11 @@ class General(commands.Cog):
 
             else:
 
-                special_args = [ # just for match method
-                    '--contains',
-                    '--starts'
-                ]
-
-                match_method = 'starts'
-                splitted_name_or_id = name_or_id.split()
-
-                log.debug(f'Checking for special args in "{name_or_id}"')
-
-                if len(splitted_name_or_id) != 1:
-
-                    for i in splitted_name_or_id:
-
-                        if i.lower() in special_args:
-
-                            match_method = str(i.replace('--', ''))
-
-                            name_or_id = name_or_id.replace(f' {i}', '')
-
-                            log.debug(f'Detected special arg: "{i}"')
-
-                            break
-
-                        else:
-
-                            continue
-
-                results = await util.fortniteapi[lang].get_playlist(query = name_or_id, match_method = match_method)
+                results = await util.fortniteapi[lang].get_playlist(query = query, match_method = match_method)
 
                 if len(results) == 0:
 
-                    await ctx.send(embed=discord.Embed(
+                    await ctx.respond(embed=discord.Embed(
                         description = util.get_str(lang, 'command_string_no_playlists_found'),
                         color = util.Colors.RED
                     ))
@@ -363,9 +193,7 @@ class General(commands.Cog):
 
                 else:
 
-                    current_page = 0
-
-                    pages = []
+                    items = []
                     count = 0
 
                     for playlist in results:
@@ -402,74 +230,30 @@ class General(commands.Cog):
 
                         i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(results)))
 
-                        pages.append(i)
+                        items.append(i)
 
-
-                    components = []
-
-                    if len(results) > 1:
-                        components = [[
-                            Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
-                            Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
-                        ]]
-
-                    msg = await ctx.send(
-                        embed = pages[current_page],
-                        components = components
+                    paginator = pages.Paginator(
+                        pages = items
                     )
-
-                    def check(interaction):
-                        return interaction.author == ctx.author and interaction.message == msg
-
-                    while True:
-
-                        try:
-
-                            interaction = await self.bot.wait_for('button_click', check=check, timeout=300)
-
-                            if interaction.custom_id == 'PAGE_NEXT':
-                                current_page += 1
-
-                            elif interaction.custom_id == 'PAGE_BACK':
-                                current_page -= 1
-
-                            elif interaction.custom_id == 'PAGE_TO_FIRST':
-                                current_page = 0
-
-                            elif interaction.custom_id == 'PAGE_TO_FINAL':
-                                current_page = len(pages) - 1
-
-                            await interaction.respond(
-                                type = 7,
-                                embed = pages[current_page],
-                                components = [[
-                                    Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
-                                    Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
-                                ]]
-                            )
-                            continue
-
-                        except asyncio.TimeoutError:
-
-                            await msg.edit(
-                                embed = pages[current_page],
-                                components = []
-                            )
-                            return
+                    await paginator.respond(interaction = ctx.interaction)
 
 
-    @commands.command(usage='shop [language]', aliases=['itemshop'])
+    @slash_command(
+        name='shop',
+        description=util.get_str('en', 'command_description_shop'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_shop'),
+            'ja': util.get_str('ja', 'command_description_shop')
+        }
+    )
     @commands.cooldown(3, 9, commands.BucketType.user)
-    async def shop(self, ctx, language = 'en'):
-        """Shows the latest fortnite item shop image."""
+    async def shop(
+        self,
+        ctx
+    ):
 
         lang = util.get_guild_lang(ctx)
-
-        url = util.get_custom_shop_url(util.database_get_server(ctx.guild))
+        url = util.get_custom_shop_url(util.database_get_server(ctx))
 
         embed = discord.Embed(
             title = util.get_str(lang, 'command_string_current_item_shop'),
@@ -477,21 +261,36 @@ class General(commands.Cog):
         )
         embed.set_image(url = url)
 
-        await ctx.send(embed = embed)
+        await ctx.respond(embed = embed)
 
-    @commands.command(usage='news [language]')
+    @slash_command(
+        name='news',
+        description=util.get_str('en', 'command_description_news'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_news'),
+            'ja': util.get_str('ja', 'command_description_news')
+        }
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
-    async def news(self, ctx, language = None):
-        """Shows an interactive message with all the game news (Battle Royale, Creative and Save The World)"""
+    async def news(
+        self,
+        ctx,
+        language: Option(
+            str,
+            description = 'Language for the news',
+            required = False,
+            default = 'none'
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
-        data_lang = language if language != None else lang
+        data_lang = language if language != 'none' else lang
 
         data = await util.fortniteapi[lang].get_news(language = data_lang)
 
         if data == False:
 
-            await ctx.send(embed=discord.Embed(
+            await ctx.respond(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_error_fetching_news'),
                 color = util.Colors.BLUE
             ))
@@ -499,9 +298,7 @@ class General(commands.Cog):
         
         else:
 
-            br_motds = []
-            cr_motds = []
-            stw_motds = []
+            items = []
 
             count = 0
             if data['data']['br'] != None:
@@ -509,29 +306,14 @@ class General(commands.Cog):
                     count += 1
 
                     embed = discord.Embed(
-                        title = motd['tabTitle'],
-                        description = f'**{motd["title"]}**\n{motd["body"]}',
-                        color = util.Colors.BLUE
-                    )
-                    embed.set_footer(text=f'Page {count} of {len(data["data"]["br"]["motds"])}')
-                    embed.set_image(url=motd['image'])
-                    
-                    br_motds.append(embed)
-
-            count = 0
-            if data['data']['creative'] != None:
-                for motd in data['data']['creative']['motds']:
-                    count += 1
-
-                    embed = discord.Embed(
-                        title = motd['tabTitle'],
+                        title = util.get_str(data_lang, 'command_button_battle_royale'),
                         description = f'**{motd["title"]}**\n{motd["body"]}',
                         color = util.Colors.BLUE
                     )
                     embed.set_image(url=motd['image'])
-                    embed.set_footer(text=f'Page {count} of {len(data["data"]["creative"]["motds"])}')
+                    embed.set_footer(text=util.get_str(data_lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['br']['motds'])))
                     
-                    cr_motds.append(embed)
+                    items.append(embed)
 
             count = 0
             if data['data']['stw'] != None:
@@ -539,336 +321,221 @@ class General(commands.Cog):
                     count += 1
 
                     embed = discord.Embed(
-                        title = message['adspace'],
+                        title = util.get_str(data_lang, 'command_button_save_the_world'),
                         description = f'**{message["title"]}**\n{message["body"]}',
                         color = util.Colors.BLUE
                     )
                     embed.set_image(url=message['image'])
-                    embed.set_footer(text=f'Page {count} of {len(data["data"]["stw"]["messages"])}')
+                    embed.set_footer(text=util.get_str(data_lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['stw']['messages'])))
                     
-                    stw_motds.append(embed)
+                    items.append(embed)
 
-
-            books = [br_motds, cr_motds, stw_motds]
-            current_book = 0
-            current_page = 0
-
-            msg = await ctx.send(
-                embed = books[current_book][current_page],
-                components = [
-                    [
-                        Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                       #Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
-                        Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
-                    ],
-                    [
-                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                        Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(books[current_book]) else False)
-                    ]
-                ]
+            paginator = pages.Paginator(
+                pages = items
             )
+            await paginator.respond(interaction = ctx.interaction)
 
-            def check(interaction):
-                    return interaction.author == ctx.author and interaction.message == msg
-
-            while True:
-
-                try:
-
-                    interaction = await self.bot.wait_for('button_click', check=check, timeout=180)
-
-                    if interaction.custom_id == 'PAGE_NEXT':
-                        current_page += 1
-
-                    elif interaction.custom_id == 'PAGE_BACK':
-                        current_page -= 1
-
-                    elif interaction.custom_id == 'SHOW_BR_BOOK':
-                        current_book = 0
-                        current_page = 0
-
-                    elif interaction.custom_id == 'SHOW_CR_BOOK':
-                        current_book = 1
-                        current_page = 0
-
-                    elif interaction.custom_id == 'SHOW_STW_BOOK':
-                        current_book = 2
-                        current_page = 0
-
-                    components = [
-                        [
-                            Button(style=ButtonStyle.green if current_book == 0 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_battle_royale'), custom_id='SHOW_BR_BOOK', disabled=True if current_book == 0 else False),
-                            #Button(style=ButtonStyle.green if current_book == 1 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_creative'), custom_id='SHOW_CR_BOOK', disabled=True if current_book == 1 else False),
-                            Button(style=ButtonStyle.green if current_book == 2 else ButtonStyle.gray, label=util.get_str(lang, 'command_button_save_the_world'), custom_id='SHOW_STW_BOOK', disabled=True if current_book == 2 else False)
-                        ],
-                        [
-                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(books[current_book]) else False)
-                        ]
-                    ]
-
-                    await interaction.respond(
-                        type = 7,
-                        embed = books[current_book][current_page],
-                        components = components
-                    )
-                    continue
-
-                except asyncio.TimeoutError:
-
-                    await msg.edit(
-                        embed = books[current_book][current_page],
-                        components = []
-                    )
-                    return
-
-    @commands.command(usage='aes [base64 / hex]')
+    @slash_command(
+        name='aes',
+        description=util.get_str('en', 'command_description_aes'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_aes'),
+            'ja': util.get_str('ja', 'command_description_aes')
+        }
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
-    async def aes(self, ctx, keyformat = 'hex'):
-        """Shows the current AES keys to decrypt game files"""
+    async def aes(
+        self,
+        ctx,
+        keyformat: Option(
+            str,
+            description = 'Keys format',
+            required = False,
+            default = 'hex',
+            choices = [
+                OptionChoice(name='Hex', value='hex'),
+                OptionChoice(name='Base64', value='base64')
+            ]
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
 
-        if keyformat.lower() not in ['base64', 'hex']:
+        data = await util.fortniteapi[lang].get_aes(keyformat=keyformat)
 
-            await ctx.send(embed=discord.Embed(
-                description = util.get_str(lang, 'command_string_key_format_example').format(prefix = ctx.prefix),
+        if data == False:
+
+            await ctx.respond(embed=discord.Embed(
+                description = util.get_str(lang, 'command_string_unavailable_aes'),
                 color = util.Colors.RED
             ))
             return
 
-        else:
-
-            data = await util.fortniteapi[lang].get_aes(keyformat=keyformat)
-
-            if data == False:
-
-                await ctx.send(embed=discord.Embed(
-                    description = util.get_str(lang, 'command_string_unavailable_aes'),
-                    color = util.Colors.RED
-                ))
-                return
-
-            embed = discord.Embed(
-                title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
-                description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
-                color = util.Colors.BLUE
-            )
-
-            pages = []
-            current_page = 0
-
-            count = 0
-            for key in data['data']['dynamicKeys']:
-                count += 1
-
-                if count == 5:
-                    embed.set_footer(text=f'Page {len(pages) + 1}')
-                    pages.append(embed)
-
-                    embed = discord.Embed(
-                        title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
-                        description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
-                        color = util.Colors.BLUE
-                    )
-                    count = 0
-
-                embed.add_field(name=key['pakFilename'], value=f'GUID: {key["pakGuid"]}\n{util.get_str(lang, "command_string_key")}: {key["key"]}', inline=False)
-
-            if len(pages) == 1:
-
-                await ctx.send(
-                    embed = pages[0]
-                )
-                return
-
-            else:
-
-                components = [[
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False)
-                ]]
-
-                msg = await ctx.send(
-                    embed = pages[current_page],
-                    components = components
-                )
-
-                def check(interaction):
-                    return interaction.author == ctx.author and interaction.message == msg
-
-                while True:
-
-                    try:
-
-                        interaction = await self.bot.wait_for('button_click', check=check, timeout=180)
-
-                        if interaction.custom_id == 'PAGE_NEXT':
-                            current_page += 1
-
-                        elif interaction.custom_id == 'PAGE_BACK':
-                            current_page -= 1
-
-                        await interaction.respond(
-                            type = 7,
-                            embed = pages[current_page],
-                            components = [[
-                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                                Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False)
-                            ]]
-                        )
-                        continue
-
-                    except asyncio.TimeoutError:
-
-                        await msg.edit(
-                            embed = pages[current_page],
-                            components = []
-                        )
-                        return
-    
-    @commands.command(usage='stats <account name>')
-    @commands.cooldown(3, 15, commands.BucketType.user)
-    async def stats(self, ctx, *, account_name = None):
-        """Search for player stats. Search can be made for Epic, PSN and XBOX accounts"""
-
-        lang = util.get_guild_lang(ctx)
-
-        if account_name == None:
-            await ctx.send(embed=discord.Embed(
-                description = util.get_str(lang, 'command_string_stats_missing_parameters').format(prefix = ctx.prefix),
-                color = util.Colors.BLUE
-            ))
-            return
-
-        components = [[
-            Button(style=ButtonStyle.grey, label='Epic', custom_id='SEARCH_TYPE_EPIC'),
-            Button(style=ButtonStyle.blue, label='PlayStation', custom_id='SEARCH_TYPE_PSN'),
-            Button(style=ButtonStyle.green, label='Xbox', custom_id='SEARCH_TYPE_XBOX')
-        ]]
-
-        msg = await ctx.send(
-            embed=discord.Embed(
-                description = util.get_str(lang, 'command_string_select_account_type'),
-                color = util.Colors.BLUE
-            ),
-            components=components
+        embed = discord.Embed(
+            title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
+            description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
+            color = util.Colors.BLUE
         )
 
-        def check(interaction):
-            return interaction.author == ctx.author and interaction.message == msg
+        items = []
 
-        try:
+        count = 0
+        for key in data['data']['dynamicKeys']:
+            count += 1
 
-            interaction = await self.bot.wait_for('button_click', check=check, timeout=180)
-
-            if interaction.custom_id == 'SEARCH_TYPE_EPIC':
-                data = await util.fortniteapi[lang].get_stats(account_name=account_name, account_type='epic')
-            
-            elif interaction.custom_id == 'SEARCH_TYPE_PSN':
-                data = await util.fortniteapi[lang].get_stats(account_name=account_name, account_type='psn')
-
-            elif interaction.custom_id == 'SEARCH_TYPE_XBOX':
-                data = await util.fortniteapi[lang].get_stats(account_name=account_name, account_type='xbl')
-
-            
-            if data['status'] == 404:
+            if count == 5:
+                embed.set_footer(text=f'Page {len(items) + 1}')
+                items.append(embed)
 
                 embed = discord.Embed(
-                    description = util.get_str(lang, 'command_string_no_stats_or_not_exists'),
-                    color = util.Colors.RED
-                )
-                await interaction.respond(
-                    type = 7,
-                    embed = embed,
-                    components = []
-                )
-                return
-
-            elif data['status'] == 403:
-
-                embed = discord.Embed(
-                    description = util.get_str(lang, 'command_string_stats_are_private'),
-                    color = util.Colors.RED
-                )
-                await interaction.respond(
-                    type = 7,
-                    embed = embed,
-                    components = []
-                )
-                return
-
-            elif data['status'] == 200:
-
-                embed = discord.Embed(
-                    title = util.get_str(lang, 'command_string_stats_of_name').format(name = data['data']['account']['name']),
+                    title = util.get_str(lang, 'command_string_aes_for_build').format(build = data['data']['build']), 
+                    description = util.get_str(lang, 'command_string_main_key').format(key = data['data']['mainKey']),
                     color = util.Colors.BLUE
                 )
-                embed.set_image(url=f'{data["data"]["image"]}?cache={time.time()}')
-                embed.set_footer(text=util.get_str(lang, 'command_string_stats_footer').format(level = data['data']['battlePass']['level'], accountId = data['data']['account']['id']))
+                count = 0
 
-                await interaction.respond(
-                    type = 7,
-                    embed = embed,
-                    components = []
-                )
+            embed.add_field(name=key['pakFilename'], value=f'GUID: {key["pakGuid"]}\n{util.get_str(lang, "command_string_key")}: {key["key"]}', inline=False)
 
-
-        except asyncio.TimeoutError:
-
-            await msg.edit(embed=discord.Embed(
-                description = util.get_str(lang, 'command_string_search_canceled_by_timeout'),
-                color = util.Colors.RED
-            ), components=[])
-
-
-    @commands.command(usage='code <creator code>', aliases=['creatorcode', 'cc'])
-    @commands.cooldown(3, 10, commands.BucketType.user)
-    async def code(self, ctx, *, creator_code = None):
-        """Shows info about a creator code"""
+        paginator = pages.Paginator(
+            pages = items
+        )
+        await paginator.respond(interaction = ctx.interaction)
+    
+    @slash_command(
+        name='stats',
+        description=util.get_str('en', 'command_description_stats'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_stats'),
+            'ja': util.get_str('ja', 'command_description_stats')
+        }
+    )
+    @commands.cooldown(3, 15, commands.BucketType.user)
+    async def stats(
+        self,
+        ctx: discord.ApplicationContext,
+        display_name: Option(
+            str,
+            description = 'Account display name',
+            required = True
+        ),
+        account_type: Option(
+            str,
+            description = 'Type of account',
+            required = False,
+            default = 'epic',
+            choices = [
+                OptionChoice(name = 'Epic', value = 'epic'),
+                OptionChoice(name = 'PlayStation', value = 'psn'),
+                OptionChoice(name = 'Xbox', value = 'xbl')
+            ]
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
 
-        if creator_code == None:
+        data = await util.fortniteapi[lang].get_stats(
+            account_name = display_name,
+            account_type = account_type
+        )
+        
+        if data['status'] == 404:
 
-            await ctx.send(embed=discord.Embed(
-                description = util.get_str(lang, 'command_string_code_missing_parameters').format(prefix = ctx.prefix),
+            embed = discord.Embed(
+                description = util.get_str(lang, 'command_string_no_stats_or_not_exists'),
+                color = util.Colors.RED
+            )
+            await ctx.respond(
+                embed = embed
+            )
+            return
+
+        elif data['status'] == 403:
+
+            embed = discord.Embed(
+                description = util.get_str(lang, 'command_string_stats_are_private'),
+                color = util.Colors.RED
+            )
+            await ctx.respond(
+                embed = embed
+            )
+            return
+
+        else:
+
+            embed = discord.Embed(
+                title = util.get_str(lang, 'command_string_stats_of_name').format(name = data['data']['account']['name']),
+                color = util.Colors.BLUE
+            )
+            embed.set_image(url=f'{data["data"]["image"]}?cache={time.time()}') # discord cache goes brrrrrrr
+            embed.set_footer(text=util.get_str(lang, 'command_string_stats_footer').format(level = data['data']['battlePass']['level'], accountId = data['data']['account']['id']))
+
+            await ctx.respond(
+                embed = embed
+            )
+
+
+    @slash_command(
+        name='code',
+        description=util.get_str('en', 'command_description_code'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_code'),
+            'ja': util.get_str('ja', 'command_description_code')
+        }
+    )
+    @commands.cooldown(3, 10, commands.BucketType.user)
+    async def code(
+        self,
+        ctx: discord.ApplicationContext,
+        code: Option(
+            str,
+            description = 'Creator code to check',
+            required = True
+        )
+    ):
+
+        lang = util.get_guild_lang(ctx)
+
+        data = await util.fortniteapi[lang].get_cc(code = code)
+
+        if data == False:
+
+            await ctx.respond(embed=discord.Embed(
+                description = util.get_str(lang, 'command_string_no_code_found'),
                 color = util.Colors.RED
             ))
             return
 
         else:
 
-            data = await util.fortniteapi[lang].get_cc(code=creator_code)
+            embed = discord.Embed(
+                title = util.get_str(lang, 'command_string_creator_code_search'),
+                color = util.Colors.BLUE
+            )
 
-            if data == False:
+            embed.add_field(name=util.get_str(lang, 'command_string_code'), value=f'`{data["data"]["code"]}`')
+            embed.add_field(name=util.get_str(lang, 'command_string_account'), value=f'`{data["data"]["account"]["name"]}`')
+            embed.add_field(name=util.get_str(lang, 'command_string_status'), value=f'`{data["data"]["status"]}`')
 
-                await ctx.send(embed=discord.Embed(
-                    description = util.get_str(lang, 'command_string_no_code_found'),
-                    color = util.Colors.RED
-                ))
-                return
+            embed.set_footer(text=util.get_str(lang, 'command_string_account_id').format(id = data['data']['account']['id']))
 
-            else:
+            await ctx.respond(
+                embed = embed
+            )
 
-                embed = discord.Embed(
-                    title = util.get_str(lang, 'command_string_creator_code_search'),
-                    color = util.Colors.BLUE
-                )
 
-                embed.add_field(name=util.get_str(lang, 'command_string_code'), value=f'`{data["data"]["code"]}`')
-                embed.add_field(name=util.get_str(lang, 'command_string_account'), value=f'`{data["data"]["account"]["name"]}`')
-                embed.add_field(name=util.get_str(lang, 'command_string_status'), value=f'`{data["data"]["status"]}`')
-
-                embed.set_footer(text=util.get_str(lang, 'command_string_account_id').format(id = data['data']['account']['id']))
-
-                await ctx.send(embed=embed)
-                
-
-    @commands.command(usage='upcoming', aliases=['leaked'])
+    @slash_command(
+        name='upcoming',
+        description=util.get_str('en', 'command_description_upcoming'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_upcoming'),
+            'ja': util.get_str('ja', 'command_description_upcoming')
+        }
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
-    async def upcoming(self, ctx):
-        """Shows an interactive message with all the new/upcoming cosmetics"""
+    async def upcoming(
+        self,
+        ctx: discord.ApplicationContext
+    ):
 
         lang = util.get_guild_lang(ctx)
 
@@ -876,7 +543,7 @@ class General(commands.Cog):
 
         if data == False:
 
-            await ctx.send(embed=discord.Embed(
+            await ctx.respond(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_upcoming_cosmetics_fetch_error'),
                 color = util.Colors.RED
             ))
@@ -884,8 +551,7 @@ class General(commands.Cog):
 
         else:
 
-            pages = []
-            current_page = 0
+            items = []
 
             count = 0
 
@@ -909,152 +575,116 @@ class General(commands.Cog):
 
                 i.set_footer(text=util.get_str(lang, 'command_string_result_int_of_int').format(count = count, results = len(data['data']['items'])))
 
-                pages.append(i)
+                items.append(i)
 
-
-            components = []
-
-            if len(pages) > 1:
-                components = [[
-                    Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                    Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
-                    Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
-                ]]
-
-            msg = await ctx.send(
-                embed = pages[current_page],
-                components = components
+            paginator = pages.Paginator(
+                pages = items
             )
+            await paginator.respond(interaction = ctx.interaction)
 
-            def check(interaction):
-                return interaction.author == ctx.author and interaction.message == msg
 
-            while True:
-
-                try:
-
-                    interaction = await self.bot.wait_for('button_click', check=check, timeout=180)
-
-                    if interaction.custom_id == 'PAGE_NEXT':
-                        current_page += 1
-
-                    elif interaction.custom_id == 'PAGE_BACK':
-                        current_page -= 1
-
-                    elif interaction.custom_id == 'PAGE_TO_FIRST':
-                        current_page = 0
-
-                    elif interaction.custom_id == 'PAGE_TO_FINAL':
-                        current_page = len(pages) - 1
-
-                    await interaction.respond(
-                        type = 7,
-                        embed = pages[current_page],
-                        components = [[
-                            Button(style=ButtonStyle.blue, label='<<', custom_id='PAGE_TO_FIRST', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_back'), custom_id='PAGE_BACK', disabled=True if current_page < 1 else False),
-                            Button(style=ButtonStyle.blue, label=util.get_str(lang, 'command_button_next'), custom_id='PAGE_NEXT', disabled=True if current_page + 1 == len(pages) else False),
-                            Button(style=ButtonStyle.blue, label='>>', custom_id='PAGE_TO_FINAL', disabled=True if current_page + 1 == len(pages) else False)
-                        ]]
-                    )
-                    continue
-
-                except asyncio.TimeoutError:
-
-                    await msg.edit(
-                        embed = pages[current_page],
-                        components = []
-                    )
-                    return
-
-    @commands.command(usage='search <query>')
+    @slash_command(
+        name='files-search',
+        description=util.get_str('en', 'command_description_search'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_search'),
+            'ja': util.get_str('ja', 'command_description_search')
+        }
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
-    async def search(self, ctx, query = None):
-        """
-        Searches for .uasset files using the BenBot API
-        """
+    async def search(
+        self,
+        ctx: discord.ApplicationContext,
+        query: Option(
+            str,
+            description = 'File name to search',
+            required = True
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
 
-        if query == None:
-            await ctx.send(embed=discord.Embed(
-                description = util.get_str(lang, 'command_string_search_missing_parameters').format(prefix = ctx.prefix),
-                color = util.Colors.BLUE
-            ))
-            return
+        async with aiohttp.ClientSession() as session:
 
-        else:
+            response = await session.get(f'https://benbot.app/api/v1/files/search?path={query}')
 
-            async with aiohttp.ClientSession() as session:
+            if response.status == 200:
 
-                response = await session.get(f'https://benbot.app/api/v1/files/search?path={query}')
+                if len(await response.text()) == 2: # empty list
+                    await ctx.respond(embed=discord.Embed(
+                        description = util.get_str(lang, 'command_string_search_nothing_found'),
+                        color = util.Colors.RED
+                    ))
+                    return
 
-                if response.status == 200:
+                else:
 
-                    if len(await response.text()) == 2: # empty list
-                        await ctx.send(embed=discord.Embed(
-                            description = util.get_str(lang, 'command_string_search_nothing_found'),
-                            color = util.Colors.RED
-                        ))
+                    await ctx.defer()
+
+                    results = await response.json()
+
+                    embed_description = f'{util.get_str(lang, "command_string_search_results").format(query = query)}\n'
+
+                    fileNeeded = False
+                    
+                    for i in results:
+                        embed_description += f'`{i}`\n'
+
+                        if len(embed_description) > 2048:
+                            fileNeeded = True
+                            break
+                    
+                    if fileNeeded:
+
+                        file = discord.File(
+                            io.StringIO(json.dumps(results, indent=2, ensure_ascii=False)),
+                            filename = 'results.json'
+                        )
+                        await ctx.respond(file = file)
                         return
 
                     else:
 
-                        results = await response.json()
+                        embed = discord.Embed(
+                            title = util.get_str(lang, 'command_string_file_search'),
+                            description = embed_description,
+                            color = util.Colors.BLUE
+                        )
+                        await ctx.respond(embed = embed)
+                        return
 
-                        embed_description = f'{util.get_str(lang, "command_string_search_results").format(query = query)}\n'
+            else:
 
-                        fileNeeded = False
-                        
-                        for i in results:
-                            embed_description += f'`{i}`\n'
-
-                            if len(embed_description) > 2048:
-                                fileNeeded = True
-                                break
-                        
-                        if fileNeeded:
-
-                            file = discord.File(
-                                io.StringIO(json.dumps(results, indent=2, ensure_ascii=False)),
-                                filename = 'results.json'
-                            )
-                            await ctx.send(file = file)
-                            return
-
-                        else:
-
-                            embed = discord.Embed(
-                                title = util.get_str(lang, 'command_string_file_search'),
-                                description = embed_description,
-                                color = util.Colors.BLUE
-                            )
-                            await ctx.send(embed = embed)
-                            return
-
-                else:
-
-                    embed = discord.Embed(
-                        description = util.get_str(lang, 'command_string_api_error_on_file_search').format(status = response.status),
-                        color = util.Colors.RED
-                    )
-                    await ctx.send(embed = embed)
-
+                embed = discord.Embed(
+                    description = util.get_str(lang, 'command_string_api_error_on_file_search').format(status = response.status),
+                    color = util.Colors.RED
+                )
+                await ctx.respond(embed = embed)
 
     
-    @commands.command(usage='export <file name>', aliases=['extract'])
+    @slash_command(
+        name='files-export',
+        description=util.get_str('en', 'command_description_export'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_export'),
+            'ja': util.get_str('ja', 'command_description_export')
+        }
+    )
     @commands.cooldown(3, 12, commands.BucketType.user)
-    async def export(self, ctx, filename: str):
-        """
-        Exports .uasset files using the BenBot API
-        """
+    async def export(
+        self,
+        ctx: discord.ApplicationContext,
+        filename: Option(
+            str,
+            description = 'File name to export'
+        )
+    ):
 
         lang = util.get_guild_lang(ctx)
 
         if filename == None:
 
-            await ctx.send(embed=discord.Embed(
+            await ctx.respond(embed=discord.Embed(
                 description = util.get_str(lang, 'command_string_export_missing_parameters').format(prefix = ctx.prefix),
                 color = util.Colors.BLUE
             ))
@@ -1064,7 +694,7 @@ class General(commands.Cog):
 
             if filename.endswith('.uasset') == False:
 
-                await ctx.send(embed=discord.Embed(
+                await ctx.respond(embed=discord.Embed(
                     description = util.get_str(lang, 'command_string_export_error_no_uasset_filename'),
                     color = util.Colors.RED
                 ))
@@ -1078,7 +708,7 @@ class General(commands.Cog):
 
                     if response.status == 404:
 
-                        await ctx.send(embed=discord.Embed(
+                        await ctx.respond(embed=discord.Embed(
                             description = util.get_str(lang, 'command_string_export_error_no_file_found'),
                             color = util.Colors.RED
                         ))
@@ -1118,7 +748,7 @@ class General(commands.Cog):
                             )
 
                         try:
-                            await ctx.send(file = file)
+                            await ctx.respond(file = file)
 
                         except:
 
@@ -1126,7 +756,7 @@ class General(commands.Cog):
                                 description = util.get_str(lang, 'command_string_export_error_sending_file').format(traceback = traceback.format_exc()),
                                 color = util.Colors.RED
                             )
-                            await ctx.send(embed = embed)
+                            await ctx.respond(embed = embed)
 
                     else:
 
@@ -1134,7 +764,7 @@ class General(commands.Cog):
                             description = util.get_str(lang, 'command_string_api_error_on_file_export').format(status = response.status),
                             color = util.Colors.RED
                         )
-                        await ctx.send(embed = embed)
+                        await ctx.respond(embed = embed)
    
     
 def setup(bot):

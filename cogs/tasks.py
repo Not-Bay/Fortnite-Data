@@ -10,7 +10,7 @@ import json
 import time
 import sys
 
-import util
+from modules import util
 
 log = logging.getLogger('FortniteData.cogs.tasks')
 
@@ -638,14 +638,14 @@ class Tasks(commands.Cog):
             start_timestamp = time.time()
 
             async with self.ClientSession() as session:
-                request = await session.get('https://api.nitestats.com/v1/epic/modes')
+                request = await session.get('https://baydev.online/api/v1/shopsections')
                 if request.status != 200:
-                    log.error(f'An error ocurred in updates_check task. Nitestats calendar endpoint returned status {request.status}')
+                    log.error(f'An error ocurred in updates_check task. API returned status {request.status}')
                     return # this is the last check in updates_check so we can return safely
                 else:
-                    current_calendar = await request.json()
+                    current_sections = await request.json()
 
-            active_sections = current_calendar['channels']['client-events']['states'][0]['state']['sectionStoreEnds']
+            active_sections = current_sections['data']
 
             async with aiofiles.open('cache/shopsections/current.json', 'r', encoding='utf-8') as f:
                 cached_sections = json.loads(await f.read())
@@ -690,6 +690,8 @@ class Tasks(commands.Cog):
                     added_string += f'\n• {i}'
                     if count == maxCount:
                         added_string += '```'
+                if maxCount == 0:
+                    added_string = '```\n```'
 
 
                 count = 0
@@ -700,6 +702,8 @@ class Tasks(commands.Cog):
                     removed_string += f'\n• {i}'
                     if count == maxCount:
                         removed_string += '```'
+                if maxCount == 0:
+                    removed_string = '```\n```'
 
 
                 count = 0
