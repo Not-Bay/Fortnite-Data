@@ -306,12 +306,12 @@ class General(commands.Cog):
                     count += 1
 
                     embed = discord.Embed(
-                        title = util.get_str(data_lang, 'command_button_battle_royale'),
+                        title = util.get_str(lang, 'command_button_battle_royale'),
                         description = f'**{motd["title"]}**\n{motd["body"]}',
                         color = util.Colors.BLUE
                     )
                     embed.set_image(url=motd['image'])
-                    embed.set_footer(text=util.get_str(data_lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['br']['motds'])))
+                    embed.set_footer(text=util.get_str(lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['br']['motds'])))
                     
                     items.append(embed)
 
@@ -321,12 +321,12 @@ class General(commands.Cog):
                     count += 1
 
                     embed = discord.Embed(
-                        title = util.get_str(data_lang, 'command_button_save_the_world'),
+                        title = util.get_str(lang, 'command_button_save_the_world'),
                         description = f'**{message["title"]}**\n{message["body"]}',
                         color = util.Colors.BLUE
                     )
                     embed.set_image(url=message['image'])
-                    embed.set_footer(text=util.get_str(data_lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['stw']['messages'])))
+                    embed.set_footer(text=util.get_str(lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['stw']['messages'])))
                     
                     items.append(embed)
 
