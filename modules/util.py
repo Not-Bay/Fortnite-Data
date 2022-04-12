@@ -6,6 +6,7 @@ import asyncio
 import discord
 import pymongo
 import aiohttp
+import string
 import time
 import json
 import sys
@@ -663,6 +664,8 @@ class Colors:
     ORANGE = 0xDE6F00
     RED = 0xDE1E00
 
-def get_commands(bot):
-
-    return list(bot.commands)
+def get_section_displayname(section_id: str, sections_data: list):
+    for section in sections_data:
+        if section['sectionId'] == section_id:
+            return section.get('sectionDisplayName', section_id)
+    return section_id

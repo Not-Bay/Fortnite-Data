@@ -662,65 +662,79 @@ class Tasks(commands.Cog):
                 async with aiofiles.open('cache/shopsections/current.json', 'w', encoding='utf-8') as f:
                     await f.write(json.dumps(active_sections))
 
-                addedSections = []
-                removedSections = []
-                notChangedSections = []
-
-                for section in cacheds: # check for removed/unchanged sections
-
-                    if section not in actives:
-                        removedSections.append(section)
-                    else:
-                        notChangedSections.append(section)
-
-                for section in actives: # check for added sectionsOld
-
-                    if section not in cacheds:
-                        addedSections.append(section)
-
-                log.debug(f'Processed section changes:\nAdded: {addedSections}\nRemoved: {removedSections}\nNot changed: {notChangedSections}')
-
-                count = 0
-                maxCount = len(addedSections)
-                added_string = '```fix'
-                for i in addedSections:
-                    count += 1
-                    added_string += f'\n• {i}'
-                    if count == maxCount:
-                        added_string += '```'
-                if maxCount == 0:
-                    added_string = '```\n```'
-
-
-                count = 0
-                maxCount = len(removedSections)
-                removed_string = '```fix'
-                for i in removedSections:
-                    count += 1
-                    removed_string += f'\n• {i}'
-                    if count == maxCount:
-                        removed_string += '```'
-                if maxCount == 0:
-                    removed_string = '```\n```'
-
-
-                count = 0
-                summary_string = '```diff\n'
-
-                for i in addedSections:
-                    summary_string += f'+ {i}\n'
-                
-                for i in removedSections:
-                    summary_string += f'- {i}\n'
-
-                for i in notChangedSections:
-                    summary_string += f'• {i}\n'
-
-                summary_string += '```'
-                
                 for lang in util.configuration['languages']:
 
-                    to_send_list = []
+                    async with self.ClientSession() as session:
+                        request = await session.get('https://baydev.online/api/v1/fortnite-content')
+                        if request.status != 200:
+                            log.error(f'An error ocurred in updates_check task. API returned status {request.status}')
+                            return # this is the last check in updates_check so we can return safely
+                        else:
+                            fortnitecontent = await request.json()
+                    
+                    sections_data = fortnitecontent['data']['shopSections']['sectionList']['sections']
+
+                    added = {}
+                    removed = {}
+                    notChanged = {}
+
+                    for section in cacheds:
+                        displayname = util.get_section_displayname(section, sections_data)
+
+                        if section in actives:
+
+                            if notChanged.get(section, None) == None:
+                                notChanged[section] = [displayname, 1]
+                            else:
+                                notChanged[section][1] += 1
+
+                        else:
+
+                            if removed.get(section, None) == None:
+                                removed[section] = [displayname, 1]
+                            else:
+                                removed[section][1] += 1
+
+                    for section in actives:
+                        displayname = util.get_section_displayname(section, sections_data)
+
+                        if section not in cacheds:
+
+                            if added.get(section, None) == None:
+                                added[section] = [displayname, 1]
+                            else:
+                                added[section][1] += 1
+
+                    if len(added.keys()) == 0:
+                        added_string = '```\n```'
+                    else:
+                        added_string = '```diff\n'
+                        for section in list(added.keys()):
+                            added_string += f'+ {added[section][0]} x{added[section][1]}\n'
+                        added_string += '```'
+
+                    if len(removed.keys()) == 0:
+                        removed_string = '```\n```'
+                    else:
+                        removed_string = '```\n'
+                        for section in list(removed.keys()):
+                            removed_string += f'- {removed[section][0]} x{removed[section][1]}\n'
+                        removed_string += '```'
+
+
+                    summary_string = '```diff\n'
+
+                    for section in list(added.keys()):
+                        summary_string += f'+ {added[section][0]} x{added[section][1]}\n'
+
+                    for section in list(removed.keys()):
+                        summary_string += f'- {removed[section][0]} x{removed[section][1]}\n'
+
+                    for section in list(notChanged.keys()):
+                        summary_string += f'• {notChanged[section][0]} x{notChanged[section][1]}\n'
+                    
+                    summary_string += '```'
+
 
                     embed = DiscordEmbed()
 
@@ -750,9 +764,7 @@ class Tasks(commands.Cog):
                         text = util.get_str(lang, 'update_message_string_shopsections_footer')
                     )
 
-                    to_send_list.append(embed)
-
-                    result = await self.updates_channel_send(embeds=to_send_list, type_='shopsections', lang=lang)
+                    result = await self.updates_channel_send(embeds=[embed], type_='shopsections', lang=lang)
 
                     log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
 
