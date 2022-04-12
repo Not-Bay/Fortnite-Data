@@ -124,22 +124,20 @@ class Tasks(commands.Cog):
 
         try:
 
-            URL = 'https://top.gg/api/bots/729409703360069722/stats'
-
             headers = {
-                'Authorization': util.configuration['top.gg-token']
+                'Authorization': util.configuration['top.gg-token'],
+                'Content-Type': 'application/json'
             }
             body = {
-                'server_count': str(len(self.bot.guilds)),
-                'shard_count': str(len(self.bot.shards))
+                'server_count': len(self.bot.guilds)
             }
 
             async with self.ClientSession() as session:
                 
                 request = await session.post(
-                    url = URL,
+                    url = 'https://top.gg/api/bots/729409703360069722/stats',
                     headers = headers,
-                    body = body
+                    data = json.dumps(body)
                 )
 
                 if request.status == 200:
