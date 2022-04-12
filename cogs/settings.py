@@ -136,7 +136,8 @@ class Settings(commands.Cog):
                 ),
                 color = util.Colors.BLURPLE
             ),
-            view = view
+            view = view,
+            ephemeral = True
         )
 
     @settings.command(
@@ -184,7 +185,8 @@ class Settings(commands.Cog):
                 ),
                 color = util.Colors.BLURPLE
             ),
-            view = view
+            view = view,
+            ephemeral = True
         )
 
 def setup(bot):
