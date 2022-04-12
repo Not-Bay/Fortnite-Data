@@ -21,8 +21,7 @@ class ReportToDeveloper(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
 
-        error_info = interaction.custom_id.replace('ERROR_', '').split('_')
-        user_id = error_info[0]
+        user_id = str(interaction.user.id)
 
         try:
             cached_error = util.error_cache[user_id]
