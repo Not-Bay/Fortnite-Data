@@ -665,7 +665,7 @@ class Tasks(commands.Cog):
                 for lang in util.configuration['languages']:
 
                     async with self.ClientSession() as session:
-                        request = await session.get('https://baydev.online/api/v1/fortnite-content')
+                        request = await session.get(f'https://baydev.online/api/v1/fortnite-content?language={lang}')
                         if request.status != 200:
                             log.error(f'An error ocurred in updates_check task. API returned status {request.status}')
                             return # this is the last check in updates_check so we can return safely
