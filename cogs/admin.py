@@ -25,7 +25,7 @@ class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @slash_command(name = 'sync-commands', description = 'Syncs commands', guild_ids=util.debug_guilds)
+    @slash_command(name = 'sync-commands', description = 'Syncs commands', guild_ids=util.configuration.get('slash_debug_guilds'))
     @permissions.is_owner()
     async def _sync_commands(
         self,
@@ -48,7 +48,7 @@ class Admin(commands.Cog):
             )
         )
 
-    @slash_command(name = 'restart', description = 'Restarts the bot', guild_ids=util.debug_guilds)
+    @slash_command(name = 'restart', description = 'Restarts the bot', guild_ids=util.configuration.get('slash_debug_guilds'))
     @permissions.is_owner()
     async def _restart(
         self,
@@ -66,7 +66,7 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not restart: {e}')
 
-    @slash_command(name = 'reload', description = 'Reloads a cog', guild_ids=util.debug_guilds)
+    @slash_command(name = 'reload', description = 'Reloads a cog', guild_ids=util.configuration.get('slash_debug_guilds'))
     @permissions.is_owner()
     async def _reload(
         self,
@@ -84,7 +84,7 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not reload the cog: {e}')
 
-    @slash_command(name = 'load', description = 'Load a cog', guild_ids=util.debug_guilds)
+    @slash_command(name = 'load', description = 'Load a cog', guild_ids=util.configuration.get('slash_debug_guilds'))
     @permissions.is_owner()
     async def _load(
         self,
@@ -102,7 +102,7 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not load the cog: {e}')
 
-    @slash_command(name = 'unload', description = 'Unload a cog', guild_ids=util.debug_guilds)
+    @slash_command(name = 'unload', description = 'Unload a cog', guild_ids=util.configuration.get('slash_debug_guilds'))
     @permissions.is_owner()
     async def _unload(
         self,
@@ -119,7 +119,7 @@ class Admin(commands.Cog):
         except Exception as e:
             await ctx.respond(f'Could not unload the cog: {e}')
 
-    @slash_command(name = 'eval', description = 'Evaluates code', guild_ids=util.debug_guilds)
+    @slash_command(name = 'eval', description = 'Evaluates code', guild_ids=util.configuration.get('slash_debug_guilds'))
     @permissions.is_owner()
     async def eval(
         self,
