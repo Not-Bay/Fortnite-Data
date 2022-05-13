@@ -251,7 +251,6 @@ class General(commands.Cog):
         self,
         ctx
     ):
-
         lang = util.get_guild_lang(ctx)
         url = util.get_custom_shop_url(util.database_get_server(ctx))
 
@@ -486,7 +485,7 @@ class General(commands.Cog):
     async def code(
         self,
         ctx: discord.ApplicationContext,
-        code: Option(
+        creatorcode: Option(
             str,
             description = 'Creator code to check',
             required = True
@@ -495,7 +494,7 @@ class General(commands.Cog):
 
         lang = util.get_guild_lang(ctx)
 
-        data = await util.fortniteapi[lang].get_cc(code = code)
+        data = await util.fortniteapi[lang].get_cc(code = creatorcode)
 
         if data == False:
 
@@ -584,7 +583,7 @@ class General(commands.Cog):
 
 
     @slash_command(
-        name='files-search',
+        name='search',
         description=util.get_str('en', 'command_description_search'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_search'),
@@ -663,7 +662,7 @@ class General(commands.Cog):
 
     
     @slash_command(
-        name='files-export',
+        name='export',
         description=util.get_str('en', 'command_description_export'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_export'),
@@ -676,7 +675,7 @@ class General(commands.Cog):
         ctx: discord.ApplicationContext,
         filename: Option(
             str,
-            description = 'File name to export'
+            description = 'File to export'
         )
     ):
 
@@ -747,16 +746,21 @@ class General(commands.Cog):
                                 filename
                             )
 
-                        try:
-                            await ctx.respond(file = file)
+                            try:
 
-                        except:
+                                await ctx.respond(file = file)
 
-                            embed = discord.Embed(
-                                description = util.get_str(lang, 'command_string_export_error_sending_file').format(traceback = traceback.format_exc()),
-                                color = util.Colors.RED
-                            )
-                            await ctx.respond(embed = embed)
+                            except discord.InvalidArgument:
+
+                                embed = discord.Embed(
+                                    description = util.get_str(lang, 'export_string_filetoobig').format(link = response.url),
+                                    color = util.Colors.RED
+                                )
+                                await ctx.respond(embed = embed)
+                            
+                            except Exception as error:
+
+                                raise error
 
                     else:
 

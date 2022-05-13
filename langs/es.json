@@ -87,6 +87,7 @@
     "command_string_api_error_on_file_export": "Ha ocurrido un error exportando. La API devolvió estado {status}",
     "command_string_export_error_no_uasset_filename": "El nombre del archivo debe terminar con `.uasset`",
     "command_string_export_error_no_file_found": "El archivo solicitado no fue encontrado",
+    "command_string_file_too_large": "El archivo es demasiado grande. [Haz click aquí]({link}) para descargarlo manualmente.",
     "command_string_export_error_sending_file": "Ha ocurrido un error al enviar el archivo. Traceback: {traceback}",
     "command_string_on_cooldown": "Estás en cooldown!",
     "command_string_on_cooldown_retry_after": "Intenta de nuevo en {seconds} segundos",

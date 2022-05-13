@@ -31,7 +31,7 @@ class Other(commands.Cog):
         ))
 
     @slash_command(
-        name='info',
+        name='about',
         description=util.get_str('en', 'command_description_info'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_info'),
