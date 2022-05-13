@@ -639,7 +639,7 @@ class Tasks(commands.Cog):
                 request = await session.get('https://baydev.online/api/v1/shopsections')
                 if request.status != 200:
                     log.error(f'An error ocurred in updates_check task. API returned status {request.status}')
-                    return # this is the last check in updates_check so we can return safely
+                    return
                 else:
                     current_sections = await request.json()
 
@@ -668,11 +668,14 @@ class Tasks(commands.Cog):
                         request = await session.get(f'https://baydev.online/api/v1/fortnite-content?language={lang}')
                         if request.status != 200:
                             log.error(f'An error ocurred in updates_check task. API returned status {request.status}')
-                            return # this is the last check in updates_check so we can return safely
+                            return
                         else:
                             fortnitecontent = await request.json()
-                    
+
                     sections_data = fortnitecontent['data']['shopSections']['sectionList']['sections']
+
+                    async with aiofiles.open(f'cache/shopsections/sections_{lang}.json', 'w', encoding='utf-8') as f:
+                        await f.write(json.dumps(sections_data))
 
                     added = {}
                     removed = {}
