@@ -89,6 +89,7 @@ class Other(commands.Cog):
         embed.add_field(name = util.get_str(lang, 'command_string_servers'), value = f'`{len(self.bot.guilds)}`')
         embed.add_field(name = util.get_str(lang, 'command_string_uptime'), value = f'`{bot_uptime}`')
         embed.add_field(name = util.get_str(lang, 'command_string_translations'), value = translations_credits)
+        embed.set_footer(text=f'v{util.version}')
 
         await ctx.respond(
             embed = embed,
