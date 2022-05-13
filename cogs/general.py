@@ -336,17 +336,26 @@ class General(commands.Cog):
             
             if match_method == 'starts':
 
+                continueCount = 0
                 if not section.get('sectionId', '').lower().startswith(query.lower()):
-                    continue
+                    continueCount += 1
 
                 if not section.get('sectionDisplayName', '').lower().startswith(query.lower()):
+                    continueCount += 1
+
+                if continueCount >= 2:
                     continue
 
             elif match_method == 'contains':
 
+                continueCount = 0
                 if not query.lower() in section.get('sectionId', '').lower():
-                    continue
+                    continueCount += 1
+
                 if not query.lower() in section.get('sectionDisplayName', '').lower():
+                    continueCount += 1
+
+                if continueCount >= 2:
                     continue
 
             embed = discord.Embed(
