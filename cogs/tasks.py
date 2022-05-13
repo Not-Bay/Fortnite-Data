@@ -686,27 +686,27 @@ class Tasks(commands.Cog):
 
                         if section in actives:
 
-                            if notChanged.get(section, None) == None:
-                                notChanged[section] = [displayname, 1]
+                            if notChanged.get(displayname, None) == None:
+                                notChanged[displayname] = [displayname, 1]
                             else:
-                                notChanged[section][1] += 1
+                                notChanged[displayname][1] += 1
 
                         else:
 
                             if removed.get(section, None) == None:
-                                removed[section] = [displayname, 1]
+                                removed[displayname] = [displayname, 1]
                             else:
-                                removed[section][1] += 1
+                                removed[displayname][1] += 1
 
                     for section in actives:
                         displayname = util.get_section_displayname(section, sections_data)
 
                         if section not in cacheds:
 
-                            if added.get(section, None) == None:
-                                added[section] = [displayname, 1]
+                            if added.get(displayname, None) == None:
+                                added[displayname] = [displayname, 1]
                             else:
-                                added[section][1] += 1
+                                added[displayname][1] += 1
 
                     if len(added.keys()) == 0:
                         added_string = '```\n```'
