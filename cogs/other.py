@@ -1,4 +1,4 @@
-from discord.commands import slash_command
+from discord.commands import slash_command, Option, OptionChoice
 from discord.ext import commands
 import discord
 import datetime
@@ -12,7 +12,11 @@ class Other(commands.Cog):
         self.bot = bot
 
     @slash_command(
-        name='invite',
+        name=util.get_str('en', 'command_name_invite'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_invite'),
+            'ja': util.get_str('ja', 'command_name_invite'),
+        },
         description=util.get_str('en', 'command_description_invite'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_invite'),
@@ -20,9 +24,26 @@ class Other(commands.Cog):
         }
     )
     @commands.cooldown(2, 4)
-    async def invite(self, ctx: discord.ApplicationContext):
+    async def invite(
+        self,
+        ctx: discord.ApplicationContext,
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
+        )
+    ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         await ctx.respond(embed = discord.Embed(
             title = util.get_str(lang, 'command_string_bot_invitation'),
@@ -31,7 +52,11 @@ class Other(commands.Cog):
         ))
 
     @slash_command(
-        name='about',
+        name=util.get_str('en', 'command_name_info'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_info'),
+            'ja': util.get_str('ja', 'command_name_info'),
+        },
         description=util.get_str('en', 'command_description_info'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_info'),
@@ -41,7 +66,7 @@ class Other(commands.Cog):
     @commands.cooldown(3, 5)
     async def info(self, ctx: discord.ApplicationContext):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
 
         current_time = time.time()
         difference = int(round(current_time - util.start_time))

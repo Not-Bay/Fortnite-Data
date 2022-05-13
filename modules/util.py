@@ -24,7 +24,6 @@ log = logging.getLogger('FortniteData.modules.util')
 configuration = None
 database = None
 ready = False
-debug_guilds = [962470334504779776]
 languages = {}
 fortniteapi = {}
 server_cache = {}
@@ -82,26 +81,8 @@ def get_str(lang: str, string: str):
         return languages['en'].get_item(item = string)
 
 
-def get_guild_lang(ctx: discord.ApplicationContext):
-
-    if ctx.guild_id == None:
-        return 'en'
-    
-    if ctx.guild_id == 718709023427526697:
-        if ctx.channel.category_id == 719713694874992681:
-            return 'ja'
-        elif ctx.channel.category_id == 718711009971535943:
-            return 'en'
-        elif ctx.channel.category_id == 719714076087025706:
-            return 'es'
-
-    try:
-        return server_cache[str(ctx.guild_id)]['language']
-    except KeyError:
-        try:
-            return database_get_server(ctx)['language']
-        except KeyError:
-            return 'en'
+def get_lang(ctx: discord.ApplicationContext):
+    return ctx.interaction.locale.replace('es-ES', 'es') # workaround for es-ES locales
 
 async def wait_cache_load():
 

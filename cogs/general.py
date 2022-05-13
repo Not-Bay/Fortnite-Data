@@ -19,7 +19,11 @@ class General(commands.Cog):
         self.bot = bot
 
     @slash_command(
-        name='item',
+        name=util.get_str('en', 'command_name_item'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_item'),
+            'ja': util.get_str('ja', 'command_name_item'),
+        },
         description=util.get_str('en', 'command_description_item'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_item'),
@@ -44,10 +48,24 @@ class General(commands.Cog):
                 OptionChoice(name='Starts', value='starts'),
                 OptionChoice(name='Contains', value='contains')
             ]
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         if query == None:
 
@@ -131,7 +149,11 @@ class General(commands.Cog):
 
 
     @slash_command(
-        name='playlist',
+        name=util.get_str('en', 'command_name_playlist'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_playlist'),
+            'ja': util.get_str('ja', 'command_name_playlist'),
+        },
         description=util.get_str('en', 'command_description_playlist'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_playlist'),
@@ -156,10 +178,24 @@ class General(commands.Cog):
                 OptionChoice(name='Starts', value='starts'),
                 OptionChoice(name='Contains', value='contains')
             ]
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         if util.fortniteapi[lang]._loaded_playlists == 0:
 
@@ -239,7 +275,11 @@ class General(commands.Cog):
 
 
     @slash_command(
-        name='shop',
+        name=util.get_str('en', 'command_name_shop'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_shop'),
+            'ja': util.get_str('ja', 'command_name_shop'),
+        },
         description=util.get_str('en', 'command_description_shop'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_shop'),
@@ -251,7 +291,7 @@ class General(commands.Cog):
         self,
         ctx
     ):
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
         url = util.get_custom_shop_url(util.database_get_server(ctx))
 
         embed = discord.Embed(
@@ -276,16 +316,23 @@ class General(commands.Cog):
         ctx,
         language: Option(
             str,
-            description = 'Language for the news',
+            description = 'Language to use',
             required = False,
-            default = 'none'
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
-        data_lang = language if language != 'none' else lang
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
-        data = await util.fortniteapi[lang].get_news(language = data_lang)
+        data = await util.fortniteapi[lang].get_news(language = lang)
 
         if data == False:
 
@@ -335,7 +382,11 @@ class General(commands.Cog):
             await paginator.respond(interaction = ctx.interaction)
 
     @slash_command(
-        name='aes',
+        name=util.get_str('en', 'command_name_aes'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_aes'),
+            'ja': util.get_str('ja', 'command_name_aes'),
+        },
         description=util.get_str('en', 'command_description_aes'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_aes'),
@@ -355,10 +406,24 @@ class General(commands.Cog):
                 OptionChoice(name='Hex', value='hex'),
                 OptionChoice(name='Base64', value='base64')
             ]
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         data = await util.fortniteapi[lang].get_aes(keyformat=keyformat)
 
@@ -401,7 +466,11 @@ class General(commands.Cog):
         await paginator.respond(interaction = ctx.interaction)
     
     @slash_command(
-        name='stats',
+        name=util.get_str('en', 'command_name_stats'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_stats'),
+            'ja': util.get_str('ja', 'command_name_stats'),
+        },
         description=util.get_str('en', 'command_description_stats'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_stats'),
@@ -427,10 +496,24 @@ class General(commands.Cog):
                 OptionChoice(name = 'PlayStation', value = 'psn'),
                 OptionChoice(name = 'Xbox', value = 'xbl')
             ]
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         data = await util.fortniteapi[lang].get_stats(
             account_name = display_name,
@@ -474,7 +557,11 @@ class General(commands.Cog):
 
 
     @slash_command(
-        name='code',
+        name=util.get_str('en', 'command_name_code'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_code'),
+            'ja': util.get_str('ja', 'command_name_code'),
+        },
         description=util.get_str('en', 'command_description_code'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_code'),
@@ -489,10 +576,24 @@ class General(commands.Cog):
             str,
             description = 'Creator code to check',
             required = True
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         data = await util.fortniteapi[lang].get_cc(code = creatorcode)
 
@@ -523,7 +624,11 @@ class General(commands.Cog):
 
 
     @slash_command(
-        name='upcoming',
+        name=util.get_str('en', 'command_name_upcoming'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_upcoming'),
+            'ja': util.get_str('ja', 'command_name_upcoming'),
+        },
         description=util.get_str('en', 'command_description_upcoming'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_upcoming'),
@@ -533,10 +638,24 @@ class General(commands.Cog):
     @commands.cooldown(3, 12, commands.BucketType.user)
     async def upcoming(
         self,
-        ctx: discord.ApplicationContext
+        ctx: discord.ApplicationContext,
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
+        )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         data = await util.fortniteapi[lang].get_new_items()
 
@@ -583,7 +702,11 @@ class General(commands.Cog):
 
 
     @slash_command(
-        name='search',
+        name=util.get_str('en', 'command_name_search'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_search'),
+            'ja': util.get_str('ja', 'command_name_search'),
+        },
         description=util.get_str('en', 'command_description_search'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_search'),
@@ -598,10 +721,24 @@ class General(commands.Cog):
             str,
             description = 'File name to search',
             required = True
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         async with aiohttp.ClientSession() as session:
 
@@ -662,7 +799,11 @@ class General(commands.Cog):
 
     
     @slash_command(
-        name='export',
+        name=util.get_str('en', 'command_name_export'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_export'),
+            'ja': util.get_str('ja', 'command_name_export'),
+        },
         description=util.get_str('en', 'command_description_export'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_export'),
@@ -676,10 +817,24 @@ class General(commands.Cog):
         filename: Option(
             str,
             description = 'File to export'
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
 
         if filename == None:
 
