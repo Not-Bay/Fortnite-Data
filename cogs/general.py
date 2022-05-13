@@ -303,7 +303,11 @@ class General(commands.Cog):
         await ctx.respond(embed = embed)
 
     @slash_command(
-        name='news',
+        name=util.get_str('en', 'command_name_news'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_news'),
+            'ja': util.get_str('ja', 'command_name_news'),
+        },
         description=util.get_str('en', 'command_description_news'),
         description_localizations={
             'es-ES': util.get_str('es', 'command_description_news'),

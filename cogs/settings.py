@@ -10,8 +10,16 @@ class Settings(commands.Cog):
         self.bot = bot
 
     settings = SlashCommandGroup(
-        'settings',
-        util.get_str('en', 'command_description_settings')
+        name=util.get_str('en', 'command_name_settings'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_settings'),
+            'ja': util.get_str('ja', 'command_name_settings')
+        },
+        description=util.get_str('en', 'command_description_settings'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_settings'),
+            'ja': util.get_str('ja', 'command_description_settings')
+        }
     )
 
     @settings.command(
