@@ -128,8 +128,6 @@ def database_store_server(ctx: discord.ApplicationContext):
         data = {
             "server_id": guild_id,
             "added": int(time.time()),
-            "language": "en",
-            "search_language": "en",
             "shop_channel": {
                 "enabled": False,
                 "channel": None,
