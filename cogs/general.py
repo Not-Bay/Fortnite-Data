@@ -1,6 +1,6 @@
 from discord.commands import slash_command, Option, OptionChoice
 from discord.ext import commands, pages
-import traceback
+import aiofiles
 import aiohttp
 import discord
 import logging
@@ -9,7 +9,7 @@ import json
 import cgi
 import io
 
-from modules import util, views
+from modules import util
 
 log = logging.getLogger('FortniteData.cogs.general')
 
@@ -272,6 +272,125 @@ class General(commands.Cog):
                         pages = items
                     )
                     await paginator.respond(interaction = ctx.interaction)
+
+
+    @slash_command(
+        name=util.get_str('en', 'command_name_sections'),
+        name_localizations={
+            'es-ES': util.get_str('es', 'command_name_sections'),
+            'ja': util.get_str('ja', 'command_name_sections'),
+        },
+        description=util.get_str('en', 'command_description_sections'),
+        description_localizations={
+            'es-ES': util.get_str('es', 'command_description_sections'),
+            'ja': util.get_str('ja', 'command_description_sections')
+        }
+    )
+    @commands.cooldown(3, 12, commands.BucketType.user)
+    async def sections(
+        self,
+        ctx: discord.ApplicationContext,
+        query: Option(
+            str,
+            description = 'Name or id to search',
+            required = True
+        ),
+        match_method: Option(
+            str,
+            description = 'Match method to use',
+            required = False,
+            default = 'contains',
+            choices = [
+                OptionChoice(name='Starts', value='starts'),
+                OptionChoice(name='Contains', value='contains')
+            ]
+        ),
+        language: Option(
+            str,
+            description = 'Language to use',
+            required = False,
+            default = 'none',
+            choices = [
+                OptionChoice(
+                    name = lang,
+                    value = lang
+                ) for lang in util.configuration.get('languages')
+            ]
+        )
+    ):
+
+        lang = util.get_lang(ctx)
+        if language != 'none':
+            lang = language
+
+        await ctx.defer()
+
+        async with aiofiles.open(f'cache/shopsections/current.json', 'r', encoding='utf-8') as f:
+            active_sections = json.loads(await f.read())
+
+        async with aiofiles.open(f'cache/shopsections/sections_{lang}.json', 'r', encoding='utf-8') as f:
+            sections = json.loads(await f.read())
+
+        embeds = []
+        for section in sections:
+            
+            if match_method == 'starts':
+
+                if not section.get('sectionId', '').lower().startswith(query.lower()):
+                    continue
+
+                if not section.get('sectionDisplayName', '').lower().startswith(query.lower()):
+                    continue
+
+            elif match_method == 'contains':
+
+                if not query.lower() in section.get('sectionId', '').lower():
+                    continue
+                if not query.lower() in section.get('sectionDisplayName', '').lower():
+                    continue
+
+            embed = discord.Embed(
+                title = 'Shop Sections',
+                color = util.Colors.GREEN
+            )
+
+            embed.add_field(
+                name = util.get_str(lang, 'command_string_section_section_id'),
+                value = section.get('sectionId', util.get_str(lang, 'command_string_none'))
+            )
+            embed.add_field(
+                name = util.get_str(lang, 'command_string_section_display_name'),
+                value = section.get('sectionDisplayName', util.get_str(lang, 'command_string_none'))
+            )
+            embed.add_field(
+                name = util.get_str(lang, 'command_string_section_priority'),
+                value = section.get('landingPriority', util.get_str(lang, 'command_string_none'))
+            )
+            embed.add_field(
+                name = util.get_str(lang, 'command_string_section_has_timer'),
+                value = util.get_str(lang, 'command_string_yes') if section.get('bShowTimer', False) == True else util.get_str(lang, 'command_string_no')
+            )
+            embed.add_field(
+                name = util.get_str(lang, 'command_string_section_can_notify'),
+                value = util.get_str(lang, 'command_string_yes') if section.get('bEnableToastNotification', False) == True else util.get_str(lang, 'command_string_no')
+            )
+
+            if section.get('sectionId', '') in list(active_sections.keys()):
+                embed.set_footer(text = util.get_str(lang, 'command_string_section_active_notice'))
+            
+            embeds.append(embed)
+
+        if len(embeds) == 0:
+            await ctx.respond(embed=discord.Embed(
+                description = util.get_str(lang, 'command_string_no_sections_found'),
+                color = util.Colors.RED
+            ))
+            return
+
+        paginator = pages.Paginator(
+            pages = embeds
+        )
+        await paginator.respond(interaction = ctx.interaction)
 
 
     @slash_command(
