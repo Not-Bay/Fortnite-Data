@@ -22,7 +22,7 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_application_command_error(self, ctx: discord.ApplicationContext, error):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
 
         if isinstance(error, commands.CommandOnCooldown):
 

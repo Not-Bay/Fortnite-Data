@@ -50,7 +50,7 @@ class Settings(commands.Cog):
         )
     ):
 
-        lang = util.get_guild_lang(ctx)
+        lang = util.get_lang(ctx)
 
         if ctx.author.guild_permissions.administrator == False:
 
