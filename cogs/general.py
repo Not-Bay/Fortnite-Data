@@ -478,10 +478,8 @@ class General(commands.Cog):
 
             items = []
 
-            count = 0
             if data['data']['br'] != None:
                 for motd in data['data']['br']['motds']:
-                    count += 1
 
                     embed = discord.Embed(
                         title = util.get_str(lang, 'command_button_battle_royale'),
@@ -489,14 +487,11 @@ class General(commands.Cog):
                         color = util.Colors.BLUE
                     )
                     embed.set_image(url=motd['image'])
-                    embed.set_footer(text=util.get_str(lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['br']['motds'])))
                     
                     items.append(embed)
 
-            count = 0
             if data['data']['stw'] != None:
                 for message in data['data']['stw']['messages']:
-                    count += 1
 
                     embed = discord.Embed(
                         title = util.get_str(lang, 'command_button_save_the_world'),
@@ -504,7 +499,6 @@ class General(commands.Cog):
                         color = util.Colors.BLUE
                     )
                     embed.set_image(url=message['image'])
-                    embed.set_footer(text=util.get_str(lang, 'command_string_page_int_of_int').format(count = count, total = len(data['data']['stw']['messages'])))
                     
                     items.append(embed)
 
