@@ -1,5 +1,5 @@
 discord-webhook==0.14.0
-py-cord==2.0.0b7
+py-cord==2.0.0rc1
 aiohttp==3.7.4
 aiofiles==0.8.0
 pymongo==4.0.1
