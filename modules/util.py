@@ -227,7 +227,12 @@ class Language:
         if self._loaded == False:
             return False
 
-        return self.data.get(item, item)
+        string = self.data.get(item, None)
+        if string == None:
+            log.error(f'Missing string "{item}" on {self.language}.')
+            return item
+        
+        return string
 
     async def load_language_data(self):
 
