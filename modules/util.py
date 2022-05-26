@@ -26,7 +26,6 @@ database = None
 ready = False
 languages = {}
 fortniteapi = {}
-server_cache = {}
 error_cache = {}
 
 on_ready_count = 0
@@ -107,17 +106,10 @@ async def wait_cache_load():
 # Servers
 def database_get_server(ctx: discord.ApplicationContext):
 
-    try:
-        return server_cache[str(ctx.guild_id)]
-    except KeyError:
-        data = database.guilds.find_one({'server_id': ctx.guild_id})
-        if data == None:
-            database_store_server(ctx)
-            data = database.guilds.find_one({'server_id': ctx.guild_id})
-
-        server_cache[str(ctx.guild_id)] = data
-
-        return data
+    data = database.guilds.find_one({'server_id': ctx.guild_id})
+    if data == None:
+        database_store_server(ctx)
+        return database.guilds.find_one({'server_id': ctx.guild_id})
 
 def database_store_server(ctx: discord.ApplicationContext):
 
@@ -183,7 +175,6 @@ def database_remove_server(ctx: discord.ApplicationContext):
     else:
         guild_id = ctx.guild_id
 
-    server_cache.pop(str(guild_id), None)
 
     log.debug(f'Removing guild "{guild_id}" from database...')
 
@@ -206,7 +197,6 @@ def database_update_server(ctx: discord.ApplicationContext, changes: dict):
     else:
         guild_id = ctx.guild_id
 
-    server_cache.pop(str(guild_id), None)
 
     log.debug(f'Updating guild "{guild_id}" data. Changes: "{changes}"')
 
