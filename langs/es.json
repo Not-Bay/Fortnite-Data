@@ -122,6 +122,7 @@
     "command_string_current_language_and_options": "Idioma actual: {language}\nOpciones disponibles: {options}",
     "command_string_current_channel_and_options": "Canal: {channel}\nOpciones: {options}",
     "command_string_select_a_new_channel_description": "Selecciona el canal a usar\nSi no lo puedes ver asegúrate que el bot tenga acceso y pueda crear webhooks",
+    "command_string_there_are_no_channels": "No hay ningún canal para configurar, asegúrate que el bot tenga permiso para ver canales y administrar webhooks.",
     "command_string_select_this_to_disable": "Selecciona aquí para desactivar el canal",
     "command_string_new_lang_same_as_old": "El nuevo idioma es igual al actual!",
     "command_string_prefix": "Prefix",

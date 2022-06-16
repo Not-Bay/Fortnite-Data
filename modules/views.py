@@ -78,6 +78,16 @@ class ShopChannelConfigure(discord.ui.Button):
             if isinstance(channel, discord.TextChannel) and channel.permissions_for(interaction.guild.me).manage_webhooks == True:
                 channels.append(channel)
 
+        if len(channels) == 0:
+            await interaction.response.edit_message(
+                embed = discord.Embed(
+                    description = util.get_str(self.lang, 'command_string_there_are_no_channels'),
+                    color = util.Colors.RED
+                ),
+                view = None
+            )
+            return
+
         select_options = []
         if server['shop_channel']['enabled'] == True:
             select_options.append(discord.SelectOption(
@@ -308,6 +318,16 @@ class UpdatesChannelConfigure(discord.ui.Button):
         for channel in interaction.guild.channels:
             if isinstance(channel, discord.TextChannel) and channel.permissions_for(interaction.guild.me).manage_webhooks == True:
                 channels.append(channel)
+
+        if len(channels) == 0:
+            await interaction.response.edit_message(
+                embed = discord.Embed(
+                    description = util.get_str(self.lang, 'command_string_there_are_no_channels'),
+                    color = util.Colors.RED
+                ),
+                view = None
+            )
+            return
 
         select_options = []
         if server['updates_channel']['enabled'] == True:

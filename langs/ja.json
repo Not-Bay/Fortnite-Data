@@ -120,6 +120,7 @@
     "command_string_current_language_and_options": "現在の言語: {language}\n使用可能なオプション: {options}",
     "command_string_current_channel_and_options": "チャンネル: {channel}\nオプション: {options}",
     "command_string_select_a_new_channel_description": "設定するチャンネルを選択してください\n 選択したいチャンネルが表示されない場合は、ボットにウェブフックを管理する権限があることを確認してください",
+    "command_string_there_are_no_channels": "There are no channel to configure, make sure the bot has permissions to see it and manage webhooks.",
     "command_string_select_this_to_disable": "このオプションを選択すると、チャンネルが無効化されます",
     "command_string_new_lang_same_as_old": "新しい言語は現在のものです！",
     "command_string_prefix": "接頭辞",
