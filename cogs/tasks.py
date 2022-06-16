@@ -202,7 +202,7 @@ class Tasks(commands.Cog):
 
                     await asyncio.sleep(5) # image isn't ready, next check will be in 5 seconds
 
-                servers = list(util.database.guilds.find({'shop_channel.enabled': True}))
+                servers = await util.database.guilds.find({'shop_channel.enabled': True}).to_list(None)
                 await self.shop_channel_send(servers) # this should send the shop to every webhook. SO PLEASE WORK THANK U
 
 
@@ -809,7 +809,7 @@ class Tasks(commands.Cog):
 
     async def updates_channel_send(self, embeds, type_, lang):
         
-        servers = list(util.database.guilds.find({'updates_channel.enabled': True, 'language': lang}))
+        servers = await util.database.guilds.find({'updates_channel.enabled': True, 'language': lang}).to_list(None)
 
         queues = await self._create_queue(embeds)
         urls = []

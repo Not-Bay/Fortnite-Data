@@ -71,7 +71,7 @@ class ShopChannelConfigure(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         channels = []
         for channel in interaction.guild.channels:
@@ -123,7 +123,7 @@ class ShopChannelSelect(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         if self.values[0] == 'DISABLE':
 
@@ -146,7 +146,7 @@ class ShopChannelSelect(discord.ui.Select):
 
                 log.error(f'An error ocurred removing webhook in shop channel disabling. Traceback: {traceback.format_exc()}')
 
-            change = util.database_update_server(
+            change = await util.database_update_server(
                 ctx = interaction,
                 changes = {
                     '$set': {
@@ -190,7 +190,7 @@ class ShopChannelSelect(discord.ui.Select):
                     view = None
                 )
                 return
-            change = util.database_update_server(
+            change = await util.database_update_server(
                 ctx = interaction,
                 changes = {
                     '$set': {
@@ -230,7 +230,7 @@ class ShopChannelManage(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         modal_options = []
         for option in ['header', 'subheader', 'footer']:
@@ -263,7 +263,7 @@ class ShopChannelOptions(discord.ui.Modal):
 
     async def callback(self, interaction: discord.Interaction):
 
-        changes = util.database_update_server(
+        changes = await util.database_update_server(
             ctx = interaction,
             changes = {
                 '$set': {
@@ -274,7 +274,7 @@ class ShopChannelOptions(discord.ui.Modal):
             }
         )
 
-        server_data = util.database_get_server(interaction)
+        server_data = await util.database_get_server(interaction)
 
         if server_data['shop_channel']['enabled'] == False:
             channel = util.get_str(self.lang, 'command_string_not_configurated')
@@ -312,7 +312,7 @@ class UpdatesChannelConfigure(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         channels = []
         for channel in interaction.guild.channels:
@@ -364,7 +364,7 @@ class UpdatesChannelSelect(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         if self.values[0] == 'DISABLE':
 
@@ -387,7 +387,7 @@ class UpdatesChannelSelect(discord.ui.Select):
 
                 log.error(f'An error ocurred removing webhook in updates channel disabling. Traceback: {traceback.format_exc()}')
 
-            change = util.database_update_server(
+            change = await util.database_update_server(
                 ctx = interaction,
                 changes = {
                     '$set': {
@@ -431,7 +431,7 @@ class UpdatesChannelSelect(discord.ui.Select):
                     view = None
                 )
                 return
-            change = util.database_update_server(
+            change = await util.database_update_server(
                 ctx = interaction,
                 changes = {
                     '$set': {
@@ -471,7 +471,7 @@ class UpdatesChannelManage(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         enabled = interaction.client.get_emoji(931338312159989781)
         disabled = interaction.client.get_emoji(931338312604602450)
@@ -512,10 +512,10 @@ class UpdatesChannelManageSelect(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         if server['updates_channel']['config'][self.values[0]] == True:
-            change = util.database_update_server(
+            change = await util.database_update_server(
                 ctx = interaction,
                 changes = {
                     '$set': {
@@ -525,7 +525,7 @@ class UpdatesChannelManageSelect(discord.ui.Select):
             )
         
         else:
-            change = util.database_update_server(
+            change = await util.database_update_server(
                 ctx = interaction,
                 changes = {
                     '$set': {
@@ -534,7 +534,7 @@ class UpdatesChannelManageSelect(discord.ui.Select):
                 }
             )
 
-        server = util.database_get_server(interaction)
+        server = await util.database_get_server(interaction)
 
         enabled = interaction.client.get_emoji(931338312159989781)
         disabled = interaction.client.get_emoji(931338312604602450)

@@ -1,4 +1,4 @@
-from discord.commands import Option, OptionChoice, SlashCommandGroup, CommandPermission
+from discord.commands import Option, OptionChoice, SlashCommandGroup
 from discord.ext import commands
 import discord
 
@@ -64,7 +64,7 @@ class Settings(commands.Cog):
 
         else:
 
-            server = util.database_get_server(ctx)
+            server = await util.database_get_server(ctx)
 
             if server['language'] == new_language:
 
@@ -87,7 +87,7 @@ class Settings(commands.Cog):
 
             else:
 
-                changes = util.database_update_server(
+                changes = await util.database_update_server(
                     ctx = ctx,
                     changes = {
                         '$set': {
@@ -123,7 +123,7 @@ class Settings(commands.Cog):
         
         lang = util.get_lang(ctx)
 
-        server = util.database_get_server(ctx)
+        server = await util.database_get_server(ctx)
 
         if server['shop_channel']['enabled'] == False:
             channel = util.get_str(lang, 'command_string_not_configurated')
@@ -176,7 +176,7 @@ class Settings(commands.Cog):
         
         lang = util.get_lang(ctx)
 
-        server = util.database_get_server(ctx)
+        server = await util.database_get_server(ctx)
 
         if server['updates_channel']['enabled'] == False:
             channel = util.get_str(lang, 'command_string_not_configurated')

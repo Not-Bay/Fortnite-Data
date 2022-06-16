@@ -1,12 +1,12 @@
 from urllib.parse import urlencode
+from motor import motor_asyncio
+from pymongo import results
 import traceback
 import aiofiles
 import logging
 import asyncio
 import discord
-import pymongo
 import aiohttp
-import string
 import time
 import json
 import sys
@@ -60,7 +60,7 @@ def get_mongoclient():
 
     connection_string = configuration.get('database_connection_str')
 
-    client = pymongo.MongoClient(connection_string)
+    client = motor_asyncio.AsyncIOMotorClient(connection_string)
 
     try:
         client.server_info()
@@ -104,15 +104,16 @@ async def wait_cache_load():
 ###
 
 # Servers
-def database_get_server(ctx: discord.ApplicationContext):
 
-    data = database.guilds.find_one({'server_id': ctx.guild_id})
+async def database_get_server(ctx: discord.ApplicationContext):
+
+    data = await database.guilds.find_one({'server_id': ctx.guild_id})
     if data == None:
-        database_store_server(ctx)
-        return database.guilds.find_one({'server_id': ctx.guild_id})
+        await database_store_server(ctx)
+        return await database.guilds.find_one({'server_id': ctx.guild_id})
     return data
 
-def database_store_server(ctx: discord.ApplicationContext):
+async def database_store_server(ctx: discord.ApplicationContext):
 
     if isinstance(ctx, discord.Guild):
         guild_id = ctx.id
@@ -121,7 +122,7 @@ def database_store_server(ctx: discord.ApplicationContext):
 
     log.debug('Inserting guild into database...')
 
-    check = database.guilds.find_one({'server_id': guild_id})
+    check = await database.guilds.find_one({'server_id': guild_id})
 
     if check == None:
 
@@ -155,9 +156,9 @@ def database_store_server(ctx: discord.ApplicationContext):
                 }
             }
         }
-        insert = database.guilds.insert_one(data)
+        insert =await  database.guilds.insert_one(data)
 
-        if isinstance(insert, pymongo.results.InsertOneResult):
+        if isinstance(insert, results.InsertOneResult):
             log.debug(f'Inserted guild into database. Id: {insert.inserted_id}')
             return insert
         else:
@@ -169,19 +170,18 @@ def database_store_server(ctx: discord.ApplicationContext):
         log.debug('Guild is already in database. Returning existing')
         return check
 
-def database_remove_server(ctx: discord.ApplicationContext):
+async def database_remove_server(ctx: discord.ApplicationContext):
 
     if isinstance(ctx, discord.Guild):
         guild_id = ctx.id
     else:
         guild_id = ctx.guild_id
 
-
     log.debug(f'Removing guild "{guild_id}" from database...')
 
-    delete = database.guilds.delete_one({'server_id': guild_id})
+    delete = await database.guilds.delete_one({'server_id': guild_id})
 
-    if isinstance(delete, pymongo.results.DeleteResult):
+    if isinstance(delete, results.DeleteResult):
 
         log.debug(f'Guild "{guild_id}" removed successfully.')
         return delete
@@ -191,19 +191,18 @@ def database_remove_server(ctx: discord.ApplicationContext):
         return None
 
 
-def database_update_server(ctx: discord.ApplicationContext, changes: dict):
+async def database_update_server(ctx: discord.ApplicationContext, changes: dict):
 
     if isinstance(ctx, discord.Guild):
         guild_id = ctx.id
     else:
         guild_id = ctx.guild_id
 
-
     log.debug(f'Updating guild "{guild_id}" data. Changes: "{changes}"')
 
-    update = database.guilds.update_one({'server_id': guild_id}, changes)
+    update = await database.guilds.update_one({'server_id': guild_id}, changes)
 
-    if isinstance(update, pymongo.results.UpdateResult):
+    if isinstance(update, results.UpdateResult):
 
         log.debug(f'Updated guild "{guild_id}" data successfully.')
         return update

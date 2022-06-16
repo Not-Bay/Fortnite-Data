@@ -85,12 +85,12 @@ class Events(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
 
-        util.database_store_server(guild)
+        await util.database_store_server(guild)
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
 
-        util.database_remove_server(guild)
+        await util.database_remove_server(guild)
 
 
 def setup(bot):

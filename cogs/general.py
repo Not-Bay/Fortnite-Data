@@ -420,7 +420,8 @@ class General(commands.Cog):
         ctx
     ):
         lang = util.get_lang(ctx)
-        url = util.get_custom_shop_url(util.database_get_server(ctx))
+        server = await util.database_get_server(ctx)
+        url = util.get_custom_shop_url(server)
 
         embed = discord.Embed(
             title = util.get_str(lang, 'command_string_current_item_shop'),
