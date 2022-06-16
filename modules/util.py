@@ -110,6 +110,7 @@ def database_get_server(ctx: discord.ApplicationContext):
     if data == None:
         database_store_server(ctx)
         return database.guilds.find_one({'server_id': ctx.guild_id})
+    return data
 
 def database_store_server(ctx: discord.ApplicationContext):
 
