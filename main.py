@@ -1,4 +1,3 @@
-from discord.ext import commands
 import coloredlogs
 import traceback
 import logging

@@ -401,9 +401,6 @@ class FortniteAPI:
 
                 self.playlists.append(playlist)
                 addedCount += 1
-    
-        async with aiofiles.open(f'cache/playlists/{self.language}.json', 'w', encoding='utf-8') as f:
-            await f.write(json.dumps(data))
         
         self._loaded_playlists = True
 

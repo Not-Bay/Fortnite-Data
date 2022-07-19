@@ -371,6 +371,9 @@ class Tasks(commands.Cog):
                             
                             to_send_list.append(embed)
 
+                    async with aiofiles.open(f'cache/playlists/{lang}.json', 'w', encoding='utf-8') as f:
+                        await f.write(json.dumps(new_playlists))
+
                     result = await self.updates_channel_send(embeds=to_send_list, type_='playlists', lang=lang)
 
                     log.debug(f'Sent {len(to_send_list)} embeds to {len(result)} guilds in {int((time.time() - start_timestamp))} seconds! - Status: {result}')
