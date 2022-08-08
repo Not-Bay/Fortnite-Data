@@ -96,12 +96,15 @@ class ShopChannelConfigure(discord.ui.Button):
                 value = 'DISABLE'
             ))
         for channel in channels:
-            select_options.append(
-                discord.SelectOption(
-                    label = '# ' + channel.name,
-                    value = str(channel.id)
+            if len(select_options) != 25:
+                select_options.append(
+                    discord.SelectOption(
+                        label = '# ' + channel.name,
+                        value = str(channel.id)
+                    )
                 )
-            )
+            else:
+                break
 
         await interaction.response.edit_message(
             embed = discord.Embed(
@@ -337,12 +340,15 @@ class UpdatesChannelConfigure(discord.ui.Button):
                 value = 'DISABLE'
             ))
         for channel in channels:
-            select_options.append(
-                discord.SelectOption(
-                    label = '# ' + channel.name,
-                    value = str(channel.id)
+            if len(select_options) != 25:
+                select_options.append(
+                    discord.SelectOption(
+                        label = '# ' + channel.name,
+                        value = str(channel.id)
+                    )
                 )
-            )
+            else:
+                break
 
         await interaction.response.edit_message(
             embed = discord.Embed(
