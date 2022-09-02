@@ -11,15 +11,6 @@ from modules import util
 log = logging.getLogger('FortniteData')
 coloredlogs.install(level=None if util.debug == False else 'DEBUG')
 
-# Set up uvloop if possible
-try:
-    import uvloop # type: ignore
-except:
-    log.warning('Using default asyncio event loop.')
-else:
-    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-    log.debug('Using uvloop.')
-
 util.configuration = util.get_config()
 
 bot = discord.Bot(
