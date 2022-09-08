@@ -16,8 +16,9 @@ If you want to contribute go ahead!
 
 Before anything, please read the following
 * If the PR includes code changes remember to test it before.
-* You must send the PR to `dev` branch.
-* The structure of the code must be adequate, at least not too different from the existing code
+* You must send the PR to `master` branch.
+* The structure of the code must be adequate, at least not too different from the existing code.
+* If you want to make breaking/big changes please contact me first.
 
 To do it just fork the repo > create a new branch > make the pull request.
 
