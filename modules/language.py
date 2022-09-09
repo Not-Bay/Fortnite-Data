@@ -22,7 +22,7 @@ class Languages:
             except:
                 log.error(f'An error ocurred loading language {lang}')
 
-    async def get_str(self, key: str, lang: str = 'en'):
+    async def get_str(self, lang: str, key: str):
 
         language = self.data.get(lang, None)
 
