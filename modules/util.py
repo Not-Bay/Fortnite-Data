@@ -82,13 +82,7 @@ def get_str(lang: str, string: str):
 
 def get_lang(ctx: discord.ApplicationContext):
     locales = configuration.get('locales', {})
-    user_locale = ctx.interaction.locale
-
-    if user_locale in list(locales.keys()):
-
-        return user_locale.replace(user_locale, locales[user_locale])
-        
-        
+    return locales.get(ctx.interaction.locale, 'en')
 
 async def wait_cache_load():
 
