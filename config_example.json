@@ -1,0 +1,31 @@
+{
+    "bot_token": "",
+    "fortnite-api-key": "",
+    "top.gg-token": "",
+    "invite": "",
+    "admin_guilds": [],
+    "error_reports_channel": 123,
+    "translations": {
+        "en": "Bay#1218",
+        "es": "Bay#1218",
+        "ja": "FK RkyFissy#6398` `MERU#0001"
+    },
+    "languages": [
+        "en",
+        "es",
+        "ja"
+    ],
+    "locales": {
+        "en-US": "en",
+        "es-ES": "es",
+        "ja": "ja"
+    },
+    "database_connection_str": null,
+    "cogs": [
+        "general",
+        "other",
+        "settings",
+        "events",
+        "tasks"
+    ]
+}
