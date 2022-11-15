@@ -1,7 +1,7 @@
 discord-webhook[async]==0.17.0
 coloredlogs==15.0.1
-aiofiles==0.8.0
-py-cord==2.1.1
-aiohttp==3.7.4
-orjson==3.8.0
-motor==3.0.0
+aiofiles==22.1.0
+py-cord==2.2.2
+aiohttp==3.8.3
+orjson==3.8.1
+motor==3.1.1
