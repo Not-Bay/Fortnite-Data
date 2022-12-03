@@ -323,12 +323,12 @@ class Tasks(commands.Cog):
 
                 added_playlists = []
 
-                if len(cached_playlists['data']) != len(new_playlists):
+                if len(cached_playlists) != len(new_playlists):
 
                     to_send_list = []
 
                     for playlist in new_playlists:
-                        if playlist not in cached_playlists['data']:
+                        if playlist not in cached_playlists:
 
                             if playlist['name'] == playlist['description']: # basically no usefull info
                                 continue # for example "CREATIVE MATCHMAKING"
@@ -639,7 +639,7 @@ class Tasks(commands.Cog):
             start_timestamp = time.time()
 
             async with self.ClientSession() as session:
-                request = await session.get('https://baydev.online/api/v1/shopsections')
+                request = await session.get('https://baydev.net/api/v1/shopsections')
                 if request.status != 200:
                     log.error(f'An error ocurred in updates_check task. API returned status {request.status}')
                     return
@@ -668,7 +668,7 @@ class Tasks(commands.Cog):
                 for lang in util.configuration['languages']:
 
                     async with self.ClientSession() as session:
-                        request = await session.get(f'https://baydev.online/api/v1/fortnite-content?language={lang}')
+                        request = await session.get(f'https://baydev.net/api/v1/fortnite-content?language={lang}')
                         if request.status != 200:
                             log.error(f'An error ocurred in updates_check task. API returned status {request.status}')
                             return

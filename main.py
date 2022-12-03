@@ -11,20 +11,11 @@ from modules import util
 log = logging.getLogger('FortniteData')
 coloredlogs.install(level=None if util.debug == False else 'DEBUG')
 
-# Set up uvloop if possible
-try:
-    import uvloop # type: ignore
-except:
-    log.warning('Using default asyncio event loop.')
-else:
-    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-    log.debug('Using uvloop.')
-
 util.configuration = util.get_config()
 
 bot = discord.Bot(
     intents = discord.Intents.default(),
-    auto_sync_commands = False,
+    auto_sync_commands = True,
     debug_guilds = util.configuration.get('slash_debug_guilds', None)
 )
 
