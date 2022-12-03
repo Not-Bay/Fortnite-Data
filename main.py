@@ -15,7 +15,7 @@ util.configuration = util.get_config()
 
 bot = discord.Bot(
     intents = discord.Intents.default(),
-    auto_sync_commands = False,
+    auto_sync_commands = True,
     debug_guilds = util.configuration.get('slash_debug_guilds', None)
 )
 

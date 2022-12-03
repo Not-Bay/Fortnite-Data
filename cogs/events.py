@@ -13,13 +13,6 @@ class Events(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_ready(self):
-
-        log.info('Syncing commands...')
-        await self.bot.sync_commands()
-        log.info('Synced!')
-
-    @commands.Cog.listener()
     async def on_application_command_error(self, ctx: discord.ApplicationContext, error):
 
         lang = util.get_lang(ctx)
