@@ -323,12 +323,12 @@ class Tasks(commands.Cog):
 
                 added_playlists = []
 
-                if len(cached_playlists['data']) != len(new_playlists):
+                if len(cached_playlists) != len(new_playlists):
 
                     to_send_list = []
 
                     for playlist in new_playlists:
-                        if playlist not in cached_playlists['data']:
+                        if playlist not in cached_playlists:
 
                             if playlist['name'] == playlist['description']: # basically no usefull info
                                 continue # for example "CREATIVE MATCHMAKING"
