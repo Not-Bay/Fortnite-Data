@@ -284,6 +284,51 @@ class BaydevAPI(API):
 
             return await response.json(loads=orjson.loads)
 
+class FortniteCentral(API):
+
+    def __init__(self):
+        super().__init__(
+            name = 'FortniteCentral',
+            base_url = 'https://fortnitecentral.gmatrixgames.ga'
+        )
+
+    async def fetch_assets(self):
+
+        response = await self.send_request(
+            method = 'GET',
+            endpoint = '/api/v1/assets'
+        )
+
+        if response.status != 200:
+            log.error(f'[{self.name}] Unable to fetch assets.')
+            return None
+
+        else:
+
+            return await response.json()
+
+    async def export_asset(
+        self,
+        path: str,
+        raw: bool = True
+    ):
+
+        response = await self.send_request(
+            method = 'GET',
+            endpoint = '/api/v1/export',
+            parameters = {
+                'path': path,
+                'raw': raw
+            }
+        )
+
+        if response.status != 200:
+            log.error(f'[{self.name}] Unable to export asset.')
+            return None
+
+        else:
+
+            return response.read(), response.content_type
 
 class Nitestats(API):
 
