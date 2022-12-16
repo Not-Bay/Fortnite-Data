@@ -445,7 +445,7 @@ class FortniteAPI:
 
         results = []
 
-        is_id = query.lower().startswith(('cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_', 'bannertoken_'))
+        is_id = query.lower().startswith(('character_', 'cid_', 'bid_', 'pickaxe_', 'eid_', 'musicpack_', 'spid_', 'lsid_', 'wrap_', 'glider_', 'bannertoken_'))
 
         for cosmeticlist in lists_to_search:
 
