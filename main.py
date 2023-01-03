@@ -3,7 +3,6 @@ import traceback
 import logging
 import discord
 import asyncio
-import time
 import sys
 
 from modules import util
@@ -16,22 +15,16 @@ util.configuration = util.get_config()
 bot = discord.Bot(
     intents = discord.Intents.default(),
     auto_sync_commands = True,
-    debug_guilds = util.configuration.get('slash_debug_guilds', None)
+    debug_guilds = util.configuration.get('admin_guilds', None)
 )
 
-@bot.event
-async def on_connect():
-    log.debug('Connected to Discord')
+def run():
 
-    for i in util.configuration.get('languages'):
-        lang = util.Language(i)
-        load = await lang.load_language_data()
-        if load == True:
-            util.languages[i] = lang
-        else:
-            util.languages[i] = False
+    for logger in list(logging.Logger.manager.loggerDict):
+        if logger.startswith('FortniteData') == False:
+            logging.getLogger(logger).disabled = True
 
-        util.fortniteapi[i] = util.FortniteAPI(i)
+    log.info('Booting...')
 
     for cog in util.configuration.get('cogs'):
         try:
@@ -39,22 +32,6 @@ async def on_connect():
             log.debug(f'Loaded cog {cog}.')
         except:
             log.error(f'An error ocurred loading cog "{cog}". Traceback: {traceback.format_exc()}')
-
-@bot.event
-async def on_ready():
-
-    util.ready = True
-
-    log.info(f'Fortnite Data is ready! • Took {int((time.time() - util.start_time))} seconds.')
-
-
-def run():
-
-    for logger in list(logging.Logger.manager.loggerDict):
-        if logger.startswith('FortniteData') == False: # 3rd party modules loggers go brrrrrr
-            logging.getLogger(logger).disabled = True
-
-    log.info('Booting...')
 
     util.database = util.get_mongoclient().fortnitedata
 

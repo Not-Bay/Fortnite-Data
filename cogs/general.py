@@ -1,7 +1,6 @@
 from discord.commands import slash_command, Option, OptionChoice
 from discord.ext import commands, pages
 import aiofiles
-import aiohttp
 import discord
 import logging
 import time

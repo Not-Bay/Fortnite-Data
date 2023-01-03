@@ -13,6 +13,26 @@ class Events(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
+    async def on_connect():
+
+        log.debug('Connected to Discord')
+
+        for i in util.configuration.get('languages'):
+            lang = util.Language(i)
+            load = await lang.load_language_data()
+            if load == True:
+                util.languages[i] = lang
+            else:
+                util.languages[i] = False
+
+            util.fortniteapi[i] = util.FortniteAPI(i)
+
+    @commands.Cog.listener()
+    async def on_ready():
+
+        log.info('Fortnite Data is ready.')
+
+    @commands.Cog.listener()
     async def on_application_command_error(self, ctx: discord.ApplicationContext, error):
 
         lang = util.get_lang(ctx)
