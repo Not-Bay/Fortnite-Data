@@ -153,7 +153,7 @@ class FortniteAPI(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v2/news',
+            endpoint = '/v2/news',
             parameters = {
                 'language': language
             }
@@ -171,7 +171,7 @@ class FortniteAPI(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v2/aes',
+            endpoint = '/v2/aes',
             parameters = {
                 'keyFormat': key_format
             }
@@ -189,7 +189,7 @@ class FortniteAPI(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v2/creatorcode/search',
+            endpoint = '/v2/creatorcode/search',
             parameters = {
                 'name': code
             }
@@ -207,7 +207,7 @@ class FortniteAPI(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v2/stats/br/v2',
+            endpoint = '/v2/stats/br/v2',
             parameters = {
                 'name': display_name,
                 'accountType': account_type, # epic, psn, xbl
@@ -237,7 +237,7 @@ class BaydevAPI(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v1/shopsections'
+            endpoint = '/v1/shopsections'
         )
 
         if response.status != 200:
@@ -252,7 +252,7 @@ class BaydevAPI(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v1/fortnite-content',
+            endpoint = '/v1/fortnite-content',
             parameters = {
                 'language': language, # en, es, ja
             }
@@ -270,7 +270,7 @@ class BaydevAPI(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v1/manifest',
+            endpoint = '/v1/manifest',
             parameters = {
                 'platform': platform # windows, android, xbox, ps4
             }
@@ -289,7 +289,7 @@ class FortniteCentral(API):
     def __init__(self):
         super().__init__(
             name = 'FortniteCentral',
-            base_url = 'https://fortnitecentral.gmatrixgames.ga'
+            base_url = 'https://fortnitecentral.genxgames.gg'
         )
 
     async def fetch_assets(self):
@@ -338,6 +338,21 @@ class Nitestats(API):
             base_url = 'https://api.nitestats.com'
         )
 
+    async def fetch_shop_hash(self):
+
+        response = await self.send_request(
+            method = 'GET',
+            endpoint = 'v1/shop/shophash'
+        )
+
+        if response.status != 200:
+            log.error(f'[{self.name}] Shop fetch failed.')
+            return None
+
+        else:
+
+            return await response.text()
+
     async def fetch_shop(
         self,
         header: str = None,
@@ -349,7 +364,7 @@ class Nitestats(API):
 
         response = await self.send_request(
             method = 'GET',
-            endpoints = '/v2/stats/br/v2',
+            endpoint = '/v1/shop/image',
             parameters = {
                 'header': header,
                 'subheader': subheader,
