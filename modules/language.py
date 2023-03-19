@@ -32,5 +32,8 @@ class Languages:
 
         string = language.get(key, None)
 
-        if string == None:
+        if not string:
             log.error(f'String for "{key}" not found.')
+            return key
+        else:
+            return string
