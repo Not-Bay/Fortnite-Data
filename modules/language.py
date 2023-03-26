@@ -1,4 +1,3 @@
-import aiofiles
 import logging
 import orjson
 
@@ -10,19 +9,30 @@ class Languages:
         self.languages = languages
         self.data = dict()
 
-    async def initialize(self):
+        self.initialized = False
 
-        log.info('Initializing languages...')
+    def initialize(self, reload: bool = False):
+
+        if self.initialized and not reload:
+            log.warning('initialization called but already loaded, ignoring.')
+            return
+
+        if reload:
+            log.info('Reloading languages...')
+        else:
+            log.info('Initializing languages...')
 
         for lang in self.languages:
             try:
-                async with aiofiles.open(f'langs/{lang}.json', 'r', encoding='utf-8') as f:
-                    self.data[lang] = orjson.loads(await f.read())
+                with open(f'langs/{lang}.json', 'r', encoding='utf-8') as file:
+                    self.data[lang] = orjson.loads(file.read())
                     log.info(f'Loaded "{lang}".')
             except:
-                log.error(f'An error ocurred loading language {lang}')
+                log.exception(f'An error ocurred loading language {lang}')
+        
+        self.initialized = True
 
-    async def get_str(self, lang: str, key: str):
+    def get_str(self, key: str, lang: str = 'en'):
 
         language = self.data.get(lang, None)
 
